@@ -1,10 +1,10 @@
 {
-  "description": "changeme",
+  "description": "CargoExpress-chat",
   "license": "SEE LICENSE IN MIT",
-  "readme": "changeme",
+  "readme": "cargo-express chat",
   "repository": "",
   "nativescript": {
-    "id": "org.nativescript.changeme",
+    "id": "org.nativescript.cargoExpress",
     "tns-android": {
       "version": "4.1.1"
     }
