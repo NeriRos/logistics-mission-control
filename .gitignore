@@ -23,6 +23,7 @@ Thumbs.db
 *.lib
 *.sbr
 obj/
+.expo
 [Rr]elease*/
 _ReSharper*/
 [Tt]est[Rr]esult*
@@ -38,5 +39,6 @@ packages/
 **/bower
 **/*-BU
 **/storage/mongoDB/*
+frontEnd/platforms
 githubKeys
 db/
