@@ -35,10 +35,10 @@ packages/
 *.zip
 [Dd]ist
 **/node_modules
+**/tns_modules/
 **/bower_components
 **/bower
 **/*-BU
 **/storage/mongoDB/*
-frontEnd/platforms
 githubKeys
 db/
