@@ -1,0 +1,15 @@
+<FlexboxLayout class="page page-login" backgroundImage="res://mesh">
+    <StackLayout class="flexbox-item company-name-container">
+        <Label class="t-30 company-name" text="Cargo Express"></Label>
+    </StackLayout>
+    
+    <Image src="res://company_logo" stretch="none" class="company-logo"></Image>
+
+    <StackLayout #loginLayout class="flexbox-item form p-16" [visibility]="isLoginLayoutVisible ? 'visible' : 'collapse'">
+        <AuthenticationForm></AuthenticationForm>
+    </StackLayout>
+    
+    <StackLayout #showLoginLayout class="flexbox-item" [visibility]="isLoginLayoutVisible ? 'collapse' : 'visible'">
+        <Button class="btn btn-login btn-rounded-sm font-weight-bold t-18" (tap)="isLoginLayoutVisible = !isLoginLayoutVisible" text="התחל"></Button>        
+    </StackLayout>
+</FlexboxLayout>
