@@ -20,4 +20,3 @@ E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\build\ex
 E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\7\classes.jar
 E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\8\classes.jar
 E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\9\gson-2.4.jar
-E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\build\intermediates\classes\debug

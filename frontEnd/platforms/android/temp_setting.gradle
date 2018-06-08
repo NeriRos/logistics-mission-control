@@ -1,6 +1,6 @@
 android {
             defaultConfig {
-                applicationId = "org.nativescript.cargoDeliverTest"
+                applicationId = "org.nativescript.cargoExpress"
 
                 if (false) {
                     minSdkVersion = false

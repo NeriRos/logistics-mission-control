@@ -1,10 +1,15 @@
-import { Kinvey } from "kinvey-nativescript-sdk";
+import { Kinvey } from 'kinvey-nativescript-sdk';
 
-/* ***********************************************************
-* The {N} Kinvey plugin initialization is explained in the plugin readme here:
-* http://devcenter.kinvey.com/nativescript/guides/getting-started#ConfigureYourApp
-* In this template, Kinvey is set up with a custom existing project, so that
-* You can build and run this template without creating your own Kinvey project.
-*************************************************************/
+Kinvey.init({
+    apiHostname: 'https://console.kinvey.com/app/2b7bff39c3ae49a8bde8dd5352355a9f',
+    appKey: 'kid_SJek5u8eQ',
+    appSecret: 'e1164e0a8abc4af99505b53e0a6dcc40'
+});
 
-Kinvey.init();
+Kinvey.ping()
+    .then((response) => {
+        console.log(`Kinvey Ping Success. Kinvey Service is alive, version: ${response.version}, response: ${response.kinvey}`);
+    })
+    .catch((error) => {
+        console.log(`Kinvey Ping Failed. Response: ${error.description}`, error);
+    });

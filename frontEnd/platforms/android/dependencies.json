@@ -8,8 +8,16 @@
         "directory": "..\\..\\node_modules\\nativescript-angular"
     },
     {
+        "name": "nativescript-nodeify",
+        "directory": "..\\..\\node_modules\\nativescript-nodeify"
+    },
+    {
         "name": "nativescript-theme-core",
         "directory": "..\\..\\node_modules\\nativescript-theme-core"
+    },
+    {
+        "name": "nativescript-unit-test-runner",
+        "directory": "..\\..\\node_modules\\nativescript-unit-test-runner"
     },
     {
         "name": "tns-core-modules",
@@ -22,6 +30,14 @@
     {
         "name": "nativescript-intl",
         "directory": "..\\..\\node_modules\\nativescript-intl"
+    },
+    {
+        "name": "nativescript-node",
+        "directory": "..\\..\\node_modules\\nativescript-node"
+    },
+    {
+        "name": "nativescript-randombytes",
+        "directory": "..\\..\\node_modules\\nativescript-randombytes"
     },
     {
         "name": "tns-core-modules-widgets",

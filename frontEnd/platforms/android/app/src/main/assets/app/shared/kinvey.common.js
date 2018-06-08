@@ -1,11 +1,16 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var kinvey_nativescript_sdk_1 = require("kinvey-nativescript-sdk");
-/* ***********************************************************
-* The {N} Kinvey plugin initialization is explained in the plugin readme here:
-* http://devcenter.kinvey.com/nativescript/guides/getting-started#ConfigureYourApp
-* In this template, Kinvey is set up with a custom existing project, so that
-* You can build and run this template without creating your own Kinvey project.
-*************************************************************/
-kinvey_nativescript_sdk_1.Kinvey.init();
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoia2ludmV5LmNvbW1vbi5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImtpbnZleS5jb21tb24udHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxtRUFBaUQ7QUFFakQ7Ozs7OzhEQUs4RDtBQUU5RCxnQ0FBTSxDQUFDLElBQUksRUFBRSxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgS2ludmV5IH0gZnJvbSBcImtpbnZleS1uYXRpdmVzY3JpcHQtc2RrXCI7XG5cbi8qICoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqXG4qIFRoZSB7Tn0gS2ludmV5IHBsdWdpbiBpbml0aWFsaXphdGlvbiBpcyBleHBsYWluZWQgaW4gdGhlIHBsdWdpbiByZWFkbWUgaGVyZTpcbiogaHR0cDovL2RldmNlbnRlci5raW52ZXkuY29tL25hdGl2ZXNjcmlwdC9ndWlkZXMvZ2V0dGluZy1zdGFydGVkI0NvbmZpZ3VyZVlvdXJBcHBcbiogSW4gdGhpcyB0ZW1wbGF0ZSwgS2ludmV5IGlzIHNldCB1cCB3aXRoIGEgY3VzdG9tIGV4aXN0aW5nIHByb2plY3QsIHNvIHRoYXRcbiogWW91IGNhbiBidWlsZCBhbmQgcnVuIHRoaXMgdGVtcGxhdGUgd2l0aG91dCBjcmVhdGluZyB5b3VyIG93biBLaW52ZXkgcHJvamVjdC5cbioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiovXG5cbktpbnZleS5pbml0KCk7XG4iXX0=
+kinvey_nativescript_sdk_1.Kinvey.init({
+    apiHostname: 'https://console.kinvey.com/app/2b7bff39c3ae49a8bde8dd5352355a9f',
+    appKey: 'kid_SJek5u8eQ',
+    appSecret: 'e1164e0a8abc4af99505b53e0a6dcc40'
+});
+kinvey_nativescript_sdk_1.Kinvey.ping()
+    .then(function (response) {
+    console.log("Kinvey Ping Success. Kinvey Service is alive, version: " + response.version + ", response: " + response.kinvey);
+})
+    .catch(function (error) {
+    console.log("Kinvey Ping Failed. Response: " + error.description, error);
+});
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoia2ludmV5LmNvbW1vbi5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImtpbnZleS5jb21tb24udHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSxtRUFBaUQ7QUFFakQsZ0NBQU0sQ0FBQyxJQUFJLENBQUM7SUFDUixXQUFXLEVBQUUsaUVBQWlFO0lBQzlFLE1BQU0sRUFBRSxlQUFlO0lBQ3ZCLFNBQVMsRUFBRSxrQ0FBa0M7Q0FDaEQsQ0FBQyxDQUFDO0FBRUgsZ0NBQU0sQ0FBQyxJQUFJLEVBQUU7S0FDUixJQUFJLENBQUMsVUFBQyxRQUFRO0lBQ1gsT0FBTyxDQUFDLEdBQUcsQ0FBQyw0REFBMEQsUUFBUSxDQUFDLE9BQU8sb0JBQWUsUUFBUSxDQUFDLE1BQVEsQ0FBQyxDQUFDO0FBQzVILENBQUMsQ0FBQztLQUNELEtBQUssQ0FBQyxVQUFDLEtBQUs7SUFDVCxPQUFPLENBQUMsR0FBRyxDQUFDLG1DQUFpQyxLQUFLLENBQUMsV0FBYSxFQUFFLEtBQUssQ0FBQyxDQUFDO0FBQzdFLENBQUMsQ0FBQyxDQUFDIiwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgS2ludmV5IH0gZnJvbSAna2ludmV5LW5hdGl2ZXNjcmlwdC1zZGsnO1xuXG5LaW52ZXkuaW5pdCh7XG4gICAgYXBpSG9zdG5hbWU6ICdodHRwczovL2NvbnNvbGUua2ludmV5LmNvbS9hcHAvMmI3YmZmMzljM2FlNDlhOGJkZThkZDUzNTIzNTVhOWYnLFxuICAgIGFwcEtleTogJ2tpZF9TSmVrNXU4ZVEnLFxuICAgIGFwcFNlY3JldDogJ2UxMTY0ZTBhOGFiYzRhZjk5NTA1YjUzZTBhNmRjYzQwJ1xufSk7XG5cbktpbnZleS5waW5nKClcbiAgICAudGhlbigocmVzcG9uc2UpID0+IHtcbiAgICAgICAgY29uc29sZS5sb2coYEtpbnZleSBQaW5nIFN1Y2Nlc3MuIEtpbnZleSBTZXJ2aWNlIGlzIGFsaXZlLCB2ZXJzaW9uOiAke3Jlc3BvbnNlLnZlcnNpb259LCByZXNwb25zZTogJHtyZXNwb25zZS5raW52ZXl9YCk7XG4gICAgfSlcbiAgICAuY2F0Y2goKGVycm9yKSA9PiB7XG4gICAgICAgIGNvbnNvbGUubG9nKGBLaW52ZXkgUGluZyBGYWlsZWQuIFJlc3BvbnNlOiAke2Vycm9yLmRlc2NyaXB0aW9ufWAsIGVycm9yKTtcbiAgICB9KTsiXX0=

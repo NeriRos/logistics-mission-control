@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-44:12
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-46:12
+INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-46:12
+INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-46:12
+INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-46:12
 MERGED from [com.orhanobut:hawk:2.0.1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\hawk-2.0.1.aar\36fcc874651b5da3110c46f6eba61586\AndroidManifest.xml:2:1-8:12
 MERGED from [com.android.support:design:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\design-26.0.0-alpha1.aar\7289a0327ce566721585964df5932aad\AndroidManifest.xml:17:1-31:12
 MERGED from [com.android.support:multidex:1.0.2] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\multidex-1.0.2.aar\ac7791feea51aacd420e37fcc91f9e4c\AndroidManifest.xml:17:1-22:12
@@ -21,9 +21,9 @@ MERGED from [com.android.support:support-core-ui:26.0.0-alpha1] C:\Users\Neriya 
 MERGED from [com.android.support:animated-vector-drawable:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\animated-vector-drawable-26.0.0-alpha1.aar\ff79195e4e20e398738df43c8799c651\AndroidManifest.xml:17:1-28:12
 MERGED from [com.android.support:support-vector-drawable:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\support-vector-drawable-26.0.0-alpha1.aar\195bf6767b8db672f1fb7cca98bc219c\AndroidManifest.xml:17:1-28:12
 MERGED from [com.android.support:support-compat:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\support-compat-26.0.0-alpha1.aar\642b1a1681674f13c0ca2d47af0c35a0\AndroidManifest.xml:17:1-31:12
-INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-44:12
-INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-44:12
+INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-46:12
+INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-46:12
+INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:2:1-46:12
 	package
 		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:3:2-41
 		INJECTED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml
@@ -110,8 +110,12 @@ uses-permission#android.permission.INTERNET
 ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:19:2-63
 	android:name
 		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:19:19-61
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:20:2-75
+	android:name
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:20:19-73
 application
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:21:2-43:16
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:23:2-45:16
 MERGED from [com.android.support:design:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\design-26.0.0-alpha1.aar\7289a0327ce566721585964df5932aad\AndroidManifest.xml:29:5-20
 MERGED from [com.android.support:design:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\design-26.0.0-alpha1.aar\7289a0327ce566721585964df5932aad\AndroidManifest.xml:29:5-20
 MERGED from [com.android.support:appcompat-v7:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.0.0-alpha1.aar\205afbef2fcd53d52b869335a32620fd\AndroidManifest.xml:29:5-20
@@ -137,47 +141,47 @@ MERGED from [com.android.support:support-vector-drawable:26.0.0-alpha1] C:\Users
 MERGED from [com.android.support:support-compat:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\support-compat-26.0.0-alpha1.aar\642b1a1681674f13c0ca2d47af0c35a0\AndroidManifest.xml:29:5-20
 MERGED from [com.android.support:support-compat:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\support-compat-26.0.0-alpha1.aar\642b1a1681674f13c0ca2d47af0c35a0\AndroidManifest.xml:29:5-20
 	android:label
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:25:3-35
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:27:3-35
 	android:icon
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:24:3-32
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:26:3-32
 	android:allowBackup
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:23:3-29
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:25:3-29
 	android:theme
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:26:3-34
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:28:3-34
 	android:name
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:22:3-49
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:24:3-49
 activity#com.tns.NativeScriptActivity
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:28:3-41:14
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:30:3-43:14
 	android:screenOrientation
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:33:4-40
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:35:4-40
 	android:label
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:30:4-49
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:32:4-49
 	android:configChanges
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:31:4-65
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:33:4-65
 	android:theme
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:32:4-44
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:34:4-44
 	android:name
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:29:4-47
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:31:4-47
 meta-data#SET_THEME_ON_LAUNCH
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:35:4-87
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:37:4-87
 	android:resource
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:35:50-84
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:37:50-84
 	android:name
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:35:15-49
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:37:15-49
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:37:4-40:20
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:39:4-42:20
 action#android.intent.action.MAIN
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:38:5-57
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:40:5-57
 	android:name
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:38:13-54
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:40:13-54
 category#android.intent.category.LAUNCHER
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:39:5-65
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:41:5-65
 	android:name
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:39:15-62
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:41:15-62
 activity#com.tns.ErrorReportActivity
-ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:42:3-57
+ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:44:3-57
 	android:name
-		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:42:13-55
+		ADDED from E:\Dropbox\WORK\RamBinyamin\cargoDeliver\frontEnd\platforms\android\app\src\main\AndroidManifest.xml:44:13-55
 meta-data#android.support.VERSION
 ADDED from [com.android.support:design:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\design-26.0.0-alpha1.aar\7289a0327ce566721585964df5932aad\AndroidManifest.xml:25:5-27:41
 MERGED from [com.android.support:appcompat-v7:26.0.0-alpha1] C:\Users\Neriya rosner\.gradle\caches\transforms-1\files-1.1\appcompat-v7-26.0.0-alpha1.aar\205afbef2fcd53d52b869335a32620fd\AndroidManifest.xml:25:5-27:41
