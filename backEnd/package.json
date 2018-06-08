@@ -29,6 +29,7 @@
     "watch-debug-server": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\""
   },
   "dependencies": {
+    "@types/oauth2-server": "^3.0.7",
     "async": "^2.6.0",
     "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
@@ -44,6 +45,7 @@
     "lusca": "^1.5.2",
     "mongoose": "^4.13.7",
     "morgan": "^1.9.0",
+    "oauth2-server": "git+https://github.com/oauthjs/node-oauth2-server.git",
     "pug": "^2.0.0-rc.4",
     "request": "^2.83.0"
   },
@@ -69,6 +71,7 @@
     "@types/mongoose": "^4.7.29",
     "@types/morgan": "^1.7.32",
     "@types/node": "^7.0.50",
+    "@types/oauth2-server": "^3.0.7",
     "@types/request": "^2.0.9",
     "@types/shelljs": "^0.7.7",
     "@types/supertest": "^2.0.4",

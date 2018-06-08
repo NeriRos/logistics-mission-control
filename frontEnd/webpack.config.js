@@ -94,7 +94,7 @@ module.exports = env => {
             "http": false,
             "timers": false,
             "setImmediate": false,
-            "fs": "empty",
+            "fs": "mock",
             "__dirname": false,
         },
         devtool: "none",
