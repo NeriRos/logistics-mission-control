@@ -9,7 +9,7 @@ import { UserService } from "./login.service";
 import { FloatLabel } from "~/components/shared/float-label.component";
 import { Globals } from "~/shared/globals";
 
-import { Networking } from "~/shared/network.service";
+import { Networking } from "~/services/network.service";
 
 @NgModule({
     imports: [

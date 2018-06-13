@@ -3,7 +3,7 @@ import { RouterExtensions } from "nativescript-angular/router";
 import { Page } from "tns-core-modules/ui/page";
 import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
 
-import { Networking } from "~/shared/network.service";
+import { Networking } from "~/services/network.service";
 import { User } from "~/models/user.model";
 import { UserService } from "~/components/login/login.service";
 
