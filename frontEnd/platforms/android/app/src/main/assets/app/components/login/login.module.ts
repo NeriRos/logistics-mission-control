@@ -7,7 +7,6 @@ import { LoginComponent } from "./login.component";
 import { UserService } from "./login.service";
 
 import { FloatLabel } from "~/components/shared/float-label.component";
-import { AuthenticationForm } from "~/components/login/components/authentication-form.component";
 import { Globals } from "~/shared/globals";
 
 import { Networking } from "~/shared/network.service";
@@ -21,8 +20,7 @@ import { Networking } from "~/shared/network.service";
     providers: [UserService, Globals, Networking],
     declarations: [
         LoginComponent,
-        FloatLabel,
-        AuthenticationForm
+        FloatLabel
     ],
     schemas: [
         NO_ERRORS_SCHEMA

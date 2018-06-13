@@ -5,12 +5,7 @@
   "main": "main.js",
   "name": "tns-template-enterprise-auth-ng",
   "pluginsData": {
-    "kinvey-nativescript-sdk": {
-      "config": {
-        "appKey": "",
-        "appSecret": ""
-      }
-    }
+    
   },
   "version": "0.1.12"
 }

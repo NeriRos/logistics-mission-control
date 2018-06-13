@@ -14,12 +14,12 @@ import { UserService } from "~/components/login/login.service";
                     <Label class="t-14" [text]="authenticationStatusName"></Label>
                 </StackLayout>
                 <StackLayout class="auth-input-layout">
-                    <FloatLabel (ngModelOutput)="authenticationDetails.email = $event" class="auth-input" id="email" placeholder="אימייל" keyboardType="email" [changeEvent]="changeEventFn.bind(this)" autocorrect="false" autocapitalizationType="none" name="email"></FloatLabel>
+                    <FloatLabel (ngModelOutput)="authenticationDetails.email = $event" class="auth-input" id="email" placeholder="אימייל" keyboardType="email" autocorrect="false" autocapitalizationType="none" name="email"></FloatLabel>
                 </StackLayout>
                 <StackLayout class="auth-input-layout">
                     <FloatLabel (ngModelOutput)="authenticationDetails.password = $event" class="auth-input" placeholder="סיסמה" secure="true" name="password"></FloatLabel>
                 </StackLayout>
-                <StackLayout [visibility]="isShowRegistrationInputs ? 'visible' : 'collapse'">
+                <StackLayout [visibility]="isRegister ? 'visible' : 'collapse'">
                     <StackLayout class="auth-input-layout">                
                         <FloatLabel (ngModelOutput)="authenticationDetails.name = $event" class="auth-input" placeholder="שם מלא" type="text" name="name"></FloatLabel>
                     </StackLayout>
@@ -36,42 +36,11 @@ import { UserService } from "~/components/login/login.service";
 export class AuthenticationForm {    
     private authenticationDetails = {email: "", password: "", name: "", code: ""};
     private authenticationStatusName: string = "התחבר";
-    private isShowRegistrationInputs: boolean = false;
+    private isRegister: boolean = false;
 
     constructor(private userService: UserService) {
     }
 
     ngOnInit(): void {
-    }
-
-    changeEventFn(event) {
-        console.log("Change!", this.authenticationDetails.email, event);
-    }
-
-    authenticate(isValid) {
-        if(isValid) {
-            let user: User = this.authenticationDetails;
-            let isUser = !!user;
-    
-            console.log(user);
-
-            if(this.isShowRegistrationInputs) {
-                this.userService.register(user).then(userData => {
-                    console.log("register", userData);
-                }).catch(err => {
-                    this.authenticationStatusName = "הרשם";
-                    this.isShowRegistrationInputs = true;
-                });  
-            } else {
-                this.userService.login(user).then(userData => {
-                    console.log("login", userData);
-                }).catch(err => {
-                    this.authenticationStatusName = "הרשם";
-                    this.isShowRegistrationInputs = true;
-                });               
-            }
-        } else {
-            alert('Form is not valid..');
-        }
     }
 }

@@ -1,14 +1,16 @@
 import { Injectable } from "@angular/core";
 import { CanLoad } from "@angular/router";
-import { Kinvey } from "kinvey-nativescript-sdk";
+
 import { RouterExtensions } from "nativescript-angular/router";
+import { UserService } from "~/components/login/login.service";
 
 @Injectable()
 export class LoggedInLazyLoadGuard implements CanLoad {
-    constructor(private _routerExtensions: RouterExtensions) { }
+    constructor(private _routerExtensions: RouterExtensions, private userService: UserService) { }
 
     canLoad(): boolean {
-        if (!Kinvey.User.getActiveUser()) {
+        // TODO: set authorizetion algorithem 
+        if (!this.userService.isAuthenticated) {
             this._routerExtensions.navigate(["login"], { clearHistory: true });
         }
 
