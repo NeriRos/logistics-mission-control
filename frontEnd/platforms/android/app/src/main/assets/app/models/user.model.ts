@@ -4,4 +4,6 @@ export interface User {
     password: string;
     name?: string;
     code?: string;
+    token?: string;
+    friends?: Array<string>;
 }

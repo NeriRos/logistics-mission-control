@@ -915,6 +915,11 @@ android.support.design.widget.BaseTransientBottomBar.BaseCallback.DismissEvent
 android.support.design.widget.CoordinatorLayout.DefaultBehavior
 android.support.design.internal.package-info
 android.support.design.internal.NavigationMenuPresenter.NavigationMenuItem
+android.support.v4.app.FragmentManager.OnBackStackChangedListener
+android.support.v4.app.FragmentManager.BackStackEntry
+android.support.v4.app.LoaderManager.LoaderCallbacks
+android.support.v4.app.Fragment.OnStartEnterTransitionListener
+android.support.v4.app.FragmentManagerImpl.OpGenerator
 android.support.v4.print.PrintHelper.PrintHelperVersionImpl
 android.support.v4.print.PrintHelper.OnPrintFinishCallback
 android.support.v4.print.PrintHelperKitkat.OnPrintFinishCallback
@@ -1233,8 +1238,3 @@ android.support.v4.media.RatingCompat.Style
 android.support.v4.media.MediaBrowserServiceCompat.ServiceCallbacks
 android.support.v4.media.MediaMetadataCompat.BitmapKey
 android.support.v4.media.MediaBrowserCompatApi21.SubscriptionCallback
-android.support.v4.app.FragmentManager.OnBackStackChangedListener
-android.support.v4.app.FragmentManager.BackStackEntry
-android.support.v4.app.LoaderManager.LoaderCallbacks
-android.support.v4.app.Fragment.OnStartEnterTransitionListener
-android.support.v4.app.FragmentManagerImpl.OpGenerator

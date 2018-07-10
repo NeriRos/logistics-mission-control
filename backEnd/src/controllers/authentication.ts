@@ -1,29 +1,14 @@
 "use strict";
 import { UserModel } from "../models/User";
 import { User } from "../types/User";
-import * as passport from "passport";
-import { Response, Request as RequestOriginal, NextFunction } from "express";
-import { IVerifyOptions } from "passport-http-bearer";
+import { Response, Request, NextFunction } from "express";
 import { WriteError } from "mongodb";
+import { randomBytes } from "crypto";
 import * as async from "async";
-import { randomBytes, createHash } from "crypto";
+import * as passport from "passport";
 import * as nodemailer from "nodemailer";
-interface Request extends RequestOriginal {
-    flash: any;
-}
-
-/**
- * GET /login
- * Login page.
- */
-export let getLogin = (req: Request, res: Response) => {
-  if (req.user) {
-    return res.redirect("/");
-  }
-  res.render("account/login", {
-    title: "Login"
-  });
-};
+import * as jwt from "jwt-simple";
+import * as moment from "moment";
 
 /**
  * POST /login
@@ -38,19 +23,24 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
 
   if (errors) {
     console.log("errors", errors);
-    return res.redirect("/login");
+    return res.json({status: "error", error: errors});
   }
 
-  passport.authenticate("local", (err: Error, user: User, info: IVerifyOptions) => {
-    if (err) { return next(err); }
-    if (!user) {
-      console.log("errors", info.message);
-      return res.redirect("/login");
+  passport.authenticate("local", (err, user, info) => {
+    if (err || !user) {
+      return res.status(400).json({
+          message: "Something is not right",
+          user   : user
+      });
     }
-    req.logIn(user, (err) => {
-      if (err) { return next(err); }
-      console.log("success", { msg: "Success! You are logged in." });
-      res.json({status: "ok", error: false});
+    req.login(user, (err) => {
+      if (err) {
+        res.send(err);
+      }
+      console.log("is Authenticated:", req.isAuthenticated());
+
+      user.token = createToken(user);
+      return res.json({user: user});
     });
   })(req, res, next);
 };
@@ -61,19 +51,19 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
  */
 export let logout = (req: Request, res: Response) => {
   req.logout();
-  res.redirect("/");
+  res.json({status: "ok", error: false});
 };
 
 /**
- * GET /signup
- * Signup page.
+ * GET /getFriends
+ * returns the ids of all account assosiated with the request account
  */
-export let getSignup = (req: Request, res: Response) => {
-  if (req.user) {
-    return res.redirect("/");
-  }
-  res.render("account/signup", {
-    title: "Create Account"
+export let getFriends = (req: Request, res: Response, next: NextFunction) => {
+  UserModel.find({friends: req.user._id}, (err, friends) => {
+    if (err)
+      return next(err);
+
+    res.json({friends: friends});
   });
 };
 
@@ -84,26 +74,25 @@ export let getSignup = (req: Request, res: Response) => {
 export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   req.assert("email", "Email is not valid").isEmail();
   req.assert("password", "Password must be at least 4 characters long").len({ min: 4 });
-  // req.assert("confirmPassword", "Passwords do not match").equals(req.body.password);
   req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
 
   if (errors) {
     console.log("errors", errors);
-    return res.redirect("/signup");
+    return res.json({status: "error", error: errors});
   }
 
   const user = new UserModel({
     email: req.body.email,
-    password: getHash(req.body.password)
+    password: req.body.password
   });
 
   UserModel.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
     if (existingUser) {
       console.log("errors", { msg: "Account with that email address already exists." });
-      return res.redirect("/signup");
+      return res.json({status: "error", error: errors, msg: "Account with that email address already exists."});
     }
     user.save((err) => {
       if (err) { return next(err); }
@@ -220,29 +209,6 @@ export let getOauthUnlink = (req: Request, res: Response, next: NextFunction) =>
 };
 
 /**
- * GET /reset/:token
- * Reset Password page.
- */
-export let getReset = (req: Request, res: Response, next: NextFunction) => {
-  if (req.isAuthenticated()) {
-    return res.redirect("/");
-  }
-  UserModel
-    .findOne({ passwordResetToken: req.params.token })
-    .where("passwordResetExpires").gt(Date.now())
-    .exec((err, user) => {
-      if (err) { return next(err); }
-      if (!user) {
-        console.log("errors", { msg: "Password reset token is invalid or has expired." });
-        return res.redirect("/forgot");
-      }
-      res.render("account/reset", {
-        title: "Password Reset"
-      });
-    });
-};
-
-/**
  * POST /reset/:token
  * Process the reset password request.
  */
@@ -301,19 +267,6 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
   ], (err) => {
     if (err) { return next(err); }
     res.redirect("/");
-  });
-};
-
-/**
- * GET /forgot
- * Forgot Password page.
- */
-export let getForgot = (req: Request, res: Response) => {
-  if (req.isAuthenticated()) {
-    return res.redirect("/");
-  }
-  res.render("account/forgot", {
-    title: "Forgot Password"
   });
 };
 
@@ -381,6 +334,15 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-const getHash = (input: string) => {
-    return createHash("sha256").update(input).digest("hex");
+export let createToken = (user?: User) => {
+  if (user) {
+    const playload = {
+      exp: moment().add(14, "days").unix(),
+      iat: moment().unix(),
+      sub: user._id
+    };
+    return jwt.encode(playload, process.env.TOKEN_SECRET);
+  }
+
+  return undefined;
 };

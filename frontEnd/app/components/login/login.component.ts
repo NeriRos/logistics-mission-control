@@ -3,9 +3,10 @@ import { RouterExtensions } from "nativescript-angular/router";
 import { Page } from "tns-core-modules/ui/page";
 import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
 
-import { Networking } from "~/services/network.service";
+import { NetworkingService } from "~/services/network.service";
 import { User } from "~/models/user.model";
-import { UserService } from "~/components/login/login.service";
+import { UserService } from "~/services/login.service";
+import { HelpersService } from "~/services/helpers.service";
 
 @Component({
     selector: "Login",
@@ -24,11 +25,10 @@ export class LoginComponent {
     private isRegister: boolean = false;
 
 
-    constructor(private _routerExtensions: RouterExtensions,
-                private zone: NgZone,
+    constructor(private helpers: HelpersService,
                 private page: Page,
                 private userService: UserService,
-                private networking: Networking) {
+                private networking: NetworkingService) {
         this.page.actionBarHidden = true;
         this.page.backgroundSpanUnderStatusBar = true;
         this.page.className = "page-login-container";
@@ -42,41 +42,33 @@ export class LoginComponent {
 
     authenticate(isValid) {
         let user: User = this.authenticationDetails;
-        let isUser = !!user;
 
-        if(isValid && isUser) {
+        if(isValid && user) {
             if(this.isRegister) {
                 this.userService.register(user).then(userData => {
                     console.log("register", userData);
-                    this.navigateHome();
+                    this.helpers.navigate(["home"]);
                 }).catch(err => {
                     console.log('[!] Error register', err);
                 });  
             } else {
                 this.userService.login(user).then(userData => {
-                    console.log("login", userData);
-                    this.navigateHome();
+                    if(userData.user) {
+                        this.helpers.navigate(["home"]);
+                    } else {
+                        this.authenticationStatusName = "הרשם";
+                        this.isRegister = true;
+                    }
                 }).catch(err => {
-                    this.authenticationStatusName = "הרשם";
-                    this.isRegister = true;
+                    console.log("Login was unsuccessful", err);
+                    if(err instanceof SyntaxError) {
+                        this.authenticationStatusName = "הרשם";
+                        this.isRegister = true;
+                    }
                 });               
             }
         } else {
             alert('Form or user is not valid..');
         }
-    }
-
-    private navigateHome() {
-        this.zone.run(() => {
-            this._routerExtensions.navigate(["home"], {
-                clearHistory: true,
-                animated: true,
-                transition: {
-                    name: "slideTop",
-                    duration: 350,
-                    curve: "ease"
-                }
-            });
-        });
     }
 }

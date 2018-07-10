@@ -1,20 +1,21 @@
 
-import * as passport from "passport";
-import * as passportLocal from "passport-local";
+import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as BearerStrategy } from "passport-http-bearer";
+import { Request, Response, NextFunction } from "express";
+import * as passport from "passport";
 import * as _ from "lodash";
 
-import { UserModel as User } from "../models/User";
-import { Request, Response, NextFunction } from "express";
+import { UserModel } from "../models/User";
+import { User } from "../types/User";
 
-const LocalStrategy = passportLocal.Strategy;
-
-passport.serializeUser<any, any>((user, done) => {
-  done(undefined, user.id);
+passport.serializeUser<any, any>((user: User, done) => {
+  console.log("Serializing user id:", user._id);
+  done(undefined, user._id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
+  UserModel.findById(id, (err, user) => {
+    console.log(user);
     done(err, user);
   });
 });
@@ -23,18 +24,16 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-  User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
+  UserModel.findOne({ email: email.toLowerCase() }, (err, user: any) => {
+
     if (err) { return done(err); }
     if (!user) {
       return done(undefined, false, { message: `Email ${email} not found.` });
     }
-    user.comparePassword(password, (err: Error, isMatch: boolean) => {
-      if (err) { return done(err); }
-      if (isMatch) {
+
+    if (user.comparePassword(password)) {
         return done(undefined, user);
-      }
-      return done(undefined, false, { message: "Invalid email or password." });
-    });
+    }
   });
 }));
 
@@ -42,7 +41,7 @@ passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, don
  * Bearer authentication.
  */
 passport.use(new BearerStrategy((token: string, done: Function) => {
-    User.findOne({_id: token}).exec().then((user) => {
+    UserModel.findOne({_id: getID(token)}).exec().then((user) => {
         if (!user) { return done(undefined, false); }
         return done(undefined, user, { scope: "read" });
     }).catch(err => {
@@ -54,10 +53,11 @@ passport.use(new BearerStrategy((token: string, done: Function) => {
  * Login Required middleware.
  */
 export let isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  console.log(req.method, req.url, "isAuthenticated:", req.isAuthenticated());
   if (req.isAuthenticated()) {
     return next();
   }
-  res.redirect("/login");
+  res.status(501).json({msg: "unauthenticated"});
 };
 
 /**
@@ -71,4 +71,11 @@ export let isAuthorized = (req: Request, res: Response, next: NextFunction) => {
   } else {
     res.redirect(`/auth/${provider}`);
   }
+};
+
+const getID = (payload: string) => {
+  payload = payload.split(".")[1];
+  payload = Buffer.from(payload, "base64").toString("utf8");
+  payload = JSON.parse(payload);
+  return payload.sub;
 };

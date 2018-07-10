@@ -1,10 +1,44 @@
 import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
 import * as connectivity from "connectivity";
+import { Observable } from "rxjs";
 
 @Injectable()
-export class Networking {
+export class NetworkingService {
     private _networkStatus: string = "";
     private _isOnline: boolean = false;
+    public server = { ip: "10.0.2.1", dns: "cargo-express.co.il", port: 80, protocol: "http" };
+
+    constructor(private httpProvider: HttpClient) {
+    }
+
+    fetch(url: string, options: RequestInit = {}, body?: any ) {
+        const isLocal = url.startsWith("/");
+        let requestURL = isLocal ? `${this.server.protocol}://${this.server.ip}:${this.server.port}${url}` : url;
+
+        if(body && !options.body && options.method === "POST") {
+            options.headers = {
+                "Content-Type": "application/json"
+            };
+        }
+            options.body = (typeof body).toLowerCase() !== "string" ? JSON.stringify(body) : body;
+
+        return fetch(requestURL, options);
+    }
+
+    http(method: string, url: string, options?: any, data?: any): Observable<any> {
+        var promise;
+
+        if(options && !options.responseType)
+            options.responseType = "json";
+
+        if(method.toUpperCase() === "GET")
+            promise = this.httpProvider.get(url, options);    
+        else
+            promise = this.httpProvider.post(url, data, options);
+
+        return promise;
+    }
 
     checkNetwork() {
         const connectionType = connectivity.getConnectionType();

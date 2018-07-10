@@ -1,11 +1,16 @@
 import { Injectable } from "@angular/core";
+import { NetworkingService } from "./network.service";
 
 @Injectable()
 export class DeliveryService {
-    private server: string = "141.226.21.44:8050/baldar";
+    private server: string = "http://141.226.21.44:8050/baldar";
+
+    constructor(private network: NetworkingService) {
+        
+    }
 
     requestStatus(deliveryNumber: number, customerCode: number) {
-        return fetch(`http://${this.server}/DeliveryStatus.aspx/GetStatus`, {
+        return this.network.fetch(`http://${this.server}/DeliveryStatus.aspx/GetStatus`, {
             method: "POST",
             headers: { "Content-Type": "application/json; charset=utf-8" },
             body: JSON.stringify({deliveryNumber: deliveryNumber, customerCode: customerCode})

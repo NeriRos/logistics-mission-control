@@ -1,6 +1,4 @@
 import * as errorHandler from "errorhandler";
-import * as fs from "fs";
-import * as path from "path";
 
 const app = require("./app");
 

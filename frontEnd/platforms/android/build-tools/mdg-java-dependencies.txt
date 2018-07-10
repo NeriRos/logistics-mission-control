@@ -6,7 +6,8 @@ E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\androi
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\12\classes.jar
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\13\classes.jar
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\14\classes.jar
-E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\15\support-annotations-26.0.0-alpha1.jar
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\15\classes.jar
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\16\support-annotations-26.0.0-alpha1.jar
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\2\classes.jar
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\3\classes.jar
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\4\classes.jar
@@ -15,4 +16,3 @@ E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\androi
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\7\classes.jar
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\8\classes.jar
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\exploded-dependencies\9\classes.jar
-E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\build\intermediates\classes\debug

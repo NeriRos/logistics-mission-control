@@ -1,90 +1,36 @@
-"use strict";
-var _this = this;
-Object.defineProperty(exports, "__esModule", { value: true });
-var nativescript_dev_appium_1 = require("nativescript-dev-appium");
-var chai_1 = require("chai");
-describe("sample scenario", function () {
-    var defaultWaitTime = 5000;
-    var driver;
-    before(function () { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, nativescript_dev_appium_1.createDriver()];
-                case 1:
-                    driver = _a.sent();
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    after(function () { return __awaiter(_this, void 0, void 0, function () {
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, driver.quit()];
-                case 1:
-                    _a.sent();
-                    console.log("Quit driver!");
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    afterEach(function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!(this.currentTest.state === "failed")) return [3 /*break*/, 2];
-                        return [4 /*yield*/, driver.logScreenshot(this.currentTest.title)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [2 /*return*/];
-                }
-            });
-        });
-    });
-    it("should find an element by text", function () { return __awaiter(_this, void 0, void 0, function () {
-        var btnTap, message, lblMessage, _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0: return [4 /*yield*/, driver.findElementByText("TAP", 0 /* exact */)];
-                case 1:
-                    btnTap = _c.sent();
-                    return [4 /*yield*/, btnTap.click()];
-                case 2:
-                    _c.sent();
-                    message = " taps left";
-                    return [4 /*yield*/, driver.findElementByText(message, 1 /* contains */)];
-                case 3:
-                    lblMessage = _c.sent();
-                    _b = (_a = chai_1.assert).equal;
-                    return [4 /*yield*/, lblMessage.text()];
-                case 4:
-                    _b.apply(_a, [_c.sent(), "41" + message]);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-    it("should find an element by type", function () { return __awaiter(_this, void 0, void 0, function () {
-        var btnTap, message, lblMessage, _a, _b;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
-                case 0: return [4 /*yield*/, driver.findElementByClassName(driver.locators.button)];
-                case 1:
-                    btnTap = _c.sent();
-                    return [4 /*yield*/, btnTap.click()];
-                case 2:
-                    _c.sent();
-                    message = " taps left";
-                    return [4 /*yield*/, driver.findElementByText(message, 1 /* contains */)];
-                case 3:
-                    lblMessage = _c.sent();
-                    _b = (_a = chai_1.assert).equal;
-                    return [4 /*yield*/, lblMessage.text()];
-                case 4:
-                    _b.apply(_a, [_c.sent(), "40" + message]);
-                    return [2 /*return*/];
-            }
-        });
-    }); });
-});
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2FtcGxlLmUyZS1zcGVjLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsic2FtcGxlLmUyZS1zcGVjLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7QUFBQSxpQkEyQ0c7O0FBM0NILG1FQUFvRjtBQUNwRiw2QkFBOEI7QUFFOUIsUUFBUSxDQUFDLGlCQUFpQixFQUFFO0lBQ3hCLElBQU0sZUFBZSxHQUFHLElBQUksQ0FBQztJQUM3QixJQUFJLE1BQW9CLENBQUM7SUFFekIsTUFBTSxDQUFDOzs7d0JBQ00scUJBQU0sc0NBQVksRUFBRSxFQUFBOztvQkFBN0IsTUFBTSxHQUFHLFNBQW9CLENBQUM7Ozs7U0FDakMsQ0FBQyxDQUFDO0lBRUgsS0FBSyxDQUFDOzs7d0JBQ0YscUJBQU0sTUFBTSxDQUFDLElBQUksRUFBRSxFQUFBOztvQkFBbkIsU0FBbUIsQ0FBQztvQkFDcEIsT0FBTyxDQUFDLEdBQUcsQ0FBQyxjQUFjLENBQUMsQ0FBQzs7OztTQUMvQixDQUFDLENBQUM7SUFFSCxTQUFTLENBQUM7Ozs7OzZCQUNGLENBQUEsSUFBSSxDQUFDLFdBQVcsQ0FBQyxLQUFLLEtBQUssUUFBUSxDQUFBLEVBQW5DLHdCQUFtQzt3QkFDbkMscUJBQU0sTUFBTSxDQUFDLGFBQWEsQ0FBQyxJQUFJLENBQUMsV0FBVyxDQUFDLEtBQUssQ0FBQyxFQUFBOzt3QkFBbEQsU0FBa0QsQ0FBQzs7Ozs7O0tBRTFELENBQUMsQ0FBQztJQUVILEVBQUUsQ0FBQyxnQ0FBZ0MsRUFBRTs7Ozt3QkFDbEIscUJBQU0sTUFBTSxDQUFDLGlCQUFpQixDQUFDLEtBQUssZ0JBQXNCLEVBQUE7O29CQUFuRSxNQUFNLEdBQUcsU0FBMEQ7b0JBQ3pFLHFCQUFNLE1BQU0sQ0FBQyxLQUFLLEVBQUUsRUFBQTs7b0JBQXBCLFNBQW9CLENBQUM7b0JBRWYsT0FBTyxHQUFHLFlBQVksQ0FBQztvQkFDVixxQkFBTSxNQUFNLENBQUMsaUJBQWlCLENBQUMsT0FBTyxtQkFBeUIsRUFBQTs7b0JBQTVFLFVBQVUsR0FBRyxTQUErRDtvQkFDbEYsS0FBQSxDQUFBLEtBQUEsYUFBTSxDQUFBLENBQUMsS0FBSyxDQUFBO29CQUFDLHFCQUFNLFVBQVUsQ0FBQyxJQUFJLEVBQUUsRUFBQTs7b0JBQXBDLGNBQWEsU0FBdUIsRUFBRSxJQUFJLEdBQUcsT0FBTyxFQUFDLENBQUM7Ozs7U0FLekQsQ0FBQyxDQUFDO0lBRUgsRUFBRSxDQUFDLGdDQUFnQyxFQUFFOzs7O3dCQUNsQixxQkFBTSxNQUFNLENBQUMsc0JBQXNCLENBQUMsTUFBTSxDQUFDLFFBQVEsQ0FBQyxNQUFNLENBQUMsRUFBQTs7b0JBQXBFLE1BQU0sR0FBRyxTQUEyRDtvQkFDMUUscUJBQU0sTUFBTSxDQUFDLEtBQUssRUFBRSxFQUFBOztvQkFBcEIsU0FBb0IsQ0FBQztvQkFFZixPQUFPLEdBQUcsWUFBWSxDQUFDO29CQUNWLHFCQUFNLE1BQU0sQ0FBQyxpQkFBaUIsQ0FBQyxPQUFPLG1CQUF5QixFQUFBOztvQkFBNUUsVUFBVSxHQUFHLFNBQStEO29CQUNsRixLQUFBLENBQUEsS0FBQSxhQUFNLENBQUEsQ0FBQyxLQUFLLENBQUE7b0JBQUMscUJBQU0sVUFBVSxDQUFDLElBQUksRUFBRSxFQUFBOztvQkFBcEMsY0FBYSxTQUF1QixFQUFFLElBQUksR0FBRyxPQUFPLEVBQUMsQ0FBQzs7OztTQUN6RCxDQUFDLENBQUM7QUFDUCxDQUFDLENBQUMsQ0FBQyIsInNvdXJjZXNDb250ZW50IjpbImltcG9ydCB7IEFwcGl1bURyaXZlciwgY3JlYXRlRHJpdmVyLCBTZWFyY2hPcHRpb25zIH0gZnJvbSBcIm5hdGl2ZXNjcmlwdC1kZXYtYXBwaXVtXCI7XG5pbXBvcnQgeyBhc3NlcnQgfSBmcm9tIFwiY2hhaVwiO1xuXG5kZXNjcmliZShcInNhbXBsZSBzY2VuYXJpb1wiLCAoKSA9PiB7XG4gICAgY29uc3QgZGVmYXVsdFdhaXRUaW1lID0gNTAwMDtcbiAgICBsZXQgZHJpdmVyOiBBcHBpdW1Ecml2ZXI7XG5cbiAgICBiZWZvcmUoYXN5bmMgKCkgPT4ge1xuICAgICAgICBkcml2ZXIgPSBhd2FpdCBjcmVhdGVEcml2ZXIoKTtcbiAgICB9KTtcblxuICAgIGFmdGVyKGFzeW5jICgpID0+IHtcbiAgICAgICAgYXdhaXQgZHJpdmVyLnF1aXQoKTtcbiAgICAgICAgY29uc29sZS5sb2coXCJRdWl0IGRyaXZlciFcIik7XG4gICAgfSk7XG5cbiAgICBhZnRlckVhY2goYXN5bmMgZnVuY3Rpb24gKCkge1xuICAgICAgICBpZiAodGhpcy5jdXJyZW50VGVzdC5zdGF0ZSA9PT0gXCJmYWlsZWRcIikge1xuICAgICAgICAgICAgYXdhaXQgZHJpdmVyLmxvZ1NjcmVlbnNob3QodGhpcy5jdXJyZW50VGVzdC50aXRsZSk7XG4gICAgICAgIH1cbiAgICB9KTtcblxuICAgIGl0KFwic2hvdWxkIGZpbmQgYW4gZWxlbWVudCBieSB0ZXh0XCIsIGFzeW5jICgpID0+IHtcbiAgICAgICAgY29uc3QgYnRuVGFwID0gYXdhaXQgZHJpdmVyLmZpbmRFbGVtZW50QnlUZXh0KFwiVEFQXCIsIFNlYXJjaE9wdGlvbnMuZXhhY3QpO1xuICAgICAgICBhd2FpdCBidG5UYXAuY2xpY2soKTtcblxuICAgICAgICBjb25zdCBtZXNzYWdlID0gXCIgdGFwcyBsZWZ0XCI7XG4gICAgICAgIGNvbnN0IGxibE1lc3NhZ2UgPSBhd2FpdCBkcml2ZXIuZmluZEVsZW1lbnRCeVRleHQobWVzc2FnZSwgU2VhcmNoT3B0aW9ucy5jb250YWlucyk7XG4gICAgICAgIGFzc2VydC5lcXVhbChhd2FpdCBsYmxNZXNzYWdlLnRleHQoKSwgXCI0MVwiICsgbWVzc2FnZSk7XG5cbiAgICAgICAgLy8gSW1hZ2UgdmVyaWZpY2F0aW9uXG4gICAgICAgIC8vIGNvbnN0IHNjcmVlbiA9IGF3YWl0IGRyaXZlci5jb21wYXJlU2NyZWVuKFwiaGVsbG8td29ybGQtNDFcIik7XG4gICAgICAgIC8vIGFzc2VydC5pc1RydWUoc2NyZWVuKTtcbiAgICB9KTtcblxuICAgIGl0KFwic2hvdWxkIGZpbmQgYW4gZWxlbWVudCBieSB0eXBlXCIsIGFzeW5jICgpID0+IHtcbiAgICAgICAgY29uc3QgYnRuVGFwID0gYXdhaXQgZHJpdmVyLmZpbmRFbGVtZW50QnlDbGFzc05hbWUoZHJpdmVyLmxvY2F0b3JzLmJ1dHRvbik7XG4gICAgICAgIGF3YWl0IGJ0blRhcC5jbGljaygpO1xuXG4gICAgICAgIGNvbnN0IG1lc3NhZ2UgPSBcIiB0YXBzIGxlZnRcIjtcbiAgICAgICAgY29uc3QgbGJsTWVzc2FnZSA9IGF3YWl0IGRyaXZlci5maW5kRWxlbWVudEJ5VGV4dChtZXNzYWdlLCBTZWFyY2hPcHRpb25zLmNvbnRhaW5zKTtcbiAgICAgICAgYXNzZXJ0LmVxdWFsKGF3YWl0IGxibE1lc3NhZ2UudGV4dCgpLCBcIjQwXCIgKyBtZXNzYWdlKTtcbiAgICB9KTtcbn0pOyJdfQ==
+// import { AppiumDriver, createDriver, SearchOptions } from "nativescript-dev-appium";
+// import { assert } from "chai";
+// describe("sample scenario", () => {
+//     const defaultWaitTime = 5000;
+//     let driver: AppiumDriver;
+//     before(async () => {
+//         driver = await createDriver();
+//     });
+//     after(async () => {
+//         await driver.quit();
+//         console.log("Quit driver!");
+//     });
+//     afterEach(async function () {
+//         if (this.currentTest.state === "failed") {
+//             await driver.logScreenshot(this.currentTest.title);
+//         }
+//     });
+//     it("should find an element by text", async () => {
+//         const btnTap = await driver.findElementByText("TAP", SearchOptions.exact);
+//         await btnTap.click();
+//         const message = " taps left";
+//         const lblMessage = await driver.findElementByText(message, SearchOptions.contains);
+//         assert.equal(await lblMessage.text(), "41" + message);
+//         // Image verification
+//         // const screen = await driver.compareScreen("hello-world-41");
+//         // assert.isTrue(screen);
+//     });
+//     it("should find an element by type", async () => {
+//         const btnTap = await driver.findElementByClassName(driver.locators.button);
+//         await btnTap.click();
+//         const message = " taps left";
+//         const lblMessage = await driver.findElementByText(message, SearchOptions.contains);
+//         assert.equal(await lblMessage.text(), "40" + message);
+//     });
+// });
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoic2FtcGxlLmUyZS1zcGVjLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsic2FtcGxlLmUyZS1zcGVjLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLHVGQUF1RjtBQUN2RixpQ0FBaUM7QUFFakMsc0NBQXNDO0FBQ3RDLG9DQUFvQztBQUNwQyxnQ0FBZ0M7QUFFaEMsMkJBQTJCO0FBQzNCLHlDQUF5QztBQUN6QyxVQUFVO0FBRVYsMEJBQTBCO0FBQzFCLCtCQUErQjtBQUMvQix1Q0FBdUM7QUFDdkMsVUFBVTtBQUVWLG9DQUFvQztBQUNwQyxxREFBcUQ7QUFDckQsa0VBQWtFO0FBQ2xFLFlBQVk7QUFDWixVQUFVO0FBRVYseURBQXlEO0FBQ3pELHFGQUFxRjtBQUNyRixnQ0FBZ0M7QUFFaEMsd0NBQXdDO0FBQ3hDLDhGQUE4RjtBQUM5RixpRUFBaUU7QUFFakUsZ0NBQWdDO0FBQ2hDLDBFQUEwRTtBQUMxRSxvQ0FBb0M7QUFDcEMsVUFBVTtBQUVWLHlEQUF5RDtBQUN6RCxzRkFBc0Y7QUFDdEYsZ0NBQWdDO0FBRWhDLHdDQUF3QztBQUN4Qyw4RkFBOEY7QUFDOUYsaUVBQWlFO0FBQ2pFLFVBQVU7QUFDVixNQUFNIiwic291cmNlc0NvbnRlbnQiOlsiLy8gaW1wb3J0IHsgQXBwaXVtRHJpdmVyLCBjcmVhdGVEcml2ZXIsIFNlYXJjaE9wdGlvbnMgfSBmcm9tIFwibmF0aXZlc2NyaXB0LWRldi1hcHBpdW1cIjtcbi8vIGltcG9ydCB7IGFzc2VydCB9IGZyb20gXCJjaGFpXCI7XG5cbi8vIGRlc2NyaWJlKFwic2FtcGxlIHNjZW5hcmlvXCIsICgpID0+IHtcbi8vICAgICBjb25zdCBkZWZhdWx0V2FpdFRpbWUgPSA1MDAwO1xuLy8gICAgIGxldCBkcml2ZXI6IEFwcGl1bURyaXZlcjtcblxuLy8gICAgIGJlZm9yZShhc3luYyAoKSA9PiB7XG4vLyAgICAgICAgIGRyaXZlciA9IGF3YWl0IGNyZWF0ZURyaXZlcigpO1xuLy8gICAgIH0pO1xuXG4vLyAgICAgYWZ0ZXIoYXN5bmMgKCkgPT4ge1xuLy8gICAgICAgICBhd2FpdCBkcml2ZXIucXVpdCgpO1xuLy8gICAgICAgICBjb25zb2xlLmxvZyhcIlF1aXQgZHJpdmVyIVwiKTtcbi8vICAgICB9KTtcblxuLy8gICAgIGFmdGVyRWFjaChhc3luYyBmdW5jdGlvbiAoKSB7XG4vLyAgICAgICAgIGlmICh0aGlzLmN1cnJlbnRUZXN0LnN0YXRlID09PSBcImZhaWxlZFwiKSB7XG4vLyAgICAgICAgICAgICBhd2FpdCBkcml2ZXIubG9nU2NyZWVuc2hvdCh0aGlzLmN1cnJlbnRUZXN0LnRpdGxlKTtcbi8vICAgICAgICAgfVxuLy8gICAgIH0pO1xuXG4vLyAgICAgaXQoXCJzaG91bGQgZmluZCBhbiBlbGVtZW50IGJ5IHRleHRcIiwgYXN5bmMgKCkgPT4ge1xuLy8gICAgICAgICBjb25zdCBidG5UYXAgPSBhd2FpdCBkcml2ZXIuZmluZEVsZW1lbnRCeVRleHQoXCJUQVBcIiwgU2VhcmNoT3B0aW9ucy5leGFjdCk7XG4vLyAgICAgICAgIGF3YWl0IGJ0blRhcC5jbGljaygpO1xuXG4vLyAgICAgICAgIGNvbnN0IG1lc3NhZ2UgPSBcIiB0YXBzIGxlZnRcIjtcbi8vICAgICAgICAgY29uc3QgbGJsTWVzc2FnZSA9IGF3YWl0IGRyaXZlci5maW5kRWxlbWVudEJ5VGV4dChtZXNzYWdlLCBTZWFyY2hPcHRpb25zLmNvbnRhaW5zKTtcbi8vICAgICAgICAgYXNzZXJ0LmVxdWFsKGF3YWl0IGxibE1lc3NhZ2UudGV4dCgpLCBcIjQxXCIgKyBtZXNzYWdlKTtcblxuLy8gICAgICAgICAvLyBJbWFnZSB2ZXJpZmljYXRpb25cbi8vICAgICAgICAgLy8gY29uc3Qgc2NyZWVuID0gYXdhaXQgZHJpdmVyLmNvbXBhcmVTY3JlZW4oXCJoZWxsby13b3JsZC00MVwiKTtcbi8vICAgICAgICAgLy8gYXNzZXJ0LmlzVHJ1ZShzY3JlZW4pO1xuLy8gICAgIH0pO1xuXG4vLyAgICAgaXQoXCJzaG91bGQgZmluZCBhbiBlbGVtZW50IGJ5IHR5cGVcIiwgYXN5bmMgKCkgPT4ge1xuLy8gICAgICAgICBjb25zdCBidG5UYXAgPSBhd2FpdCBkcml2ZXIuZmluZEVsZW1lbnRCeUNsYXNzTmFtZShkcml2ZXIubG9jYXRvcnMuYnV0dG9uKTtcbi8vICAgICAgICAgYXdhaXQgYnRuVGFwLmNsaWNrKCk7XG5cbi8vICAgICAgICAgY29uc3QgbWVzc2FnZSA9IFwiIHRhcHMgbGVmdFwiO1xuLy8gICAgICAgICBjb25zdCBsYmxNZXNzYWdlID0gYXdhaXQgZHJpdmVyLmZpbmRFbGVtZW50QnlUZXh0KG1lc3NhZ2UsIFNlYXJjaE9wdGlvbnMuY29udGFpbnMpO1xuLy8gICAgICAgICBhc3NlcnQuZXF1YWwoYXdhaXQgbGJsTWVzc2FnZS50ZXh0KCksIFwiNDBcIiArIG1lc3NhZ2UpO1xuLy8gICAgIH0pO1xuLy8gfSk7Il19

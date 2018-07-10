@@ -9,4 +9,5 @@ export type User = Document & {
         location: String
     },
     code: string
+    friends: Array<string>
 };

@@ -4,12 +4,14 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms"
 
 import { LoginRoutingModule } from "./login-routing.module";
 import { LoginComponent } from "./login.component";
-import { UserService } from "./login.service";
-
 import { FloatLabel } from "~/components/shared/float-label.component";
+
+import { UserService } from "~/services/login.service";
+import { NetworkingService } from "~/services/network.service";
+import { HelpersService } from "~/services/helpers.service";
+
 import { Globals } from "~/shared/globals";
 
-import { Networking } from "~/services/network.service";
 
 @NgModule({
     imports: [
@@ -17,7 +19,7 @@ import { Networking } from "~/services/network.service";
         LoginRoutingModule,
         NativeScriptFormsModule
     ],
-    providers: [UserService, Globals, Networking],
+    providers: [UserService, Globals, NetworkingService, HelpersService],
     declarations: [
         LoginComponent,
         FloatLabel

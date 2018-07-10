@@ -1,9 +1,9 @@
-import { startServer, stopServer } from "nativescript-dev-appium";
+// import { startServer, stopServer } from "nativescript-dev-appium";
 
-before("start server", async () => {
-    await startServer();
-});
+// before("start server", async () => {
+//     await startServer();
+// });
 
-after("stop server", async () => {
-    await stopServer();
-});
+// after("stop server", async () => {
+//     await stopServer();
+// });
