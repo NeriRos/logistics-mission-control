@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, NgZone } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
-import { Page } from "tns-core-modules/ui/page"
-import { EventData } from "data/observable";
-import { StackLayout } from "ui/layouts/stack-layout";
+import { Page } from "tns-core-modules/ui/page/page"
+import { EventData } from "tns-core-modules/data/observable/observable";
+import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
 
 import { HelpersService } from "~/services/helpers.service";
 import { UserService } from "~/services/login.service";

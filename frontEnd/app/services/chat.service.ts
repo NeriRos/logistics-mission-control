@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Chat } from "~/models/chat.model";
-import { NetworkingService } from "./network.service";
+import { NetworkingService } from "~/services/network.service";
 
 
 @Injectable()

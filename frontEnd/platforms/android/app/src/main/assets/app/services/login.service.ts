@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { User } from "~/models/user.model";
-import { NetworkingService } from "./network.service";
+import { NetworkingService } from "~/services/network.service";
 import * as localStorage from "nativescript-localstorage";
 import * as  base64 from "base-64";
 
@@ -16,7 +16,7 @@ export class UserService {
       headers: {"Accepts": "application/json"}
     };
 
-    return this.network.fetch("/signup", options, user).then((r) => r.json());
+    return this.network.fetch("/signup", options, user).then((r) => r.json()).then((r) => { this.saveToken((r.user || {}).token); return r; });
   }
 
   login(user: User): Promise<any> {
@@ -24,7 +24,7 @@ export class UserService {
       method: "POST",
       headers: {"Accepts": "application/json"} 
     };
-    return this.network.fetch("/login", options, user).then((r) => r.json()).then((r) => { this.saveToken(r.user.token); return r; });
+    return this.network.fetch("/login", options, user).then((r) => r.json()).then((r) => { this.saveToken((r.user || {}).token); return r; });
   }
 
   isAuthenticated() : boolean {
@@ -57,6 +57,7 @@ export class UserService {
   getToken(): string {
     return localStorage.getItem("token");
   }
+
   getID(): string {
     var payload = localStorage.getItem("token");
     payload = payload.split(".")[1];

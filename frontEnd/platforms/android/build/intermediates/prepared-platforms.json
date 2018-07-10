@@ -12,6 +12,7 @@
     "base-64": true,
     "karma-nativescript-launcher": true,
     "nativescript-angular": true,
+    "nativescript-floatingactionbutton": true,
     "nativescript-localstorage": true,
     "nativescript-nodeify": true,
     "nativescript-theme-core": true,

@@ -3,8 +3,8 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpResponse } from "@angular/
 import { HttpRequest } from "@angular/common/http";
 import { Observable } from "rxjs/Observable";
 import { Router } from "@angular/router";
-import { UserService } from "../services/login.service";
-import { NetworkingService } from "../services/network.service";
+import { UserService } from "~/services/login.service";
+import { NetworkingService } from "~/services/network.service";
 import 'rxjs/add/operator/do';
 
 @Injectable()

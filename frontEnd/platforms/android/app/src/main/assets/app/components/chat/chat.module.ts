@@ -1,8 +1,8 @@
 import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptCommonModule } from "nativescript-angular/common";
 
-import { ChatRoutingModule } from "./chat-routing.module";
-import { ChatComponent } from "./chat.component";
+import { ChatRoutingModule } from "~/components/chat/chat-routing.module";
+import { ChatComponent } from "~/components/chat/chat.component";
 
 import { UserService } from "~/services/login.service";
 import { ChatService } from "~/services/chat.service";

@@ -4,7 +4,8 @@
     </ActionItem>
 </ActionBar>
 
-<RadListView [items]="friends$" loadOnDemandMode="Manual" (loadMoreDataRequested)="onLoadMoreContactsRequested($event)">
+<!-- <RadListView [items]="friends$" loadOnDemandMode="Manual" (loadMoreDataRequested)="onLoadMoreContactsRequested($event)"> -->
+<RadListView [items]="friends$" loadOnDemandMode="Auto" (tap)="room = $event">
 
 <StackLayout>
     <ListView height="90%" margin-bottom="50" padding="5" #list [items]="chats$ | async">

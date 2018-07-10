@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import * as connectivity from "connectivity";
+import * as connectivity from "tns-core-modules/connectivity/connectivity";
 import { Observable } from "rxjs";
 
 @Injectable()

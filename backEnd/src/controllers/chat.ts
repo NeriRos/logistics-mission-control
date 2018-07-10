@@ -25,7 +25,6 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
  * Sends a message.
  */
 export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
-    console.log("USER ID", req.user._id);
     ChatModel.count({ $or: [{"to": req.user._id}, {"from": req.user._id}] }, (err, count) => {
         if (err)
             return next(err);

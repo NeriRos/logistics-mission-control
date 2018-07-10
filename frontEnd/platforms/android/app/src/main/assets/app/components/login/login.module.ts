@@ -2,8 +2,8 @@ import { NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { NativeScriptFormsModule } from "nativescript-angular/forms"
 
-import { LoginRoutingModule } from "./login-routing.module";
-import { LoginComponent } from "./login.component";
+import { LoginRoutingModule } from "~/components/login/login-routing.module";
+import { LoginComponent } from "~/components/login/login.component";
 import { FloatLabel } from "~/components/shared/float-label.component";
 
 import { UserService } from "~/services/login.service";

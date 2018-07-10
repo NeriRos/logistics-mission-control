@@ -78,6 +78,8 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
 
   const errors = req.validationErrors();
 
+  console.log(req.body);
+
   if (errors) {
     console.log("errors", errors);
     return res.json({status: "error", error: errors});
@@ -134,9 +136,7 @@ export let postUpdateProfile = (req: Request, res: Response, next: NextFunction)
   UserModel.findById(req.user.id, (err, user: User) => {
     if (err) { return next(err); }
     user.email = req.body.email || "";
-    user.profile.name = req.body.name || "";
-    user.profile.gender = req.body.gender || "";
-    user.profile.location = req.body.location || "";
+    user.name = req.body.name || "";
     user.save((err: WriteError) => {
       if (err) {
         if (err.code === 11000) {

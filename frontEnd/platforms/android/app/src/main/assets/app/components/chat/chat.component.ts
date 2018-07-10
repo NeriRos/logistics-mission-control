@@ -1,20 +1,20 @@
 import { Component, ElementRef, OnInit, NgZone, ViewChild, ChangeDetectorRef } from "@angular/core";
-import { Page } from "tns-core-modules/ui/page"
-import { EventData } from "data/observable";
-import { StackLayout } from "ui/layouts/stack-layout";
+import { Page } from "tns-core-modules/ui/page/page"
+import { EventData } from "tns-core-modules/data/observable/observable";
+import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
 
 import { UserService } from "~/services/login.service";
 import { HelpersService } from "~/services/helpers.service";
 import { ChatService } from "~/services/chat.service";
 
 import { Observable } from 'rxjs/Observable';
-import { ListView } from 'ui/list-view';
-import { TextField } from 'ui/text-field';
+import { ListView } from 'tns-core-modules/ui/list-view/list-view';
+import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 import { Chat } from "~/models/chat.model";
 import { User } from "~/models/user.model";
 
 import { ListViewLinearLayout, ListViewEventData, RadListView, ListViewLoadOnDemandMode } from "nativescript-ui-listview";
-import { AndroidApplication } from "application";
+import { AndroidApplication } from "tns-core-modules/application/application";
 
 @Component({
     selector: "Chat",
@@ -43,12 +43,7 @@ export class ChatComponent implements OnInit {
     }
     
     public ngOnInit() {
-        this.me = this.userService.getID();
-        
-        this.layout = new ListViewLinearLayout();
-        this.layout.scrollDirection = "Horizontal";
-        this.initDataItems();
-        this._changeDetectionRef.detectChanges();      
+        this.me = this.userService.getID(); 
     }
 
     public ngAfterViewInit() {
@@ -97,32 +92,6 @@ export class ChatComponent implements OnInit {
         else {
             return "visible"
         }
-    }
-
-    private initDataItems() {
-        this.friends$ = this.userService.getFriends();
-        this.chats$ = this.chatService.getChats(); 
-    }
-
-    public onLoadMoreItemsRequested(args: ListViewEventData) {
-        const that = new WeakRef(this);
-        setTimeout(function () {
-            const listView: RadListView = args.object;
-            const initialNumberOfItems = that.get().numberOfAddedItems;
-            for (let i = that.get().numberOfAddedItems; i < initialNumberOfItems + 2; i++) {
-                // if (i > length - 1) {
-                    listView.loadOnDemandMode = ListViewLoadOnDemandMode[ListViewLoadOnDemandMode.None];
-                    // break;
-                // }
-
-                //const imageUri = AndroidApplication ? posts.images[i].toLowerCase() : posts.images[i];
-                //that.get()._dataItems.push(new DataItem(i, posts.names[i], "This is item description", posts.titles[i], posts.text[i], "res://" + imageUri));
-                //that.get()._numberOfAddedItems++;
-            }
-
-            listView.notifyLoadOnDemandFinished();
-        }, 1000);
-        args.returnValue = true;
     }
 
     // Navigate to corresponding page

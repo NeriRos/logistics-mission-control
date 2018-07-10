@@ -1,0 +1,8 @@
+<StackLayout>
+    <!-- <RadListView [items]="friends$" loadOnDemandMode="Manual" (loadMoreDataRequested)="onLoadMoreContactsRequested($event)"> -->
+    <RadListView [items]="friends$" loadOnDemandMode="Auto" (tap)="room = $event"></RadListView>
+    
+    <StackLayout>
+        <fab (tap)="addContact()" icon="res://ic_add_white" rippleColor="#f1f1f1" class="fab-button"></fab>
+    </StackLayout>
+</StackLayout>

@@ -4,6 +4,10 @@ E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\androi
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\chat\chat-routing.module.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\chat\chat.component.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\chat\chat.module.js
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\contacts-routing.module.js
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\contacts.component.js
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\contacts.module.js
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\contacts.routes.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\home\home-routing.module.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\home\home.component.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\home\home.module.js
@@ -109,6 +113,8 @@ E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\androi
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-angular\zone-js\dist\zone-nativescript.mocha.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-angular\zone-js\testing.jasmine.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-angular\zone-js\testing.mocha.js
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-floatingactionbutton\fab-common.js
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-floatingactionbutton\fab.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-intl\index.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-intl\nativescript-intl-common.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\tns_modules\nativescript-intl\nativescript-intl.js

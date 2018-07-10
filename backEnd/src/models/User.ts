@@ -4,13 +4,9 @@ import { createHash } from "crypto";
 import { createToken } from "../controllers/authentication";
 
 const userSchema = new Schema({
-  email: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
   password: { type: String },
-  profile: {
-    name: { type: String },
-    gender: { type: String },
-    location: { type: String }
-  },
+  name: { type: String },
   code: { type: String },
   friends: { type: Array<String>() },
   token: { type: String }

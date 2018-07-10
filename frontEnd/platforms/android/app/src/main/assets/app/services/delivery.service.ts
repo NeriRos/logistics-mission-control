@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { NetworkingService } from "./network.service";
+import { NetworkingService } from "~/services/network.service";
 
 @Injectable()
 export class DeliveryService {

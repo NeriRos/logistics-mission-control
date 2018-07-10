@@ -9,7 +9,6 @@ import { UserModel } from "../models/User";
 import { User } from "../types/User";
 
 passport.serializeUser<any, any>((user: User, done) => {
-  console.log("Serializing user id:", user._id);
   done(undefined, user._id);
 });
 
