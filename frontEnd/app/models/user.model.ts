@@ -6,4 +6,5 @@ export interface User {
     code?: string;
     token?: string;
     friends?: Array<string>;
+    picture?: string;
 }

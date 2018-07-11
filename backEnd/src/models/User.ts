@@ -5,11 +5,12 @@ import { createToken } from "../controllers/authentication";
 
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
-  password: { type: String },
+  password: { type: String, required: true },
   name: { type: String },
   code: { type: String },
-  friends: { type: Array<String>() },
-  token: { type: String }
+  friends: { type: Array<String>(), default: [] },
+  token: { type: String },
+  picture: { type: String }
 }, { timestamps: true });
 
 userSchema.pre("save", function(next) {

@@ -1,8 +1,20 @@
 <StackLayout>
-    <!-- <RadListView [items]="friends$" loadOnDemandMode="Manual" (loadMoreDataRequested)="onLoadMoreContactsRequested($event)"> -->
-    <RadListView [items]="friends$" loadOnDemandMode="Auto" (tap)="room = $event"></RadListView>
-    
+    <Label class="t-30 text-center title" text="Contacts"></Label>
+    <StackLayout class="hr"></StackLayout>
+
     <StackLayout>
-        <fab (tap)="addContact()" icon="res://ic_add_white" rippleColor="#f1f1f1" class="fab-button"></fab>
+        <!-- <FAB (tap)="addContact()" icon="res://ic_add_white" rippleColor="#f1f1f1" class="fab-button"></FAB> -->
+        <app-fab [friends]="friends", [friendsNumber]="friendsNumber"></app-fab>
     </StackLayout>
+
+    <GridLayout *ngIf="friends">
+        <RadListView [items]="friends">
+            <ng-template let-item="item">
+                <StackLayout orientation="vertical">
+                    <Label class="nameLabel" [text]="item.name"></Label>
+                    <Image class="contactPicture" [src]="'res://' + item.picture"></Image>
+                </StackLayout>
+            </ng-template>
+        </RadListView>
+    </GridLayout>
 </StackLayout>

@@ -3,6 +3,7 @@
 import { Response, Request, NextFunction } from "express";
 import { ChatModel } from "../models/Chat";
 import { Chat } from "../types/Chat";
+import { UserModel } from "../models/User";
 
 
 /**
@@ -50,4 +51,58 @@ export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
         } else
             res.status(500).json({error: "Unauthorized sender."});
         });
+};
+
+
+/**
+ * GET /getFriends
+ * returns the ids of all account assosiated with the request account
+ */
+export let getFriends = (req: Request, res: Response, next: NextFunction) => {
+    UserModel.find({friends: req.user._id}, (err, users) => {
+        if (err)
+            return next(err);
+
+        const friends = users.map(user => {
+            return {
+                email: user.email,
+                name: user.name,
+                picture: user.picture
+            };
+        });
+
+        res.json(friends);
+    });
+};
+
+/**
+ * POST /addFriends
+ * returns the ids of all account assosiated with the request account
+ */
+export let addFriend = (req: Request, res: Response, next: NextFunction) => {
+    req.assert("email", "Email is not valid").isEmail();
+    req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
+
+    const email = req.body.email;
+    const userID = req.user._id;
+
+    const errors = req.validationErrors();
+
+    if (errors) {
+        console.log("errors", errors);
+        return res.json({status: "error", error: errors});
+    }
+
+    UserModel.findOne({email: email, friends: { "$ne": userID }}, (err, user) => {
+        if (err)
+            return next(err);
+        if (!user)
+            return res.json({status: "already added"});
+
+        user.friends.push(userID);
+
+        user.save((err) => {
+            res.json({status: "ok", error: err});
+        });
+    });
 };

@@ -115,7 +115,8 @@ app.post("/account/delete", passport.authenticate("bearer", { session: false }),
 app.get("/account/unlink/:provider", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, authenticate.getOauthUnlink);
 
 
-app.get("/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, authenticate.getFriends);
+app.get("/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getFriends);
+app.post("/addFriend", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.addFriend);
 
 /**
  * Chat routes

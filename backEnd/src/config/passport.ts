@@ -52,10 +52,10 @@ passport.use(new BearerStrategy((token: string, done: Function) => {
  * Login Required middleware.
  */
 export let isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
-  console.log(req.method, req.url, "isAuthenticated:", req.isAuthenticated());
   if (req.isAuthenticated()) {
     return next();
   }
+
   res.status(501).json({msg: "unauthenticated"});
 };
 

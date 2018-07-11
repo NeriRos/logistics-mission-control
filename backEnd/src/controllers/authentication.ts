@@ -37,7 +37,6 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
       if (err) {
         res.send(err);
       }
-      console.log("is Authenticated:", req.isAuthenticated());
 
       user.token = createToken(user);
       return res.json({user: user});
@@ -55,19 +54,6 @@ export let logout = (req: Request, res: Response) => {
 };
 
 /**
- * GET /getFriends
- * returns the ids of all account assosiated with the request account
- */
-export let getFriends = (req: Request, res: Response, next: NextFunction) => {
-  UserModel.find({friends: req.user._id}, (err, friends) => {
-    if (err)
-      return next(err);
-
-    res.json({friends: friends});
-  });
-};
-
-/**
  * POST /signup
  * Create a new local account.
  */
@@ -77,8 +63,6 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
   req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
-
-  console.log(req.body);
 
   if (errors) {
     console.log("errors", errors);

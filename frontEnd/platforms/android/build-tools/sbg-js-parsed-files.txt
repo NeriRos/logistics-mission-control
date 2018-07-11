@@ -4,6 +4,7 @@ E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\androi
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\chat\chat-routing.module.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\chat\chat.component.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\chat\chat.module.js
+E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\components\fab\fab.component.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\contacts-routing.module.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\contacts.component.js
 E:\Dropbox\WORK\RamBinyamin\crago-express\cargoDeliver\frontEnd\platforms\android\app\src\main\assets\app\components\contacts\contacts.module.js

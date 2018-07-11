@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, NgZone, OnInit } from "@angular/core";
 import { Page } from "tns-core-modules/ui/page/page";
 import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
-import { AndroidApplication } from "tns-core-modules/application/application";
+import { AndroidApplication } from "application";
 
 import { NetworkingService } from "~/services/network.service";
 import { User } from "~/models/user.model";

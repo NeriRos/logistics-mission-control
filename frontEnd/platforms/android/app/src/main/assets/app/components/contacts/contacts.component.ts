@@ -1,32 +1,29 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ListViewLinearLayout, ListViewEventData, RadListView, ListViewLoadOnDemandMode } from 'nativescript-ui-listview';
-import { registerElement } from "nativescript-angular/element-registry";
-import { Fab } from "nativescript-floatingactionbutton";
 import { UserService } from '~/services/login.service';
-
 import { User } from '~/models/user.model';
+import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 
 @Component({
   moduleId: module.id,
   selector: 'app-contacts',
   templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.scss']
+  styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent implements OnInit {
 
-  public friends$: Observable<Array<User>>;
+  private _friends: ObservableArray<User>;
   public layout: ListViewLinearLayout;
   public numberOfAddedItems: number = 0;
 
   constructor(private changeDetectionRef: ChangeDetectorRef,
     private userService: UserService) {      
-      registerElement("fab", () => Fab);
     }
 
   ngOnInit() {
     this.layout = new ListViewLinearLayout();
-    this.layout.scrollDirection = "Horizontal";
+    this.layout.scrollDirection = "Vertical";
     this.initDataItems();
     this.changeDetectionRef.detectChanges();     
   }
@@ -35,12 +32,12 @@ export class ContactsComponent implements OnInit {
     
   }
 
-  private initDataItems() {
+  private async initDataItems() {
     this.userService.getFriends().subscribe(res => {
-        console.log("Friends", res);
         this.numberOfAddedItems = res.length || 0;
     });
-    this.friends$ = this.userService.getFriends();
+    this._friends = new ObservableArray(await this.userService.getFriends().toPromise());
+    console.log("THIS FRIENDS", this._friends);
   }
 
   public onLoadMoreItemsRequested(args: ListViewEventData) {
@@ -62,6 +59,14 @@ export class ContactsComponent implements OnInit {
           listView.notifyLoadOnDemandFinished();
       }, 1000);
       args.returnValue = true;
+  }
+
+  get friends(): ObservableArray<User> {
+    return this._friends;
+  }
+
+  get friendsNumber(): number {
+    return this.numberOfAddedItems;
   }
 
 }

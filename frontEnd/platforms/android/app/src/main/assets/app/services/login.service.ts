@@ -3,6 +3,7 @@ import { User } from "~/models/user.model";
 import { NetworkingService } from "~/services/network.service";
 import * as localStorage from "nativescript-localstorage";
 import * as  base64 from "base-64";
+import { Observable } from "rxjs";
 
 @Injectable()
 export class UserService {
@@ -50,7 +51,7 @@ export class UserService {
     }
   }
 
-  getFriends() {
+  getFriends(): Observable<any> {
     return this.network.http("GET", `/getFriends`);
   }
 

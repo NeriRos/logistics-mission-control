@@ -14,7 +14,7 @@ import { Chat } from "~/models/chat.model";
 import { User } from "~/models/user.model";
 
 import { ListViewLinearLayout, ListViewEventData, RadListView, ListViewLoadOnDemandMode } from "nativescript-ui-listview";
-import { AndroidApplication } from "tns-core-modules/application/application";
+import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 
 @Component({
     selector: "Chat",
@@ -35,8 +35,8 @@ export class ChatComponent implements OnInit {
 
     list: ListView;
     textField: TextField;
-    public chats$: Observable<Array<Chat>>;
-    public friends$: Observable<Array<User>>;
+    public chats$: ObservableArray<Chat>;
+    public friends$: ObservableArray<User>;
 
     constructor(private chatService: ChatService, private page: Page, private userService: UserService, private helpers: HelpersService, private _changeDetectionRef: ChangeDetectorRef) {
         this.page.actionBarHidden = false;

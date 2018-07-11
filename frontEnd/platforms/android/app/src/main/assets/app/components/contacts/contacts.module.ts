@@ -6,6 +6,7 @@ import { ContactsRoutingModule } from '~/components/contacts/contacts-routing.mo
 import { ContactsComponent } from '~/components/contacts/contacts.component';
 
 import { UserService } from "~/services/login.service";
+import { FabComponent } from '~/components/contacts/components/fab/fab.component';
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { UserService } from "~/services/login.service";
     ContactsRoutingModule
   ],
   declarations: [
-    ContactsComponent
+    ContactsComponent,
+    FabComponent
   ],
   providers: [
       UserService
