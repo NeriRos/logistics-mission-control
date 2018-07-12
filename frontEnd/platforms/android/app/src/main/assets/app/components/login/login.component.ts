@@ -53,7 +53,6 @@ export class LoginComponent implements OnInit {
         if(isValid && user) {
             if(this.isRegister) {
                 this.userService.register(user).then(userData => {
-                    console.log("register", userData);
                     this.helpers.navigate(["home"]);
                 }).catch(err => {
                     console.log('[!] Error register', err);

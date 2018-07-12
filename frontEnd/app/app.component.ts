@@ -2,6 +2,10 @@ import { Component, OnInit } from "@angular/core";
 import { Globals } from "~/shared/globals";
 import { RouterExtensions } from "nativescript-angular/router";
 import { AndroidApplication } from "application";
+import { Fab } from "nativescript-floatingactionbutton";
+import { registerElement } from "nativescript-angular/element-registry";
+
+registerElement("Fab", () => Fab); 
 
 @Component({
     selector: "ns-app",
@@ -14,7 +18,6 @@ export class AppComponent implements OnInit {
     constructor(private globals: Globals,
         private routerExtensions: RouterExtensions,
         private application: AndroidApplication) {
-        
     }
 
     ngOnInit(): void {

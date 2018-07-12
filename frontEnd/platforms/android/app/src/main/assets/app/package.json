@@ -3,7 +3,7 @@
     "v8Flags": "--expose_gc"
   },
   "main": "main.js",
-  "name": "tns-template-enterprise-auth-ng",
+  "name": "cargo-express",
   "pluginsData": {
     
   },

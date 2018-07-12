@@ -1,11 +1,10 @@
-<Label [text]="'test:'+friends.length" class="h1"></Label> 
 <View>
     <GridLayout #fabContainer rows="auto,*">
-        <RadListView [items]="friends">
+        <ListView [items]="friends">
             <ng-template let-item="item" let-idx="index">
                 <Image tap="doThis" [id]="'person'+idx" [src]="'res://' + item.picture.toLowerCase()" class="speed-button" row="1"></Image>
             </ng-template>
-        </RadListView>
+        </ListView>
         
         <Fab row="1" icon="res://ic_add_white" (tap)="fabTap($event)" rippleColor="#fff" class="fab-button"></Fab> 
     </GridLayout>

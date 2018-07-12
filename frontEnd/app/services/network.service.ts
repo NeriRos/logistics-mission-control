@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as connectivity from "tns-core-modules/connectivity/connectivity";
 import { Observable } from "rxjs";
 
@@ -26,16 +26,25 @@ export class NetworkingService {
         return fetch(requestURL, options);
     }
 
-    http(method: string, url: string, options?: any, data?: any): Observable<any> {
+    http(method: string, url: string, options: any = {}, data?: any): Observable<any> {
         var promise;
 
-        if(options && !options.responseType)
+        var headers = new HttpHeaders({
+            Accepts: "Application/json",
+            "Content-Type": options.contentType || "Application/json"
+        })
+
+        if(!options.responseType)
             options.responseType = "json";
+
+        options.headers = options.headers || headers;
 
         if(method.toUpperCase() === "GET")
             promise = this.httpProvider.get(url, options);    
-        else
+        else {
+            console.log("POSTING:", data);
             promise = this.httpProvider.post(url, data, options);
+        }
 
         return promise;
     }

@@ -19,7 +19,7 @@ xdescribe("GET /signup", () => {
 });
 
 
-xdescribe("POST /login", () => {
+describe("POST /login", () => {
   it("should return message with status 'ok'", (done) => {
     request(app).post("/login")
       .send({email: "neriyarosner@gmail.com", password: "St4rtXDir!p"})

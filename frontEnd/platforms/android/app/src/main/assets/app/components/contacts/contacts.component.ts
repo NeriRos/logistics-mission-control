@@ -1,9 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, NgZone } from '@angular/core';
 import { ListViewLinearLayout, ListViewEventData, RadListView, ListViewLoadOnDemandMode } from 'nativescript-ui-listview';
 import { UserService } from '~/services/login.service';
 import { User } from '~/models/user.model';
-import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 
 @Component({
   moduleId: module.id,
@@ -12,13 +10,15 @@ import { ObservableArray } from "tns-core-modules/data/observable-array/observab
   styleUrls: ['./contacts.component.css']
 })
 export class ContactsComponent implements OnInit {
+  @ViewChild("newPerson") newPerson: ElementRef;
 
-  private _friends: ObservableArray<User>;
+  public _friends: Array<User>;
   public layout: ListViewLinearLayout;
-  public numberOfAddedItems: number = 0;
+  private numberOfAddedItems: number = 0;
 
   constructor(private changeDetectionRef: ChangeDetectorRef,
-    private userService: UserService) {      
+      private ngZone: NgZone,
+      private userService: UserService) {  
     }
 
   ngOnInit() {
@@ -28,16 +28,19 @@ export class ContactsComponent implements OnInit {
     this.changeDetectionRef.detectChanges();     
   }
   
-  addContact() {
-    
+  addContact(email: string) {
+    this.userService.addFriend(email).subscribe(res => {
+      console.log("AddContact res:", res.body, "for email:", {email: email});
+    });
   }
 
   private async initDataItems() {
-    this.userService.getFriends().subscribe(res => {
-        this.numberOfAddedItems = res.length || 0;
+    this.ngZone.run(async () => {
+      this.userService.getFriends().subscribe(res => {
+          this.numberOfAddedItems = res.length || 0;
+          this._friends = res;
+      });
     });
-    this._friends = new ObservableArray(await this.userService.getFriends().toPromise());
-    console.log("THIS FRIENDS", this._friends);
   }
 
   public onLoadMoreItemsRequested(args: ListViewEventData) {
@@ -61,7 +64,7 @@ export class ContactsComponent implements OnInit {
       args.returnValue = true;
   }
 
-  get friends(): ObservableArray<User> {
+  get friends(): Array<User> {
     return this._friends;
   }
 

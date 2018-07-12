@@ -2,19 +2,24 @@
     <Label class="t-30 text-center title" text="Contacts"></Label>
     <StackLayout class="hr"></StackLayout>
 
-    <StackLayout>
-        <!-- <FAB (tap)="addContact()" icon="res://ic_add_white" rippleColor="#f1f1f1" class="fab-button"></FAB> -->
-        <app-fab [friends]="friends", [friendsNumber]="friendsNumber"></app-fab>
-    </StackLayout>
+    <GridLayout columns="80, *, 50", rows="60">
+        <Label row="0" col="0" text="Add person:" ></Label>
+        <TextField row="0" col="1" #newPerson keyboardType="email" hint="Enter email" (returnPress)="addContact(newPerson.text)" class="input input-border"></TextField>
+        <Button row="0" col="2" text="Add" (tap)="addContact(newPerson.text)" class="btn btn-primary btn-active"></Button>
+    </GridLayout>
 
-    <GridLayout *ngIf="friends">
-        <RadListView [items]="friends">
+    <StackLayout>
+        <ListView [items]="friends">
             <ng-template let-item="item">
                 <StackLayout orientation="vertical">
                     <Label class="nameLabel" [text]="item.name"></Label>
                     <Image class="contactPicture" [src]="'res://' + item.picture"></Image>
                 </StackLayout>
             </ng-template>
-        </RadListView>
-    </GridLayout>
+        </ListView>
+    </StackLayout>
+
+    <StackLayout>
+        <app-fab [friends]="friends", [friendsNumber]="friendsNumber"></app-fab>
+    </StackLayout>
 </StackLayout>

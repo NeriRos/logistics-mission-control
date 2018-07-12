@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import { User } from "../types/User";
 import { createHash } from "crypto";
-import { createToken } from "../controllers/authentication";
+import { createToken } from "../controllers/user";
 
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },

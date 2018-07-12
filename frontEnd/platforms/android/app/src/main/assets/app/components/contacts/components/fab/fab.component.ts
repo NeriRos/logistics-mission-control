@@ -1,9 +1,6 @@
 import { Component, Input, OnInit, ViewChild, ElementRef } from "@angular/core";
 import { Page, View, ViewBase, EventData } from "tns-core-modules/ui/page/page";
 import { Animation, AnimationDefinition } from "tns-core-modules/ui/animation/animation";
-import { Observable } from "rxjs";
-import { Fab } from "nativescript-floatingactionbutton";
-import { registerElement } from "nativescript-angular/element-registry";
 import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 
 import { User } from "~/models/user.model";
@@ -22,7 +19,6 @@ export class FabComponent implements OnInit {
     public isFabOpen = false;
 
     constructor(private page: Page) {
-        registerElement("Fab", () => Fab);
     }
 
     ngOnInit() {

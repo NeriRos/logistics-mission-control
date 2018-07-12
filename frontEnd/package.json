@@ -10,9 +10,9 @@
     }
   },
   "scripts": {
+    "start": "npm run watch",
     "lint": "tslint \"app/**/*.ts\"",
     "test": "tns test android",
-    "start": "tns run android",
     "watch": "tns debug android",
     "debug": "tns debug android --syncAllFiles",
     "build": "tns build android",

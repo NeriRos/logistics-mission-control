@@ -21,7 +21,7 @@ dotenv.config({ path: ".env" });
 import * as apiController from "./controllers/api";
 import * as chatController from "./controllers/chat";
 import * as homeController from "./controllers/home";
-import * as authenticate from "./controllers/authentication";
+import * as userController from "./controllers/user";
 import * as passportConfig from "./config/passport";
 
 // Create Express server
@@ -44,8 +44,8 @@ app.set("view engine", "hbs");
 
 app.use(compression());
 app.use(logger("dev"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({ type: "application/json", strict: false }));
 app.use(expressValidator());
 app.use(session({
   resave: true,
@@ -92,11 +92,11 @@ app.use((req, res, next) => {
 /**
  * Authentication
  */
-app.post("/login", authenticate.postLogin);
-app.get("/logout", authenticate.logout);
-app.post("/forgot", authenticate.postForgot);
-app.post("/reset/:token", authenticate.postReset);
-app.post("/signup", authenticate.postSignup);
+app.post("/login", userController.postLogin);
+app.get("/logout", userController.logout);
+app.post("/forgot", userController.postForgot);
+app.post("/reset/:token", userController.postReset);
+app.post("/signup", userController.postSignup);
 
 
 /**
@@ -108,15 +108,13 @@ app.get("/api/test", passportConfig.isAuthenticated, apiController.test);
 /**
  * Protected routes
  */
-app.get("/account", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, authenticate.getAccount);
-app.post("/account/profile", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, authenticate.postUpdateProfile);
-app.post("/account/password", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, authenticate.postUpdatePassword);
-app.post("/account/delete", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, authenticate.postDeleteAccount);
-app.get("/account/unlink/:provider", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, authenticate.getOauthUnlink);
-
-
-app.get("/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getFriends);
-app.post("/addFriend", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.addFriend);
+app.get("/account", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getAccount);
+app.post("/account/profile", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.postUpdateProfile);
+app.post("/account/password", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.postUpdatePassword);
+app.post("/account/delete", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.postDeleteAccount);
+app.get("/account/unlink/:provider", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getOauthUnlink);
+app.get("/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getFriends);
+app.post("/addFriend", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.addFriend);
 
 /**
  * Chat routes

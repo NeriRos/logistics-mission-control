@@ -55,6 +55,10 @@ export class UserService {
     return this.network.http("GET", `/getFriends`);
   }
 
+  addFriend(email: string): Observable<any> {
+    return this.network.http("POST", `/addFriend`, {}, {email: email});
+  }
+
   getToken(): string {
     return localStorage.getItem("token");
   }
