@@ -42,7 +42,6 @@ export class NetworkingService {
         if(method.toUpperCase() === "GET")
             promise = this.httpProvider.get(url, options);    
         else {
-            console.log("POSTING:", data);
             promise = this.httpProvider.post(url, data, options);
         }
 

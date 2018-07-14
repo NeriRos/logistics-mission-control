@@ -368,31 +368,35 @@ export let addFriend = (req: Request, res: Response, next: NextFunction) => {
       return res.json({status: "error", error: errors});
   }
 
-  UserModel.findOne({email: email, friends: { "$ne": userID }}, (err, user) => {
+  UserModel.findOne({email: email}, (err, friend) => {
       if (err)
           return next(err);
-      if (!user)
-          return res.json({status: "already added"});
+      if (!friend)
+        return res.json({status: "no friend", code: 1});
+      if (friend.friends.indexOf(userID) != -1)
+          return res.json({status: "already added", code: 2});
 
-      user.friends.push(userID);
-      user.save((err) => {
+      const friendDetails = {
+        email: friend.email,
+        name: friend.name,
+        picture: friend.picture
+      };
+
+      friend.friends.push(userID);
+      friend.save((err) => {
           if (err)
               return next(err);
 
           if (req.user.friends.indexOf(userID) == -1) {
-              req.user.friends.push(user._id);
+              req.user.friends.push(friend._id);
               req.user.save(() => {
                   if (err)
                       return next(err);
 
-                  res.json({status: "ok"});
+                  res.json({status: "ok", user: friendDetails});
               });
           } else {
-            res.json({status: "ok", msg: "waiting accept", user: {
-                email: user.email,
-                name: user.name,
-                picture: user.picture
-            }});
+            res.json({status: "ok", msg: "waiting accept", user: friendDetails, code: 3});
           }
       });
   });

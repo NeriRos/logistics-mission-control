@@ -4,9 +4,9 @@ import { NativeScriptCommonModule } from 'nativescript-angular/common';
 
 import { ContactsRoutingModule } from '~/components/contacts/contacts-routing.module';
 import { ContactsComponent } from '~/components/contacts/contacts.component';
-
-import { UserService } from "~/services/login.service";
 import { FabComponent } from '~/components/contacts/components/fab/fab.component';
+
+import { ContactsService } from "~/services/contacts.service";
 import { HelpersService } from '~/services/helpers.service';
 
 @NgModule({
@@ -20,7 +20,7 @@ import { HelpersService } from '~/services/helpers.service';
     
   ],
   providers: [
-      UserService,
+      ContactsService,
       HelpersService
   ],
   schemas: [

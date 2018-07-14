@@ -15,8 +15,6 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
         if (err)
             return next(err);
 
-        console.log(chats);
-
         res.json(chats);
     });
 };

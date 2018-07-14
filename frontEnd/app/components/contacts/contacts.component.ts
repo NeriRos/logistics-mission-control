@@ -3,6 +3,7 @@ import { ListViewLinearLayout, ListViewEventData, RadListView, ListViewLoadOnDem
 import { UserService } from '~/services/login.service';
 import { User } from '~/models/user.model';
 import { HelpersService } from '~/services/helpers.service';
+import { ContactsService } from '~/services/contacts.service';
 
 @Component({
   moduleId: module.id,
@@ -19,7 +20,7 @@ export class ContactsComponent implements OnInit {
 
   constructor(private changeDetectionRef: ChangeDetectorRef,
       private ngZone: NgZone,
-      private userService: UserService,
+      private contactsService: ContactsService,
       private helpers: HelpersService) {  
     }
 
@@ -31,18 +32,18 @@ export class ContactsComponent implements OnInit {
   }
   
   addContact(email: string) {
-    this.userService.addFriend(email).subscribe(res => {
+    this.contactsService.addFriend(email).subscribe(res => {
       this._friends.push(res);
     });
   }
 
   chatWith(user: User) {
-    this.helpers.navigate(["chat"], {email: user.email, picture: user.picture});
+    this.helpers.navigate(["chat"], {friend: JSON.stringify(user)});
   }
 
   private async initDataItems() {
     this.ngZone.run(async () => {
-      this.userService.getFriends().subscribe(res => {
+      this.contactsService.getFriends().subscribe(res => {
           this.numberOfAddedItems = res.length || 0;
           this._friends = res;
       });

@@ -5,6 +5,7 @@ var tslib_1 = require("tslib");
 var core_1 = require("@angular/core");
 var Globals = /** @class */ (function () {
     function Globals() {
+        this.DEFAULT_USER_PICTURE = "default_user";
     }
     Globals = tslib_1.__decorate([
         core_1.Injectable()
@@ -12,4 +13,4 @@ var Globals = /** @class */ (function () {
     return Globals;
 }());
 exports.Globals = Globals;
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ2xvYmFscy5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImdsb2JhbHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsYUFBYTtBQUNiLHNDQUEyQztBQUczQztJQUFBO0lBSUEsQ0FBQztJQUpZLE9BQU87UUFEbkIsaUJBQVUsRUFBRTtPQUNBLE9BQU8sQ0FJbkI7SUFBRCxjQUFDO0NBQUEsQUFKRCxJQUlDO0FBSlksMEJBQU8iLCJzb3VyY2VzQ29udGVudCI6WyIvLyBnbG9iYWxzLnRzXHJcbmltcG9ydCB7IEluamVjdGFibGUgfSBmcm9tICdAYW5ndWxhci9jb3JlJztcclxuXHJcbkBJbmplY3RhYmxlKClcclxuZXhwb3J0IGNsYXNzIEdsb2JhbHMge1xyXG4gICAgc2VydmVyOiB7XHJcbiAgICAgICAgRE5TOiBcImNhcmdvLWV4cHJlc3MuY28uaWxcIlxyXG4gICAgfSBcclxufSJdfQ==
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ2xvYmFscy5qcyIsInNvdXJjZVJvb3QiOiIiLCJzb3VyY2VzIjpbImdsb2JhbHMudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7O0FBQUEsYUFBYTtBQUNiLHNDQUEyQztBQUczQztJQURBO1FBS2EseUJBQW9CLEdBQUcsY0FBYyxDQUFDO0lBQ25ELENBQUM7SUFMWSxPQUFPO1FBRG5CLGlCQUFVLEVBQUU7T0FDQSxPQUFPLENBS25CO0lBQUQsY0FBQztDQUFBLEFBTEQsSUFLQztBQUxZLDBCQUFPIiwic291cmNlc0NvbnRlbnQiOlsiLy8gZ2xvYmFscy50c1xyXG5pbXBvcnQgeyBJbmplY3RhYmxlIH0gZnJvbSAnQGFuZ3VsYXIvY29yZSc7XHJcblxyXG5ASW5qZWN0YWJsZSgpXHJcbmV4cG9ydCBjbGFzcyBHbG9iYWxzIHtcclxuICAgIHNlcnZlcjoge1xyXG4gICAgICAgIEROUzogXCJjYXJnby1leHByZXNzLmNvLmlsXCJcclxuICAgIH07XHJcbiAgICByZWFkb25seSBERUZBVUxUX1VTRVJfUElDVFVSRSA9IFwiZGVmYXVsdF91c2VyXCI7XHJcbn0iXX0=

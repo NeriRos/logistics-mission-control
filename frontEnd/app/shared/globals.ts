@@ -5,5 +5,6 @@ import { Injectable } from '@angular/core';
 export class Globals {
     server: {
         DNS: "cargo-express.co.il"
-    } 
+    };
+    readonly DEFAULT_USER_PICTURE = "default_user";
 }

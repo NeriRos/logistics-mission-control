@@ -38,8 +38,6 @@ packages/
 **/tns_modules/
 **/bower_components
 **/bower
-**/frontEnd/platforms
-frontEnd/platforms/
 **/platforms
 **/*-BU
 **/storage/mongoDB/*
@@ -47,3 +45,5 @@ githubKeys
 db/
 
 /frontEnd/platforms/*
+**/frontEnd/platforms
+frontEnd/platforms/

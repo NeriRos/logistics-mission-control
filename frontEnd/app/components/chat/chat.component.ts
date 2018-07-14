@@ -2,20 +2,19 @@ import { Component, ElementRef, OnInit, NgZone, ViewChild, ChangeDetectorRef } f
 import { Page } from "tns-core-modules/ui/page/page"
 import { EventData } from "tns-core-modules/data/observable/observable";
 import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
+import { ListView } from 'tns-core-modules/ui/list-view/list-view';
+import { TextField } from 'tns-core-modules/ui/text-field/text-field';
+import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
+import { ActivatedRoute } from '@angular/router';
 
 import { UserService } from "~/services/login.service";
 import { HelpersService } from "~/services/helpers.service";
 import { ChatService } from "~/services/chat.service";
 
-import { Observable } from 'rxjs/Observable';
-import { ListView } from 'tns-core-modules/ui/list-view/list-view';
-import { TextField } from 'tns-core-modules/ui/text-field/text-field';
 import { Chat } from "~/models/chat.model";
 import { User } from "~/models/user.model";
 
-import { ListViewLinearLayout, ListViewEventData, RadListView, ListViewLoadOnDemandMode } from "nativescript-ui-listview";
-import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
-import { ActivatedRoute } from '@angular/router';
+import { Globals } from '~/shared/globals';
 
 @Component({
     selector: "Chat",
@@ -27,10 +26,8 @@ export class ChatComponent implements OnInit {
     @ViewChild("list") lv: ElementRef;
     @ViewChild("textfield") tf: ElementRef;
 
-    public loggedUser: string;
     public me: string;
-    public room: string;
-    public senderPicture: string;
+    public friend: User;
 
     public numberOfAddedItems: number = 0;
 
@@ -39,11 +36,15 @@ export class ChatComponent implements OnInit {
     public chats$: ObservableArray<Chat>;
     public friends$: ObservableArray<User>;
 
-    constructor(private chatService: ChatService, private route: ActivatedRoute, private page: Page, private userService: UserService, private helpers: HelpersService, private _changeDetectionRef: ChangeDetectorRef) {
+    constructor(private chatService: ChatService, private route: ActivatedRoute, private page: Page, private userService: UserService, private helpers: HelpersService, private _changeDetectionRef: ChangeDetectorRef, private globals: Globals) {
         this.page.actionBarHidden = false;
+
         this.route.queryParams.subscribe(params => {
-            this.room = params["email"];
-            this.senderPicture = params["picture"];
+            if(!params["friend"])
+                return this.helpers.navigate(["contacts"]);
+            
+            this.friend = JSON.parse(params["friend"]);;
+            this.friend.picture = this.friend.picture || this.globals.DEFAULT_USER_PICTURE;
         });
     }
     
@@ -64,12 +65,12 @@ export class ChatComponent implements OnInit {
     }
 
     chat() {
-        if(this.room) {
+        if(this.friend) {
             const newMessage: Chat = {
                 message: this.textField.text,
                 from: this.me,
                 date: new Date(),
-                to: this.room
+                to: this.friend.email
             };
 
             this.chatService.sendMessage(newMessage).then((data: any) => {
@@ -113,7 +114,7 @@ export class ChatComponent implements OnInit {
     // Navigate to corresponding page
     onMenuButtonTap(args: EventData) {
         const menuButtonParent = (<StackLayout>args.object).parent;
-        alert("Navigate to " + menuButtonParent.get("data-name"));
+        // alert("Navigate to " + menuButtonParent.get("data-name"));
     }
 
     // Navigate to profile page here

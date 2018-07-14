@@ -10,11 +10,12 @@ const userSchema = new Schema({
   code: { type: String },
   friends: { type: Array<String>(), default: [] },
   token: { type: String },
-  picture: { type: String }
+  picture: { type: String },
+  secured: { type: Boolean }
 }, { timestamps: true });
 
 userSchema.pre("save", function(next) {
-  if (this.password) {
+  if (this.password && this.isNew) {
       this.password = getHash(this.password);
       this.token = createToken(this);
   }

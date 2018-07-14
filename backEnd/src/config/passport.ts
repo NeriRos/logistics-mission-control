@@ -9,7 +9,7 @@ import { UserModel } from "../models/User";
 import { User } from "../types/User";
 
 const NO_EMAIL_CODE = 1;
-const PASSWORD_DONT_MATCH_CODE = 2;
+const PASSWORD_INCORRECT = 2;
 
 passport.serializeUser<any, any>((user: User, done) => {
   done(undefined, user._id);
@@ -34,7 +34,7 @@ passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, don
     if (user.comparePassword(password)) {
         return done(undefined, user);
     } else {
-      return done({error: new Error("Passwords does not match"), code: PASSWORD_DONT_MATCH_CODE});
+      return done({error: new Error("Password is incorrect"), code: PASSWORD_INCORRECT});
     }
   });
 }));

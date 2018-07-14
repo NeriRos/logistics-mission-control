@@ -1,4 +1,4 @@
-<ActionBar class="action-bar" [title]="'Cargo Express' + (room ? ' - ' + room : '')">
+<ActionBar class="action-bar" [title]="'Cargo Express ' + friend?.name">
     <ActionItem android.position="actionBar" ios.position="right" (tap)="onProfileButtonTap()">
         <Label text="&#xf2bd;" class="fa action-button"></Label>
     </ActionItem>
@@ -9,7 +9,7 @@
         <ng-template let-chat="item">
             <GridLayout columns="*" rows="auto" class="msg">
                 <StackLayout [class]="filter(chat.from)" orientation="horizontal" [horizontalAlignment]="align(chat.from)">
-                    <Image [visibility]="showImage(chat.from)" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" [src]="'res://' + senderPicture" col="1"></Image>
+                    <Image [visibility]="showImage(chat.from)" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" [src]="'res://' + friend?.picture" col="1"></Image>
                     <Label [text]='chat.message' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
                 </StackLayout>
             </GridLayout>
