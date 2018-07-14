@@ -30,14 +30,17 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("local", (err, user, info) => {
     if (err || !user) {
       return res.status(400).json({
-          message: "Something is not right",
-          user   : user
+        message: "Something is not right",
+        user   : user,
+        error  : err.error.message,
+        code : err.code,
+        info   : info
       });
     }
+
     req.login(user, (err) => {
-      if (err) {
-        res.send(err);
-      }
+      if (err)
+        next(err);
 
       user.token = createToken(user);
       return res.json({user: user});
@@ -59,10 +62,11 @@ export let logout = (req: Request, res: Response) => {
  * Create a new local account.
  */
 export let postSignup = (req: Request, res: Response, next: NextFunction) => {
-  const DEFAULT_USER_PICTURE_NAME = "default-user";
+  const DEFAULT_USER_PICTURE_NAME = "default_user";
 
   req.assert("email", "Email is not valid").isEmail();
   req.assert("password", "Password must be at least 4 characters long").len({ min: 4 });
+  req.assert("confirmPassword", "Passwords must match").equals(req.body.password);
   req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
 
   const errors = req.validationErrors();
@@ -81,17 +85,19 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
 
   UserModel.findOne({ email: req.body.email }, (err, existingUser) => {
     if (err) { return next(err); }
-    if (existingUser) {
-      console.log("errors", { msg: "Account with that email address already exists." });
-      return res.json({status: "error", error: errors, msg: "Account with that email address already exists."});
-    }
+    if (existingUser)
+      return res.json({status: "error", error: true, msg: "Account with that email address already exists."});
+
+    user.token = createToken(user);
     user.save((err) => {
       if (err) { return next(err); }
-      req.logIn(user, (err) => {
+
+    req.logIn(user, (err) => {
         if (err) {
           return next(err);
         }
-        res.json({status: "OK", error: false, token: createToken(user)});
+
+        res.json({status: "OK", error: false, user: user});
       });
     });
   });
@@ -382,7 +388,11 @@ export let addFriend = (req: Request, res: Response, next: NextFunction) => {
                   res.json({status: "ok"});
               });
           } else {
-            res.json({status: "ok", msg: "waiting accept"});
+            res.json({status: "ok", msg: "waiting accept", user: {
+                email: user.email,
+                name: user.name,
+                picture: user.picture
+            }});
           }
       });
   });

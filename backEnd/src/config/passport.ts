@@ -8,13 +8,15 @@ import * as _ from "lodash";
 import { UserModel } from "../models/User";
 import { User } from "../types/User";
 
+const NO_EMAIL_CODE = 1;
+const PASSWORD_DONT_MATCH_CODE = 2;
+
 passport.serializeUser<any, any>((user: User, done) => {
   done(undefined, user._id);
 });
 
 passport.deserializeUser((id, done) => {
   UserModel.findById(id, (err, user) => {
-    console.log(user);
     done(err, user);
   });
 });
@@ -24,14 +26,15 @@ passport.deserializeUser((id, done) => {
  */
 passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
   UserModel.findOne({ email: email.toLowerCase() }, (err, user: any) => {
-
     if (err) { return done(err); }
     if (!user) {
-      return done(undefined, false, { message: `Email ${email} not found.` });
+      return done({error: new Error(`Email ${email} not found.`), code: NO_EMAIL_CODE});
     }
 
     if (user.comparePassword(password)) {
         return done(undefined, user);
+    } else {
+      return done({error: new Error("Passwords does not match"), code: PASSWORD_DONT_MATCH_CODE});
     }
   });
 }));
@@ -40,12 +43,15 @@ passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, don
  * Bearer authentication.
  */
 passport.use(new BearerStrategy((token: string, done: Function) => {
+  if (token && token !== "null") {
     UserModel.findOne({_id: getID(token)}).exec().then((user) => {
         if (!user) { return done(undefined, false); }
         return done(undefined, user, { scope: "read" });
     }).catch(err => {
         if (err) { return done(err); }
     });
+  } else
+    done({error: new Error("No token")});
 }));
 
 /**

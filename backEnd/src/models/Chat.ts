@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { ChatDocument } from "../types/Chat";
 
 const chatSchema = new Schema({
-  id: { type: String, unique: true, required: true },
+  id: { type: String, required: true },
   message: { type: String },
   from: { type: String },
   to: { type: String },

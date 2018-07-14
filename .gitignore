@@ -45,3 +45,5 @@ frontEnd/platforms/
 **/storage/mongoDB/*
 githubKeys
 db/
+
+/frontEnd/platforms/*

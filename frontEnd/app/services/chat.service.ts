@@ -10,23 +10,10 @@ export class ChatService {
     }
 
     getChats() {
-        // return this.network.fetch("/chat/getChats", {
-        //     method: "GET",
-        //     headers: { "Accept": "application/json" },
-        //     credentials: "include" 
-        // }).then((r) => r.json());
-
         return this.network.http("GET", "/chat/getChats");
     }
 
-    sendMessage(message: string, to: string, userID: string) {
-        const newMessage: Chat = {
-            message: message,
-            from: userID,
-            date: new Date(),
-            to: to
-        };
-
-        return this.network.http("POST", "/chat/sendMessage", {}, newMessage).toPromise();
+    sendMessage(message: Chat) {
+        return this.network.http("POST", "/chat/sendMessage", {}, message).toPromise();
     }
 }

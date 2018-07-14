@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, ElementRef, NgZone } f
 import { ListViewLinearLayout, ListViewEventData, RadListView, ListViewLoadOnDemandMode } from 'nativescript-ui-listview';
 import { UserService } from '~/services/login.service';
 import { User } from '~/models/user.model';
+import { HelpersService } from '~/services/helpers.service';
 
 @Component({
   moduleId: module.id,
@@ -18,7 +19,8 @@ export class ContactsComponent implements OnInit {
 
   constructor(private changeDetectionRef: ChangeDetectorRef,
       private ngZone: NgZone,
-      private userService: UserService) {  
+      private userService: UserService,
+      private helpers: HelpersService) {  
     }
 
   ngOnInit() {
@@ -30,8 +32,12 @@ export class ContactsComponent implements OnInit {
   
   addContact(email: string) {
     this.userService.addFriend(email).subscribe(res => {
-      console.log("AddContact res:", res.body, "for email:", {email: email});
+      this._friends.push(res);
     });
+  }
+
+  chatWith(user: User) {
+    this.helpers.navigate(["chat"], {email: user.email, picture: user.picture});
   }
 
   private async initDataItems() {
@@ -70,6 +76,11 @@ export class ContactsComponent implements OnInit {
 
   get friendsNumber(): number {
     return this.numberOfAddedItems;
+  }
+
+  // Navigate to profile page here
+  onProfileButtonTap() {
+    this.helpers.navigate(["home"]);
   }
 
 }

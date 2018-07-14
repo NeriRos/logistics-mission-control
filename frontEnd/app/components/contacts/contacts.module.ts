@@ -7,6 +7,7 @@ import { ContactsComponent } from '~/components/contacts/contacts.component';
 
 import { UserService } from "~/services/login.service";
 import { FabComponent } from '~/components/contacts/components/fab/fab.component';
+import { HelpersService } from '~/services/helpers.service';
 
 @NgModule({
   imports: [
@@ -15,10 +16,12 @@ import { FabComponent } from '~/components/contacts/components/fab/fab.component
   ],
   declarations: [
     ContactsComponent,
-    FabComponent
+    FabComponent,
+    
   ],
   providers: [
-      UserService
+      UserService,
+      HelpersService
   ],
   schemas: [
     NO_ERRORS_SCHEMA

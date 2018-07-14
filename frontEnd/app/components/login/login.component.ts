@@ -51,26 +51,32 @@ export class LoginComponent implements OnInit {
         let user: User = this.authenticationDetails;
 
         if(isValid && user) {
-            if(this.isRegister) {
+            if(this.isRegister && user.confirmPassword === user.password) {
                 this.userService.register(user).then(userData => {
-                    this.helpers.navigate(["home"]);
+                    if(!userData.error)
+                        this.helpers.navigate(["home"]);
+                    else
+                        alert("Email already exist");
                 }).catch(err => {
                     console.log('[!] Error register', err);
                 });  
             } else {
                 this.userService.login(user).then(userData => {
-                    if(userData.user) {
+                    if(!userData.error) {
                         this.helpers.navigate(["home"]);
                     } else {
-                        this.authenticationStatusName = this.REGISTER_STATUS_NAME;
-                        this.isRegister = true;
+                        switch(userData.code) {
+                            case 1: // NO USER
+                                this.authenticationStatusName = this.REGISTER_STATUS_NAME;
+                                this.isRegister = true;
+                                break;
+                            case 2: // Password not match
+                                alert("Password or email is incorrect");
+                                break;
+                        }
                     }
                 }).catch(err => {
                     console.log("Login was unsuccessful", err);
-                    if(err instanceof SyntaxError) {
-                        this.authenticationStatusName = this.REGISTER_STATUS_NAME;
-                        this.isRegister = true;
-                    }
                 });               
             }
         } else {

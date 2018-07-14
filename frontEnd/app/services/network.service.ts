@@ -30,8 +30,8 @@ export class NetworkingService {
         var promise;
 
         var headers = new HttpHeaders({
-            Accepts: "Application/json",
-            "Content-Type": options.contentType || "Application/json"
+            Accepts: "application/json",
+            "Content-Type": options.contentType || "application/json"
         })
 
         if(!options.responseType)

@@ -1,6 +1,5 @@
 import { ElementRef, Injectable, NgZone } from "@angular/core";
 import { RouterExtensions } from "nativescript-angular/router";
-import { NavigationOptions } from "nativescript-angular/router/ns-location-strategy";
 import { NavigationTransition } from "tns-core-modules/ui/frame/frame";
 
 @Injectable()
@@ -12,7 +11,7 @@ export class HelpersService {
         elementRef.nativeElement.visibility = state;
     }
     
-    navigate(route: string[], transition?: NavigationTransition) {
+    navigate(route: string[], data?: any, transition?: NavigationTransition) {
         this.zone.run(() => {
             var transitionArgs = transition || {
                 name: "slideTop",
@@ -22,7 +21,8 @@ export class HelpersService {
             this._routerExtensions.navigate(route, {
                 clearHistory: true,
                 animated: true,
-                transition: transitionArgs
+                transition: transitionArgs,
+                queryParams: data
             });
         });
     }

@@ -7,4 +7,5 @@ export type User = Document & {
     code?: string;
     friends?: Array<string>;
     picture?: string;
+    token?: string;
 };

@@ -1,3 +1,9 @@
+<ActionBar class="action-bar" title="Cargo Express">
+    <ActionItem android.position="actionBar" ios.position="right" (tap)="onProfileButtonTap()">
+        <Label text="&#xf2bd;" class="fa action-button"></Label>
+    </ActionItem>
+</ActionBar>
+
 <StackLayout>
     <Label class="t-30 text-center title" text="Contacts"></Label>
     <StackLayout class="hr"></StackLayout>
@@ -11,10 +17,10 @@
     <StackLayout>
         <ListView [items]="friends">
             <ng-template let-item="item">
-                <StackLayout orientation="vertical">
-                    <Label class="nameLabel" [text]="item.name"></Label>
-                    <Image class="contactPicture" [src]="'res://' + item.picture"></Image>
-                </StackLayout>
+                <GridLayout columns="auto, *" rows="50" (tap)="chatWith(item)">
+                    <Image row="0" col="0" class="contactPicture" [src]="'res://' + item.picture"></Image>
+                    <Label row="0" col="1" class="nameLabel" [text]="item.name"></Label>
+                </GridLayout>
             </ng-template>
         </ListView>
     </StackLayout>

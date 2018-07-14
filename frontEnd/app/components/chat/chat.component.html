@@ -1,19 +1,16 @@
-<ActionBar class="action-bar" title="Cargo Express">
+<ActionBar class="action-bar" [title]="'Cargo Express' + (room ? ' - ' + room : '')">
     <ActionItem android.position="actionBar" ios.position="right" (tap)="onProfileButtonTap()">
         <Label text="&#xf2bd;" class="fa action-button"></Label>
     </ActionItem>
 </ActionBar>
 
-<!-- <RadListView [items]="friends$" loadOnDemandMode="Manual" (loadMoreDataRequested)="onLoadMoreContactsRequested($event)"> -->
-<RadListView [items]="friends$" loadOnDemandMode="Auto" (tap)="room = $event">
-
 <StackLayout>
-    <ListView height="90%" margin-bottom="50" padding="5" #list [items]="chats$ | async">
-        <ng-template let-item="item">
+    <ListView #list height="90%" margin-bottom="50" padding="5" [items]="chats$">
+        <ng-template let-chat="item">
             <GridLayout columns="*" rows="auto" class="msg">
-                <StackLayout [class]="filter(item.from)" orientation="horizontal" [horizontalAlignment]="align(item.from)">
-                    <Image [visibility]="showImage(item.from)" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" src="~/images/k1.png" col="1"></Image>
-                    <Label [text]='item.message' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
+                <StackLayout [class]="filter(chat.from)" orientation="horizontal" [horizontalAlignment]="align(chat.from)">
+                    <Image [visibility]="showImage(chat.from)" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" [src]="'res://' + senderPicture" col="1"></Image>
+                    <Label [text]='chat.message' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
                 </StackLayout>
             </GridLayout>
         </ng-template>

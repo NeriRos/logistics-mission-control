@@ -2,7 +2,7 @@
     <GridLayout #fabContainer rows="auto,*">
         <ListView [items]="friends">
             <ng-template let-item="item" let-idx="index">
-                <Image tap="doThis" [id]="'person'+idx" [src]="'res://' + item.picture.toLowerCase()" class="speed-button" row="1"></Image>
+                <Image tap="doThis" [id]="'person'+idx" [src]="'res://' + item.picture" class="speed-button" row="1"></Image>
             </ng-template>
         </ListView>
         

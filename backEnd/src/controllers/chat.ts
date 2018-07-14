@@ -26,29 +26,46 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
  * Sends a message.
  */
 export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
-    ChatModel.count({ $or: [{"to": req.user._id}, {"from": req.user._id}] }, (err, count) => {
+    req.assert("to", "Please enter a valid email address.").isEmail();
+    req.sanitize("to").normalizeEmail({ gmail_remove_dots: false });
+
+    const errors = req.validationErrors();
+
+    if (errors) {
+        console.log("errors", errors);
+        return res.status(400).json({error: errors, status: "error"});
+    }
+
+    UserModel.findOne({email: req.body.to}, (err, user) => {
         if (err)
             return next(err);
+        if (!user)
+            return res.json({status: "error", error: true, message: "no user", code: 1});
+        if (!req.user)
+            return res.json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
 
-        if (req.user._id == req.body.from) {
-            const chat: Chat = {
-                id: (count + 1).toString(),
-                message: req.body.message,
-                from: req.user._id,
-                to: req.body.to,
-                date: req.body.date
-            };
+        ChatModel.count({ $or: [{"to": req.user._id}, {"from": req.user._id}] }, (err, count) => {
+            if (err)
+                return next(err);
 
-            console.log("Sending message:", chat);
+            if (req.user._id == req.body.from) {
+                const chat: Chat = {
+                    id: (count + 1).toString(),
+                    message: req.body.message,
+                    from: req.user._id,
+                    to: user._id,
+                    date: req.body.date
+                };
 
-            const newMessage = new ChatModel(chat);
-            newMessage.save((err) => {
-                if (err)
-                    return next(err);
+                const newMessage = new ChatModel(chat);
+                newMessage.save((err) => {
+                    if (err)
+                        return next(err);
 
-                res.json({status: "ok", msg: "message send successfully"});
-            });
-        } else
-            res.status(500).json({error: "Unauthorized sender."});
+                    res.json({status: "ok", msg: "message send successfully"});
+                });
+            } else
+                res.status(500).json({error: "Unauthorized sender."});
         });
+    });
 };

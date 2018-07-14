@@ -67,27 +67,6 @@ app.use(passport.session());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use(express.static(path.join(__dirname, "public"), { maxAge: 31557600000 }));
-app.use((req, res, next) => {
-  res.locals.user = req.user;
-  next();
-});
-app.use((req, res, next) => {
-  // After successful login, redirect back to the intended page
-  if (!req.user &&
-    req.path !== "/login" &&
-    req.path !== "/signup" &&
-    !req.path.match(/^\/auth/) &&
-    !req.path.match(/\./)) {
-    // req.session.returnTo = req.path;
-    // res.status(502).send("ERROR: no req.user");
-  } else if (req.user &&
-    req.path == "/account") {
-    // req.session.returnTo = req.path;
-    // res.status(502).send("ERROR: no req.user");
-  }
-  next();
-});
-
 
 /**
  * Authentication
