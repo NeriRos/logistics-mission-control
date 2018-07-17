@@ -1,14 +1,10 @@
-<ActionBar class="action-bar" title="Cargo Express">
-    <ActionItem android.position="actionBar" ios.position="right" (tap)="onProfileButtonTap()">
-        <Label text="&#xf2bd;" class="fa action-button"></Label>
-    </ActionItem>
-</ActionBar>
+<app-action-bar></app-action-bar>
 
 <StackLayout>
     <Label class="t-30 text-center title" text="Contacts"></Label>
     <StackLayout class="hr"></StackLayout>
 
-    <GridLayout columns="80, *, 50", rows="60">
+    <GridLayout columns="auto, *, auto", rows="auto">
         <Label row="0" col="0" text="Add person:" ></Label>
         <TextField row="0" col="1" #newPerson keyboardType="email" hint="Enter email" (returnPress)="addContact(newPerson.text)" class="input input-border"></TextField>
         <Button row="0" col="2" text="Add" (tap)="addContact(newPerson.text)" class="btn btn-primary btn-active"></Button>

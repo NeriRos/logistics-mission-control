@@ -9,8 +9,8 @@ export class ChatService {
 
     }
 
-    getChats() {
-        return this.network.http("GET", "/chat/getChats");
+    getChats(friendID) {
+        return this.network.http("GET", `/chat/getChats?id=${friendID}`);
     }
 
     sendMessage(message: Chat) {

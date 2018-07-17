@@ -6,11 +6,13 @@ import { HomeComponent } from "~/components/home/home.component";
 
 import { UserService } from "~/services/login.service";
 import { HelpersService } from "~/services/helpers.service";
+import { ActionBarModule } from '~/components/shared/action-bar.component';
 
 @NgModule({
     imports: [
         NativeScriptCommonModule,
-        HomeRoutingModule
+        HomeRoutingModule,
+        ActionBarModule
     ],
     declarations: [
         HomeComponent

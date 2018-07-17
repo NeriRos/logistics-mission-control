@@ -6,6 +6,7 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { AndroidApplication } from "tns-core-modules/application/application";
 
 import { AppRoutingModule } from "~/app-routing.module";
+
 import { AppComponent } from "~/app.component";
 
 import { LoggedInLazyLoadGuard } from "~/logged-in-lazy-load.guard";

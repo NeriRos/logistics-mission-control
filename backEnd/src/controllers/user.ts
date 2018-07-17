@@ -9,6 +9,7 @@ import * as passport from "passport";
 import * as nodemailer from "nodemailer";
 import * as jwt from "jwt-simple";
 import * as moment from "moment";
+import { json } from "../../node_modules/@types/body-parser";
 
 
 /**
@@ -32,7 +33,7 @@ export let postLogin = (req: Request, res: Response, next: NextFunction) => {
       return res.status(400).json({
         message: "Something is not right",
         user   : user,
-        error  : err.error.message,
+        error  : (err.error || {}).message,
         code : err.code,
         info   : info
       });
@@ -105,12 +106,10 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
 
 /**
  * GET /account
- * Profile page.
+ * returns the current loggedin account
  */
 export let getAccount = (req: Request, res: Response) => {
-  res.render("account/profile", {
-    title: "Account Management"
-  });
+  res.json(req.user);
 };
 
 /**
@@ -340,6 +339,7 @@ export let getFriends = (req: Request, res: Response, next: NextFunction) => {
 
       const friends = users.map(user => {
           return {
+              _id: user._id,
               email: user.email,
               name: user.name,
               picture: user.picture

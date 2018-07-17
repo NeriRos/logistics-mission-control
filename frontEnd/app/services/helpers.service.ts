@@ -20,7 +20,7 @@ export class HelpersService {
                 curve: "ease"
             }
             const options: ExtendedNavigationExtras = {
-                clearHistory: true,
+                clearHistory: false,
                 animated: true,
                 transition: transitionArgs,
                 queryParams: data,

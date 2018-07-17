@@ -4,6 +4,8 @@ import { RouterExtensions } from "nativescript-angular/router";
 import { AndroidApplication } from "application";
 import { Fab } from "nativescript-floatingactionbutton";
 import { registerElement } from "nativescript-angular/element-registry";
+import { Page } from 'tns-core-modules/ui/page/page';
+import { ActionBar } from '../node_modules/tns-core-modules/ui/action-bar/action-bar';
 
 registerElement("Fab", () => Fab); 
 
@@ -15,9 +17,7 @@ registerElement("Fab", () => Fab);
 export class AppComponent implements OnInit {
     public networkStatus: string = "";
 
-    constructor(private globals: Globals,
-        private routerExtensions: RouterExtensions,
-        private application: AndroidApplication) {
+    constructor(private application: AndroidApplication) {
     }
 
     ngOnInit(): void {
@@ -33,9 +33,5 @@ export class AppComponent implements OnInit {
             this.application.on("activityBackPressed", backEvent);
         }
         
-    }
-
-    backEvent() {
-        this.routerExtensions.backToPreviousPage();
     }
 }

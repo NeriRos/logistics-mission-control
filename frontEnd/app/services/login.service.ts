@@ -63,6 +63,10 @@ export class UserService {
     return payload.sub;
   }
 
+  getUser(): Observable<User> {
+    return this.network.http("GET", "/account");
+  }
+
   logout(): void {
     this.network.fetch("/logout", {
       method: "GET",

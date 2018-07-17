@@ -26,7 +26,7 @@ export class ChatComponent implements OnInit {
     @ViewChild("list") lv: ElementRef;
     @ViewChild("textfield") tf: ElementRef;
 
-    public me: string;
+    public me: User;
     public friend: User;
 
     public numberOfAddedItems: number = 0;
@@ -49,8 +49,8 @@ export class ChatComponent implements OnInit {
     }
     
     public async ngOnInit() {
-        this.me = this.userService.getID(); 
-        this.chats$ = new ObservableArray(await this.chatService.getChats().toPromise());
+        this.me = await this.userService.getUser().toPromise(); 
+        this.chats$ = new ObservableArray(await this.chatService.getChats(this.friend._id).toPromise());
     }
 
     public ngAfterViewInit() {
@@ -68,9 +68,10 @@ export class ChatComponent implements OnInit {
         if(this.friend) {
             const newMessage: Chat = {
                 message: this.textField.text,
-                from: this.me,
+                from: this.me._id,
                 date: new Date(),
-                to: this.friend.email
+                to: this.friend._id,
+
             };
 
             this.chatService.sendMessage(newMessage).then((data: any) => {
@@ -87,7 +88,7 @@ export class ChatComponent implements OnInit {
     }
 
     filter(sender) {
-        if (sender == this.me) {
+        if (sender == this.me._id) {
             return "me"
         }
         else {
@@ -95,7 +96,7 @@ export class ChatComponent implements OnInit {
         }
     }
     align(sender) {
-        if (sender == this.me) {
+        if (sender == this.me._id) {
             return "right"
         }
         else {
@@ -103,7 +104,7 @@ export class ChatComponent implements OnInit {
         }
     }
     showImage(sender) {
-        if (sender == this.me) {
+        if (sender == this.me._id) {
             return "collapsed"
         }
         else {

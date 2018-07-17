@@ -3,6 +3,7 @@ import { NativeScriptCommonModule } from "nativescript-angular/common";
 
 import { ChatRoutingModule } from "~/components/chat/chat-routing.module";
 import { ChatComponent } from "~/components/chat/chat.component";
+import { ActionBarModule } from '~/components/shared/action-bar.component';
 
 import { UserService } from "~/services/login.service";
 import { ChatService } from "~/services/chat.service";
@@ -11,7 +12,8 @@ import { HelpersService } from "~/services/helpers.service";
 @NgModule({
     imports: [
         NativeScriptCommonModule,
-        ChatRoutingModule
+        ChatRoutingModule,
+        ActionBarModule
     ],
     declarations: [
         ChatComponent

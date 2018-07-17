@@ -1,23 +1,22 @@
-<ActionBar class="action-bar" [title]="'Cargo Express ' + friend?.name">
-    <ActionItem android.position="actionBar" ios.position="right" (tap)="onProfileButtonTap()">
-        <Label text="&#xf2bd;" class="fa action-button"></Label>
-    </ActionItem>
-</ActionBar>
+<app-action-bar></app-action-bar>
 
 <StackLayout>
-    <ListView #list height="90%" margin-bottom="50" padding="5" [items]="chats$">
-        <ng-template let-chat="item">
-            <GridLayout columns="*" rows="auto" class="msg">
-                <StackLayout [class]="filter(chat.from)" orientation="horizontal" [horizontalAlignment]="align(chat.from)">
-                    <Image [visibility]="showImage(chat.from)" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" [src]="'res://' + friend?.picture" col="1"></Image>
-                    <Label [text]='chat.message' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
-                </StackLayout>
-            </GridLayout>
-        </ng-template>
-    </ListView>
+    <StackLayout height="90%">
+        <Label [text]="'Chatting with: ' + friend?.name" class="h1"></Label>
+        <ListView #list margin-bottom="50" padding="5" [items]="chats$">
+            <ng-template let-chat="item">
+                <GridLayout columns="*" rows="auto" class="msg">
+                    <StackLayout [class]="filter(chat.from)" orientation="horizontal" [horizontalAlignment]="align(chat.from)">
+                        <Image [visibility]="showImage(chat.from)" class="authorimg" stretch="aspectFill" height="30" width="30" verticalAlignment="top" [src]="'res://' + friend?.picture" col="1"></Image>
+                        <Label [text]='chat.message' class="msg_text" textWrap="true" verticalAlignment="top"></Label>
+                    </StackLayout>
+                </GridLayout>
+            </ng-template>
+        </ListView>
+    </StackLayout>
 
     <StackLayout #chatbox height="10%">
-        <GridLayout columns="*,auto" style="padding: 10">
+        <GridLayout columns="*,auto" rows="auto" style="padding: 10">
             <TextField #textfield class="chatTextField" row="0" col="0" [(ngModel)]="userMessage"></TextField>
             <Button #btn class="chatBtn" row="0" col="1" text="send" (tap)=chat(userMessage)></Button>
         </GridLayout>
