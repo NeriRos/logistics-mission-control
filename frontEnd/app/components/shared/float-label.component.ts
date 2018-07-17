@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild, Output, EventEmitter } from "@angular/core";
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 import { Color } from "tns-core-modules/color/color";
 
 @Component({
@@ -6,12 +6,20 @@ import { Color } from "tns-core-modules/color/color";
     moduleId: module.id,
     template: `
         <GridLayout rows="30, auto" marginBottom="5">
-            <Label #label row="1" [text]="placeholder" opacity="0.4" fontSize="14"  class="input floating-input-label"></Label>
-            <TextField #textField="ngModel" [secure]="secure" row="1" [(ngModel)]='ngModelInput' (ngModelChange)="onChange()" (focus)="onFocus()" (blur)="onBlur()" borderBottomWidth="3" borderBottomColor="#cec8c8" padding="2"></TextField>
+            <Label #label [text]="placeholder"
+            row="1"
+            opacity="0.4" fontSize="14"  class="input floating-input-label"></Label>
+            <TextField #textField="ngModel"
+            [secure]="secure"
+            [(ngModel)]='ngModelInput'
+            (ngModelChange)="onChange()"
+            (focus)="onFocus()"
+            (blur)="onBlur()"
+            borderBottomWidth="3" row="1" borderBottomColor="#cec8c8" padding="2"></TextField>
         </GridLayout>
     `
 })
-export class FloatLabel {
+export class FloatLabelComponent {
     @Input() placeholder: string;
     @Input() secure: boolean;
     @Input() ngModelInput: string = "";
@@ -19,6 +27,7 @@ export class FloatLabel {
     @ViewChild("label") label: ElementRef;
     @ViewChild("textField", { read: ElementRef }) textField: ElementRef;
 
+    // tslint:disable-next-line:no-empty
     constructor() {
     }
 
@@ -33,11 +42,11 @@ export class FloatLabel {
         // animate the label sliding up and less transparent.
         label.animate({
             translate: { x: 0, y: - 25 },
-            opacity: 1,
-        }).then(() => { }, () => { });
+            opacity: 1
+        });
 
         // set the border bottom color to green to indicate focus
-        textField.borderBottomColor = new Color('#00b47e');
+        textField.borderBottomColor = new Color("#00b47e");
     }
 
     onBlur() {
@@ -49,9 +58,9 @@ export class FloatLabel {
             label.animate({
                 translate: { x: 0, y: 0 },
                 opacity: 0.4
-            }).then(() => { }, () => { });
+            });
         }
         // reset border bottom color.
-        textField.borderBottomColor = new Color('#cec8c8');
+        textField.borderBottomColor = new Color("#cec8c8");
     }
 }

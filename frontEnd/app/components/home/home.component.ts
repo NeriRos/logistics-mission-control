@@ -1,8 +1,7 @@
-import { Component, ElementRef, OnInit, NgZone } from "@angular/core";
-import { RouterExtensions } from "nativescript-angular/router";
-import { Page } from "tns-core-modules/ui/page/page"
+import { Component, OnInit } from "@angular/core";
 import { EventData } from "tns-core-modules/data/observable/observable";
 import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
+import { Page } from "tns-core-modules/ui/page/page";
 
 import { HelpersService } from "~/services/helpers.service";
 import { UserService } from "~/services/login.service";
@@ -13,15 +12,11 @@ import { UserService } from "~/services/login.service";
     templateUrl: "./home.component.html",
     styleUrls: ["home.component.css"]
 })
-export class HomeComponent implements OnInit {
-    public loggedUser: string;
+export class HomeComponent {
+    loggedUser: string;
 
-    constructor(private _routerExtensions: RouterExtensions, private page: Page, private userService: UserService, private helpers: HelpersService) {
+    constructor(private page: Page, private userService: UserService, private helpers: HelpersService) {
         this.page.actionBarHidden = false;
-    }
-
-    ngOnInit(): void {
-
     }
 
     logout() {

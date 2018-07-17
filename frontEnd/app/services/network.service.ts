@@ -1,49 +1,45 @@
-import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import * as connectivity from "tns-core-modules/connectivity/connectivity";
+import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import * as connectivity from "tns-core-modules/connectivity/connectivity";
 
 @Injectable()
 export class NetworkingService {
+    server = { ip: "10.0.2.1", dns: "cargo-express.co.il", port: 80, protocol: "http" };
     private _networkStatus: string = "";
     private _isOnline: boolean = false;
-    public server = { ip: "10.0.2.1", dns: "cargo-express.co.il", port: 80, protocol: "http" };
 
     constructor(private httpProvider: HttpClient) {
     }
 
-    fetch(url: string, options: RequestInit = {}, body?: any ) {
+    fetch(url: string, options: RequestInit = {}, body?: any) {
         const isLocal = url.startsWith("/");
-        let requestURL = isLocal ? `${this.server.protocol}://${this.server.ip}:${this.server.port}${url}` : url;
+        const requestURL = isLocal ? `${this.server.protocol}://${this.server.ip}:${this.server.port}${url}` : url;
 
-        if(body && !options.body && options.method === "POST") {
+        if (body && !options.body && options.method === "POST") {
             options.headers = {
                 "Content-Type": "application/json"
             };
         }
-            options.body = (typeof body).toLowerCase() !== "string" ? JSON.stringify(body) : body;
+        options.body = (typeof body).toLowerCase() !== "string" ? JSON.stringify(body) : body;
 
         return fetch(requestURL, options);
     }
 
     http(method: string, url: string, options: any = {}, data?: any): Observable<any> {
-        var promise;
-
-        var headers = new HttpHeaders({
+        const headers = new HttpHeaders({
             Accepts: "application/json",
             "Content-Type": options.contentType || "application/json"
-        })
+        });
 
-        if(!options.responseType)
+        if (!options.responseType) {
             options.responseType = "json";
+        }
 
         options.headers = options.headers || headers;
 
-        if(method.toUpperCase() === "GET")
-            promise = this.httpProvider.get(url, options);    
-        else {
-            promise = this.httpProvider.post(url, data, options);
-        }
+        // tslint:disable-next-line:max-line-length
+        const promise = method.toUpperCase() === "GET" ? this.httpProvider.get(url, options) : this.httpProvider.post(url, data, options);
 
         return promise;
     }
@@ -87,7 +83,7 @@ export class NetworkingService {
             }
         };
         connectivity.startMonitoring(onConnectionTypeChanged);
-        
+
     }
 
     monitorNetworkStop() {
@@ -95,13 +91,12 @@ export class NetworkingService {
         this._networkStatus = "No longer monitoring network connection changes.";
     }
 
-    
-    public get networkStatus() : string {
+    get networkStatus(): string {
         return this._networkStatus;
     }
-    
-    public get isOnline() : boolean {
+
+    get isOnline(): boolean {
         return this._isOnline;
     }
-    
+
 }

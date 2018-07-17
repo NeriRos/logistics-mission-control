@@ -1,9 +1,9 @@
-import { Component, Input, OnInit, ViewChild, ElementRef } from "@angular/core";
-import { Page, View, ViewBase, EventData } from "tns-core-modules/ui/page/page";
-import { Animation, AnimationDefinition } from "tns-core-modules/ui/animation/animation";
+import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
 import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
+import { Animation, AnimationDefinition } from "tns-core-modules/ui/animation/animation";
+import { EventData, Page, View, ViewBase } from "tns-core-modules/ui/page/page";
 
-import { User } from "~/models/user.model";
+import { IUser } from "~/models/user.model";
 
 @Component({
     moduleId: module.id,
@@ -11,34 +11,33 @@ import { User } from "~/models/user.model";
     templateUrl: "./fab.component.html",
     styleUrls: ["./fab.component.css"]
   })
-export class FabComponent implements OnInit {
+export class FabComponent {
     @ViewChild("fabContainer") fabContainer: ElementRef;
-    @Input("friends") friends: ObservableArray<User>;
+    // tslint:disable-next-line:no-input-rename
+    @Input("friends") friends: ObservableArray<IUser>;
+    // tslint:disable-next-line:no-input-rename
     @Input("friendsNumber") friendsNumber: number;
-    
-    public isFabOpen = false;
+
+    isFabOpen = false;
 
     constructor(private page: Page) {
     }
 
-    ngOnInit() {
-    }
-
     fabTap(args: EventData) {
-        var fab: View = <View>args.object;
-        var buttons: ViewBase[] = [];
+        const fab: View = <View>args.object;
+        const buttons: Array<ViewBase> = [];
 
         for (let index = 0; index < this.friendsNumber; index++) {
-            buttons.push(this.page.getViewById("person"+index));
+            buttons.push(this.page.getViewById("person" + index));
         }
-    
+
         if (this.isFabOpen === true) {
-            var animations: AnimationDefinition[] = buttons.map((button) => {
+            const animations: Array<AnimationDefinition> = buttons.map((button) => {
                 return {target: <View>button, translate: { x: 0, y: 0 }, opacity: 0, duration: 400, delay: 0};
             });
             animations.push({ target: fab, rotate: 0, duration: 400, delay: 0 });
 
-            var a = new Animation(animations);
+            const a = new Animation(animations);
 
             a.play()
                 .then(() => {
@@ -50,18 +49,19 @@ export class FabComponent implements OnInit {
         } else {
             let yIndex = 0;
 
-            var animations: AnimationDefinition[] = buttons.map((button, index) => {
-                yIndex -= index % 2 == 0 ? -46 : -54;
+            const animations: Array<AnimationDefinition> = buttons.map((button, index) => {
+                yIndex -= index % 2 === 0 ? -46 : -54;
                 console.log("Y Index", yIndex);
+
                 return {target: <View>button, translate: { x: 0, y: yIndex }, opacity: 1, duration: 440, delay: 0};
             });
             animations.push({ target: fab, rotate: 45, duration: 400, delay: 0 });
 
-            var a = new Animation(animations);
-            
+            const a = new Animation(animations);
+
             a.play()
                 .then(() => {
-                    //console.log("Animations finished");
+                    // console.log("Animations finished");
                     this.isFabOpen = true;
                 })
                 .catch((e) => {
@@ -70,4 +70,3 @@ export class FabComponent implements OnInit {
         }
     }
 }
-

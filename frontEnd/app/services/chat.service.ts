@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Chat } from "~/models/chat.model";
+import { IChat } from "~/models/chat.model";
 import { NetworkingService } from "~/services/network.service";
-
 
 @Injectable()
 export class ChatService {
@@ -13,7 +12,7 @@ export class ChatService {
         return this.network.http("GET", `/chat/getChats?id=${friendID}`);
     }
 
-    sendMessage(message: Chat) {
+    sendMessage(message: IChat) {
         return this.network.http("POST", "/chat/sendMessage", {}, message).toPromise();
     }
 }

@@ -11,7 +11,7 @@
   },
   "scripts": {
     "start": "npm run watch",
-    "lint": "tslint \"app/**/*.ts\"",
+    "lint": "tslint -p . \"app/**/*.ts\"",
     "test": "tns test android",
     "watch": "tns debug android",
     "debug": "tns debug android --syncAllFiles",
@@ -59,6 +59,7 @@
     "babel-types": "^6.26.0",
     "babylon": "6.4.5",
     "clean-webpack-plugin": "~0.1.19",
+    "codelyzer": "^4.4.2",
     "copy-webpack-plugin": "^4.5.2",
     "css-loader": "~0.28.11",
     "extract-text-webpack-plugin": "~3.0.2",

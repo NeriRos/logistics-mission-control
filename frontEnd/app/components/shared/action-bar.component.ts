@@ -1,8 +1,7 @@
 import { Component, NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
-import { RouterExtensions } from 'nativescript-angular/router';
-import { NativeScriptCommonModule } from 'nativescript-angular/common';
-import { NativeScriptFormsModule } from 'nativescript-angular/forms';
-
+import { NativeScriptCommonModule } from "nativescript-angular/common";
+import { NativeScriptFormsModule } from "nativescript-angular/forms";
+import { RouterExtensions } from "nativescript-angular/router";
 
 @Component({
     moduleId: module.id,
@@ -26,6 +25,7 @@ export class ActionBarComponent {
     }
 }
 
+// tslint:disable-next-line:max-classes-per-file
 @NgModule({
     imports: [
         NativeScriptCommonModule,
