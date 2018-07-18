@@ -56,7 +56,14 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
     async ngOnInit() {
         this.me = await this.userService.getUser().toPromise();
-        this.chats$ = new ObservableArray(await this.chatService.getChats(this.friend._id).toPromise());
+        this.chatService.getChats(this.friend._id).subscribe((chats) => {
+            this.chats$ = new ObservableArray(chats.map((chat: IChat) => {
+                chat.date = new Date(chat.date);
+                chat.time = chat.date.toTimeString().split(" ")[0];
+
+                return chat;
+            }));
+        });
     }
 
     ngAfterViewInit() {
@@ -72,12 +79,13 @@ export class ChatComponent implements OnInit, AfterViewInit {
 
     chat() {
         if (this.friend) {
+            const date = new Date();
             const newMessage: IChat = {
                 message: this.textField.text,
                 from: this.me._id,
-                date: new Date(),
-                to: this.friend._id
-
+                date,
+                to: this.friend._id,
+                time: date.toTimeString().split(" ")[0]
             };
 
             this.chatService.sendMessage(newMessage).then((data: any) => {
@@ -113,6 +121,13 @@ export class ChatComponent implements OnInit, AfterViewInit {
             return "collapsed";
         } else {
             return "visible";
+        }
+    }
+    undentText(sender) {
+        if (sender === this.me._id) {
+            return "0";
+        } else {
+            return "1";
         }
     }
 

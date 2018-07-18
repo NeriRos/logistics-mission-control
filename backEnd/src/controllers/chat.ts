@@ -13,14 +13,9 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
     const userID = req.user._id;
     const friendID = req.query.id;
 
-    ChatModel.find({}, (err, chats) => {
-        console.log("allchatsL:", chats);
-    });
     ChatModel.find({ $or: [{from: userID, to: friendID}, {from: friendID, to: userID}] }, (err, chats: Array<Chat>) => {
         if (err)
             return next(err);
-
-        console.log(chats);
 
         res.json(chats);
     });
@@ -47,7 +42,7 @@ export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
                 message: req.body.message,
                 from: userID,
                 to: friendID,
-                date: req.body.date
+                date: new Date(req.body.date)
             };
             const newMessage = new ChatModel(chat);
 

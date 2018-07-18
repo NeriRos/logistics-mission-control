@@ -3,5 +3,6 @@ export interface IChat {
   from: string;
   to: string;
   date: Date;
+  time?: string;
   id?: string;
 }
