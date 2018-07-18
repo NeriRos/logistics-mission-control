@@ -44,6 +44,6 @@ packages/
 githubKeys
 db/
 
-/frontEnd/platforms/*
-**/frontEnd/platforms
 frontEnd/platforms/
+*.js
+!frontEnd/hooks/**/*.js
