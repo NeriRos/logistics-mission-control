@@ -2,19 +2,20 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import * as connectivity from "tns-core-modules/connectivity/connectivity";
+import { Globals } from "~/shared/globals";
 
 @Injectable()
 export class NetworkingService {
-    server = { ip: "10.0.2.1", dns: "cargo-express.co.il", port: 80, protocol: "http" };
     private _networkStatus: string = "";
     private _isOnline: boolean = false;
 
-    constructor(private httpProvider: HttpClient) {
+    constructor(private httpProvider: HttpClient, private globals: Globals) {
     }
 
     fetch(url: string, options: RequestInit = {}, body?: any) {
         const isLocal = url.startsWith("/");
-        const requestURL = isLocal ? `${this.server.protocol}://${this.server.ip}:${this.server.port}${url}` : url;
+        // tslint:disable-next-line:max-line-length
+        const requestURL = isLocal ? `${this.globals.server.protocol}://${this.globals.server.ip}:${this.globals.server.port}${url}` : url;
 
         if (body && !options.body && options.method === "POST") {
             options.headers = {
