@@ -1,0 +1,9 @@
+<app-action-bar></app-action-bar>
+
+<StackLayout>
+    <GridLayout columns="50, *", rows="auto">
+        <Label row="0" col="0" text="Server"></Label>
+        <TextField row="0" col="1" hint="ex. 8.8.8.8" [(NgModel)]="settings.server"></TextField>
+    </GridLayout>    
+    <Button (tap)="saveSettings()" text="save"></Button>
+</StackLayout>
