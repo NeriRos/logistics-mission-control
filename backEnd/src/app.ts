@@ -39,6 +39,7 @@ mongoose.connect(mongoUrl, {useMongoClient: true}).then(
 
 // Express configuration
 app.set("port", process.env.HTTP_PORT || 80);
+app.set("host", process.env.HOST || "localhost");
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "hbs");
 
