@@ -1,13 +1,10 @@
 <app-action-bar></app-action-bar>
 
 <StackLayout>
-    <Label class="t-30 text-center title" text="Contacts"></Label>
-    <StackLayout class="hr"></StackLayout>
-
     <GridLayout columns="auto, *, auto", rows="60">
-        <Label row="0" col="0" text="Add person:" ></Label>
+        <Label row="0" col="0" verticalAlignment="center" text="Add person:"></Label>
         <TextField row="0" col="1" #newPerson keyboardType="email" hint="Enter email" (returnPress)="addContact(newPerson.text)" class="input input-border"></TextField>
-        <Button row="0" col="2" text="Add" (tap)="addContact(newPerson.text)" class="btn btn-primary btn-active"></Button>
+        <Button row="0" col="2" text="Add" (tap)="addContact(newPerson.text)"></Button>
     </GridLayout>
 
     <StackLayout>

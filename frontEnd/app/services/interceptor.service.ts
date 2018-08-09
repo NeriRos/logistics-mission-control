@@ -2,12 +2,12 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } fr
 import { Injectable } from "@angular/core";
 import "rxjs/add/operator/do";
 import { Observable } from "rxjs/Observable";
-import { NetworkingService } from "~/services/network.service";
+import { Globals } from "~/shared/globals";
 
 @Injectable()
 export class Interceptor implements HttpInterceptor {
 
-    constructor(private network: NetworkingService) {
+    constructor(private globals: Globals) {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -30,7 +30,7 @@ export class Interceptor implements HttpInterceptor {
         if (url.startsWith("http://") || url.startsWith("https://")) {
             return url;
         } else {
-            return `${this.network.server.protocol}://${this.network.server.ip}:${this.network.server.port}${url}`;
+            return `${this.globals.protocol}://${this.globals.ip}:${this.globals.port}${url}`;
         }
     }
 }

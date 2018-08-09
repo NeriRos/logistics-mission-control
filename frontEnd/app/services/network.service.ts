@@ -15,7 +15,7 @@ export class NetworkingService {
     fetch(url: string, options: RequestInit = {}, body?: any) {
         const isLocal = url.startsWith("/");
         // tslint:disable-next-line:max-line-length
-        const requestURL = isLocal ? `${this.globals.server.protocol}://${this.globals.server.ip}:${this.globals.server.port}${url}` : url;
+        const requestURL = isLocal ? `${this.globals.protocol}://${this.globals.ip}:${this.globals.port}${url}` : url;
 
         if (body && !options.body && options.method === "POST") {
             options.headers = {

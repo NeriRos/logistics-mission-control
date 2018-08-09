@@ -1,3 +1,3 @@
 export interface ISettings {
-    server: string;
+    server?: string;
 }

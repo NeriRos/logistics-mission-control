@@ -15,4 +15,32 @@ export class Globals {
     constructor() {
         this.server = { ip: "10.0.2.1", dns: "cargo-express.co.il", port: "80", protocol: "http" };
     }
+
+    get dns(): string {
+        return this.server.dns;
+    }
+    set dns(value: string) {
+        this.server.dns = value;
+    }
+
+    get ip(): string {
+        return this.server.ip;
+    }
+    set ip(value: string) {
+        this.server.ip = value;
+    }
+
+    get port(): string {
+        return this.server.port;
+    }
+    set port(value: string) {
+        this.server.port = value;
+    }
+
+    get protocol(): string {
+        return this.server.protocol;
+    }
+    set protocol(value: string) {
+        this.server.protocol = value;
+    }
 }

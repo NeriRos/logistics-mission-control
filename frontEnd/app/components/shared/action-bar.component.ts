@@ -1,7 +1,8 @@
 import { Component, NgModule, NO_ERRORS_SCHEMA } from "@angular/core";
 import { NativeScriptCommonModule } from "nativescript-angular/common";
 import { NativeScriptFormsModule } from "nativescript-angular/forms";
-import { RouterExtensions } from "nativescript-angular/router";
+import { UserService } from "~/services/login.service";
+import { Globals } from "~/shared/globals";
 
 @Component({
     moduleId: module.id,
@@ -11,17 +12,24 @@ import { RouterExtensions } from "nativescript-angular/router";
             <!-- <NavigationButton visibility="collapsed"></NavigationButton> -->
             <ActionItem android.position="actionBar" ios.position="right" (tap)="backEvent()">
                 <Label text="&#xf2bd;" class="fa action-button"></Label>
+                <Image height="25" width="25" [src]="'res://' + userPicture"></Image>
             </ActionItem>
         </ActionBar>
     `
 })
 export class ActionBarComponent {
-    constructor(private routerExtensions: RouterExtensions) {
+    private userPicture: string;
 
+    constructor(private userService: UserService, private globals: Globals) {
+        this.userPicture = this.globals.DEFAULT_USER_PICTURE;
+
+        userService.getUser().subscribe((user) => {
+            this.userPicture = user.picture;
+        });
     }
 
     backEvent() {
-        this.routerExtensions.backToPreviousPage();
+        // this.routerExtensions.backToPreviousPage();
     }
 }
 

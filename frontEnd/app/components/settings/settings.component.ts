@@ -9,13 +9,14 @@ import { Globals } from "~/shared/globals";
   styleUrls: ["./settings.component.css"]
 })
 export class SettingsComponent {
-  private settings: ISettings;
+  private settings: ISettings = {};
 
   // tslint:disable-next-line:no-empty
   constructor(private globals: Globals) {
+    this.settings.server = this.globals.ip;
   }
 
   saveSettings() {
-    this.globals.server.ip = this.settings.server;
+    this.globals.ip = this.settings.server;
   }
 }

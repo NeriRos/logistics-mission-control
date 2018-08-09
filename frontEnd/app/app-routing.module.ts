@@ -9,7 +9,9 @@ const routes: Routes = [
     { path: "home", loadChildren: "./components/home/home.module#HomeModule", canLoad: [LoggedInLazyLoadGuard] },
     { path: "chat", loadChildren: "./components/chat/chat.module#ChatModule", canLoad: [LoggedInLazyLoadGuard] },
     // tslint:disable-next-line:max-line-length
-    { path: "contacts", loadChildren: "./components/contacts/contacts.module#ContactsModule", canLoad: [LoggedInLazyLoadGuard] }
+    { path: "contacts", loadChildren: "./components/contacts/contacts.module#ContactsModule", canLoad: [LoggedInLazyLoadGuard] },
+    // tslint:disable-next-line:max-line-length
+    { path: "settings", loadChildren: "./components/settings/settings.module#SettingsModule", canLoad: [LoggedInLazyLoadGuard] }
 ];
 
 @NgModule({

@@ -50,7 +50,7 @@ export class FabComponent {
             let yIndex = 0;
 
             const animations: Array<AnimationDefinition> = buttons.map((button, index) => {
-                yIndex -= index % 2 === 0 ? -46 : -54;
+                yIndex -= index % 2 === 0 ? 46 : 54;
                 console.log("Y Index", yIndex);
 
                 return {target: <View>button, translate: { x: 0, y: yIndex }, opacity: 1, duration: 440, delay: 0};
