@@ -3,6 +3,7 @@ import { ObservableArray } from "tns-core-modules/data/observable-array/observab
 import { ISupport, SUPPORT_STATUS } from "~/models/support.model";
 import { IUser } from "~/models/user.model";
 import { HelpersService } from "~/services/helpers.service";
+import { UserService } from "~/services/login.service";
 import { SupportService } from "~/services/support.service";
 
 @Component({
@@ -18,29 +19,12 @@ export class SupportComponent implements OnInit {
   private selectedSupport: IUser;
 
   constructor(private supportService: SupportService,
-              private helpers: HelpersService) {
+              private helpers: HelpersService,
+              private userService: UserService) {
 
     this.supports = {
       open: new ObservableArray(),
       taken: new ObservableArray()
-    };
-
-    const test: ISupport = {
-      _id: "",
-      client: {
-        id: "1",
-        business: "test business",
-        name: "name",
-        phone: "11313313113"
-      },
-      status: 2,
-      messages: [],
-      users: [],
-      representative: {
-        id: "1",
-        name: "name",
-        picture: "default_user.png"
-      }
     };
   }
 
@@ -63,14 +47,17 @@ export class SupportComponent implements OnInit {
   }
 
   launchChat(support) {
-    const client: IUser = {
-      email: support.client.phone,
-      name: support.client.name,
-      _id: support.client.id
-    };
+    this.userService.getUser().subscribe((user) => {
+      const client: IUser = {
+        email: support.client.phone,
+        name: support.client.name,
+        _id: support.client.id,
+        picture: user.picture
+      };
 
-    this.selectedSupport = support;
-    this.client = client;
+      this.selectedSupport = support;
+      this.client = client;
+    });
   }
 
   set supports(value) {

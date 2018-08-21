@@ -38,7 +38,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
 
     requestChatsInterval: any;
 
-    CHAT_REQUEST_SECONDS = 3;
+    CHAT_REQUEST_SECONDS = 5;
 
     isTyping = false;
 

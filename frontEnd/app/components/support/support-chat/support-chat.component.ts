@@ -1,9 +1,7 @@
 import { AfterContentInit, Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { ObservableArray } from "tns-core-modules/data/observable-array/observable-array";
 import { Page } from "tns-core-modules/ui/page/page";
 import { ChatComponent } from "~/components/chat/chat.component";
-import { IChat } from "~/models/chat.model";
 import { ISupport } from "~/models/support.model";
 import { IUser } from "~/models/user.model";
 import { ChatService } from "~/services/chat.service";
