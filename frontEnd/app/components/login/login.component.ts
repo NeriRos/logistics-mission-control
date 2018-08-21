@@ -1,9 +1,8 @@
 import { Component, ElementRef, NgZone, OnInit, ViewChild } from "@angular/core";
-import { AndroidApplication } from "application";
+import { AndroidApplication } from "tns-core-modules/application/application";
 import { StackLayout } from "tns-core-modules/ui/layouts/stack-layout/stack-layout";
 import { Page } from "tns-core-modules/ui/page/page";
 
-import { IUser } from "~/models/user.model";
 import { HelpersService } from "~/services/helpers.service";
 import { UserService } from "~/services/login.service";
 import { NetworkingService } from "~/services/network.service";

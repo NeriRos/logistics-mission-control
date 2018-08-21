@@ -5,4 +5,8 @@ export interface IChat {
   date: Date;
   time?: string;
   id?: string;
+  status?: number;
+  statusIcon?: string;
+  isSupport?: boolean;
+  initial?: boolean;
 }

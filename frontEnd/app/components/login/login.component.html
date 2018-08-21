@@ -2,11 +2,11 @@
     <StackLayout class="flexbox-item company-name-container">
         <Label class="t-30 company-name" text="Cargo Express"></Label>
     </StackLayout>
-    
+
     <Image src="res://company_logo" stretch="none" class="company-logo"></Image>
 
     <StackLayout #loginLayout class="flexbox-item form p-16" [visibility]="isLoginLayoutVisible ? 'visible' : 'collapse'">
-        <StackLayout>    
+        <StackLayout>
             <form name="authForm" #authForm="ngForm" novalidate>
                 <StackLayout class="auth-input-layout">
                     <FloatLabel (ngModelOutput)="authenticationDetails.email = $event" class="auth-input" id="email" placeholder="אימייל" keyboardType="email" autocorrect="false" autocapitalizationType="none" name="email"></FloatLabel>
@@ -20,12 +20,12 @@
                 <StackLayout [visibility]="isRegister ? 'visible' : 'collapse'" class="auth-input-layout">                
                     <FloatLabel (ngModelOutput)="authenticationDetails.name = $event" class="auth-input" placeholder="שם מלא" type="text" name="name"></FloatLabel>
                 </StackLayout>
-                
+
                 <Button class="btn btn-login btn-rounded-sm font-weight-bold t-18" (tap)="authenticate(authForm.valid)" [text]="authenticationStatusName"></Button>
             </form>
         </StackLayout>
     </StackLayout>
-    
+
     <StackLayout #showLoginLayout class="flexbox-item" [visibility]="isLoginLayoutVisible ? 'collapse' : 'visible'">
         <Button class="btn btn-login btn-rounded-sm font-weight-bold t-18" (tap)="isLoginLayoutVisible = !isLoginLayoutVisible" text="התחל"></Button>        
     </StackLayout>

@@ -11,7 +11,9 @@ const routes: Routes = [
     // tslint:disable-next-line:max-line-length
     { path: "contacts", loadChildren: "./components/contacts/contacts.module#ContactsModule", canLoad: [LoggedInLazyLoadGuard] },
     // tslint:disable-next-line:max-line-length
-    { path: "settings", loadChildren: "./components/settings/settings.module#SettingsModule", canLoad: [LoggedInLazyLoadGuard] }
+    { path: "settings", loadChildren: "./components/settings/settings.module#SettingsModule", canLoad: [LoggedInLazyLoadGuard] },
+    // tslint:disable-next-line:max-line-length
+    { path: "support", loadChildren: "./components/support/support.module#SupportModule", canLoad: [LoggedInLazyLoadGuard] }
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 "use strict";
 import { UserModel } from "../models/User";
-import { User } from "../types/User";
+import { IUser, UserDocument } from "../types/User";
 import { Response, Request, NextFunction } from "express";
 import { WriteError } from "mongodb";
 import { randomBytes } from "crypto";
@@ -9,8 +9,6 @@ import * as passport from "passport";
 import * as nodemailer from "nodemailer";
 import * as jwt from "jwt-simple";
 import * as moment from "moment";
-import { json } from "../../node_modules/@types/body-parser";
-
 
 /**
  * POST /login
@@ -127,7 +125,7 @@ export let postUpdateProfile = (req: Request, res: Response, next: NextFunction)
     return res.redirect("/account");
   }
 
-  UserModel.findById(req.user.id, (err, user: User) => {
+  UserModel.findById(req.user.id, (err, user: UserDocument) => {
     if (err) { return next(err); }
     user.email = req.body.email || "";
     user.name = req.body.name || "";
@@ -160,7 +158,7 @@ export let postUpdatePassword = (req: Request, res: Response, next: NextFunction
     return res.redirect("/account");
   }
 
-  UserModel.findById(req.user.id, (err, user: User) => {
+  UserModel.findById(req.user.id, (err, user: UserDocument) => {
     if (err) { return next(err); }
     user.password = req.body.password;
     user.save((err: WriteError) => {
@@ -239,7 +237,7 @@ export let postReset = (req: Request, res: Response, next: NextFunction) => {
           });
         });
     },
-    function sendResetPasswordEmail(user: User, done: Function) {
+    function sendResetPasswordEmail(user: IUser, done: Function) {
       const transporter = nodemailer.createTransport({
         service: "SendGrid",
         auth: {
@@ -300,7 +298,7 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
         });
       });
     },
-    function sendForgotPasswordEmail(token: any, user: User, done: Function) {
+    function sendForgotPasswordEmail(token: any, user: IUser, done: Function) {
       const transporter = nodemailer.createTransport({
         service: "SendGrid",
         auth: {
@@ -402,7 +400,7 @@ export let addFriend = (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
-export let createToken = (user?: User) => {
+export let createToken = (user?: UserDocument) => {
   if (user) {
     const playload = {
       exp: moment().add(14, "days").unix(),

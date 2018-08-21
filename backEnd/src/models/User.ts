@@ -1,7 +1,9 @@
 import { Schema, model } from "mongoose";
-import { User } from "../types/User";
+import { IUser, UserDocument } from "../types/User";
 import { createHash } from "crypto";
 import { createToken } from "../controllers/user";
+import { ISupport, SupportDocument } from "../types/Support";
+import { SupportModel } from "../models/Support";
 
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
@@ -11,8 +13,10 @@ const userSchema = new Schema({
   friends: { type: Array<String>(), default: [] },
   token: { type: String },
   picture: { type: String },
-  secured: { type: Boolean }
-}, { timestamps: true });
+  secured: { type: Boolean },
+  permissions: { type: Number },
+  supports: { type: [{type: Schema.Types.ObjectId, ref: "Support"}], default: [] }
+}, { timestamps: true, usePushEach: true });
 
 userSchema.pre("save", function(next) {
   if (this.password && this.isNew) {
@@ -27,8 +31,8 @@ userSchema.methods.comparePassword = function(password: string): boolean {
   return getHash(password) == this.password;
 };
 
-export const UserModel = model<User>("User", userSchema, "users");
-
 const getHash = (input: string) => {
   return createHash("sha256").update(input).digest("hex");
 };
+
+export const UserModel = model<UserDocument>("User", userSchema, "users");

@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { AndroidApplication } from "application";
 import { registerElement } from "nativescript-angular/element-registry";
 import { Fab } from "nativescript-floatingactionbutton";
+import { AndroidApplication } from "tns-core-modules/application/application";
 
 registerElement("Fab", () => Fab);
 
@@ -19,6 +19,7 @@ export class AppComponent {
     backPressInit() {
         const backEvent = (args) => {
             if (!!false) { args.cancel = true; }
+
         };
 
         if (this.application) {

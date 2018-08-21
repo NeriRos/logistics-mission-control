@@ -9,7 +9,7 @@ export class ChatService {
     }
 
     getChats(friendID) {
-        return this.network.http("GET", `/chat/getChats?id=${friendID}`);
+        return this.network.http("GET", `/chat/getChats?id=${friendID}`).toPromise();
     }
 
     sendMessage(message: IChat) {

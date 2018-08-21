@@ -22,6 +22,7 @@ import * as apiController from "./controllers/api";
 import * as chatController from "./controllers/chat";
 import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
+import * as supportController from "./controllers/support";
 import * as passportConfig from "./config/passport";
 
 // Create Express server
@@ -96,11 +97,18 @@ app.get("/account/unlink/:provider", passport.authenticate("bearer", { session: 
 app.get("/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getFriends);
 app.post("/addFriend", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.addFriend);
 
+
 /**
  * Chat routes
  */
 app.get("/chat/getChats", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getChats);
 app.post("/chat/sendMessage", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.sendMessage);
+
+app.post("/support/openSupport", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.openSupport);
+app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
+app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
+app.get("/support/getChats/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
+app.get("/support/takeSupport/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.takeSupport);
 
 
 /**

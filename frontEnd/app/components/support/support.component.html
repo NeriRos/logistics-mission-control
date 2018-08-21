@@ -1,0 +1,17 @@
+<app-action-bar></app-action-bar>
+
+<StackLayout>
+    <StackLayout [visibility]="!isChatVisible ? 'visible' : 'collapsed'">
+        <StackLayout>
+            <Label text="Open"></Label>
+            <SupportsList [supports]="supports.open" (support)="launchChat($event)" (isChatVisible)="isChatVisible = $event"></SupportsList>
+        </StackLayout>
+        <StackLayout>
+            <Label text="Taken"></Label>
+            <SupportsList [supports]="supports.taken" (support)="launchChat($event)" (isChatVisible)="isChatVisible = $event"></SupportsList>
+        </StackLayout>
+    </StackLayout>
+    <StackLayout *ngIf="client">
+        <SupportChat [client]="client" [selectedSupport]="selectedSupport"></SupportChat>
+    </StackLayout>
+</StackLayout>

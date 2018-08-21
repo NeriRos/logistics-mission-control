@@ -6,12 +6,14 @@ import * as passport from "passport";
 import * as _ from "lodash";
 
 import { UserModel } from "../models/User";
-import { User } from "../types/User";
+import { IUser, UserDocument } from "../types/User";
+import { Schema, Mongoose } from "mongoose";
 
 const NO_EMAIL_CODE = 1;
 const PASSWORD_INCORRECT = 2;
+const mongoose = new Mongoose();
 
-passport.serializeUser<any, any>((user: User, done) => {
+passport.serializeUser<any, any>((user: UserDocument, done) => {
   done(undefined, user._id);
 });
 
@@ -53,6 +55,25 @@ passport.use(new BearerStrategy((token: string, done: Function) => {
   } else
     done({error: new Error("No token")});
 }));
+
+/**
+ * Support authorization middleware
+ */
+export let supportAuthorization = (req, res, next) => {
+  if (req.get("origin") === "www.cargo-express.co.il" || req.get("origin") && req.get("origin").match("localhost:15255")) {
+    const isPost = req.method == "POST";
+
+    req.user = isPost ? req.body.user : {};
+
+    if (req.body.isNewSupport)
+      req.user._id = mongoose.Types.ObjectId(("000000000000" + (req.query.id || "0")).slice(-12));
+    req.user._id = req.user._id || req.user.id || req.query.id;
+
+    next();
+  } else {
+    passport.authenticate("bearer", { session: false })(req, res, next);
+  }
+};
 
 /**
  * Login Required middleware.

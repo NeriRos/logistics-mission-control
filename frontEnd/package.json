@@ -14,8 +14,10 @@
     "lint": "tslint -p . \"app/**/*.ts\"",
     "test": "tns test android",
     "watch": "tns debug android",
+    "phone": "tns debug android --device 2",
     "debug": "tns debug android --syncAllFiles",
     "build": "tns build android",
+    "build-prod": "tns build android --clean --release --key-store-path E:\\Dropbox\\WORK\\RamBinyamin\\crago-express\\credits\\ce-release-key.jks --key-store-password ErduTexprx --key-store-alias CargoExpress --key-store-alias-password ErduTexprx --copy-to e:/CargoDeliver.apk",
     "e2e": "tsc -p e2e && mocha --opts ./e2e/config/mocha.opts",
     "e2e-watch": "tsc -p e2e --watch"
   },

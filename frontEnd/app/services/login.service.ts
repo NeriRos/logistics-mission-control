@@ -35,6 +35,12 @@ export class UserService {
       this.saveToken((r.user || {}).token);
 
       return r;
+    }).catch((err) => {
+      console.log("error logging in:", err);
+
+      return new Promise((reject) => {
+        reject({error: err});
+      });
     });
   }
 

@@ -8,4 +8,6 @@ export interface IUser {
     token?: string;
     friends?: Array<string>;
     picture?: string;
+    supports?: Array<string>;
+    permissions?: number;
 }

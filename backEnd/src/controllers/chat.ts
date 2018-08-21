@@ -2,8 +2,7 @@
 
 import { Response, Request, NextFunction } from "express";
 import { ChatModel } from "../models/Chat";
-import { Chat } from "../types/Chat";
-
+import { IChat } from "../types/Chat";
 
 /**
  * GET /chat/getChats
@@ -13,7 +12,7 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
     const userID = req.user._id;
     const friendID = req.query.id;
 
-    ChatModel.find({ $or: [{from: userID, to: friendID}, {from: friendID, to: userID}] }, (err, chats: Array<Chat>) => {
+    ChatModel.find({ $or: [{from: userID, to: friendID}, {from: friendID, to: userID}] }, (err, chats: Array<IChat>) => {
         if (err)
             return next(err);
 
@@ -37,12 +36,14 @@ export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
             return next(err);
 
         if (userID == req.body.from) {
-            const chat: Chat = {
+            const chat: IChat = {
                 id: (count + 1).toString(),
                 message: req.body.message,
                 from: userID,
                 to: friendID,
-                date: new Date(req.body.date)
+                date: new Date(req.body.date),
+                status: 1,
+                isSupport: false
             };
             const newMessage = new ChatModel(chat);
 
