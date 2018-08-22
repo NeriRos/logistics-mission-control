@@ -131,7 +131,6 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
                         return chat;
                     }));
 
-                    console.log("INITALMESSAGEA", data.chats, typeof this.chats$, this.chats$);
                 } else if (data.chats && this.chats$ && data.chats.length > this.chats$.length) {
                     this.addChats(data.chats);
                 }

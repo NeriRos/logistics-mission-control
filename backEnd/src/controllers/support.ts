@@ -48,13 +48,13 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
             });
         },
         findReps: (cb) => {
-			// TODO: run a service worker to find reps
-			UserModel.find({ supports: {$ne: req.user._id} }, (err, users: Array<UserDocument>) => {
-				if (err)
-					return cb(err);
-				
-				cb(false, users || []);
-			});
+            // TODO: run a service worker to find reps
+            UserModel.find({ supports: {$ne: req.user._id} }, (err, users: Array<UserDocument>) => {
+                if (err)
+                    return cb(err);
+
+                cb(false, users || []);
+            });
         }
     }, (errors, results) => {
         if (errors)
@@ -64,9 +64,9 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
         const support: any = results.getSupport;
         let isAvailableRep = false;
 
-		if (reps.length > 0) {
-			console.log("no reps found!");
-		}
+        if (reps.length > 0) {
+            console.log("no reps found!");
+        }
         // Filter fit reps
         reps.forEach((user: UserDocument) => {
             if (user.permissions <= USER_PERMISSIONS.REPRESENTATIVE && support.representative.id != user._id && user.supports.indexOf(support._id) == -1 && support.users.indexOf(user._id) == -1) {
@@ -127,7 +127,7 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
                 UserModel.findById(userID, (err, user) => {
                     if (err)
                         return next(err);
-					console.log(repID.equals(userID), repID, userID);
+
                     if (repID.equals(userID)) {
                         support.status = 3;
                         support.representative = {
@@ -152,7 +152,7 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
         }
 
         req.params.id = supportID;
-        req.user._id = supportID;
+        req.user._id = repID;
         req.body.support = support;
         req.body.date = new Date();
         req.body.message = support.client.name + " welcome to dynamichat!";
@@ -196,15 +196,15 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
 
         if (!support || support.status < SUPPORT_STATUS.TAKEN)
             return res.json({ isAvailableRep: false, chats: [] });
-		
-		if (support.messages.length <= 0)
-			return res.json({ isAvailableRep: true, chats: [] });
-	
+
+        if (support.messages.length <= 0)
+            return res.json({ isAvailableRep: true, chats: [] });
+
         ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {
             if (err)
                 return next(err);
 
-            res.json({chats, isAvailableRep: true});
+            res.json({chats: chats || [], isAvailableRep: true, representative: support.representative});
         });
     });
 };
@@ -242,7 +242,7 @@ export let sendMessage = (req, res: Response, next: NextFunction) => {
             const chat: IChat = {
                 id: (count + 1).toString(),
                 message: data.message,
-                from: req.user._id,
+                from: isRep ? support.representative.id : (isClient ? support.client.id : req.user._id),
                 to: support.status >= SUPPORT_STATUS.TAKEN && support.representative && isClient ? support.representative.id : data.contact || data.to,
                 date: new Date(data.date),
                 status: 1,

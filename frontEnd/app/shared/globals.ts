@@ -14,7 +14,7 @@ export class Globals {
 
     constructor() {
         this.server = { ip: "141.226.21.44", dns: "cargo-express.co.il", port: "8887", protocol: "http" };
-        // this.server = { ip: "10.0.2.1", dns: "localhost", port: "8887", protocol: "http" };
+        // this.server = { ip: "10.0.2.1", dns: "localhost", port: "8888", protocol: "http" };
     }
 
     get dns(): string {
