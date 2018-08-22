@@ -45,5 +45,5 @@ githubKeys
 db/
 
 *.js
-!frontEnd/hooks/**/*.js
-!backEnd/src/public/**/*.js
+!angular/hooks/**/*.js
+!nodejs/src/public/**/*.js
