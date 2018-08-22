@@ -159,7 +159,7 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
                     let isInChats = false;
 
                     this.chats$.forEach((chat$, index) => {
-                        if (chat$ && chat$.id === chat.id) {
+                        if (chat$ && chat$.date === chat.date) {
                             isInChats = true;
 
                             if (chat$.status !== chat.status) {
