@@ -10,6 +10,8 @@ import { ChatModel } from "../models/Chat";
 import { IChat } from "../types/Chat";
 import { Schema, Mongoose } from "mongoose";
 
+const FIND_REP_INTERVAL_SECONDS = 5;
+
 /**
  * POST /support/openSupport
  * Opens support.
@@ -46,18 +48,13 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
             });
         },
         findReps: (cb) => {
-            const findRepresentativeInterval = setInterval(() => {
-                UserModel.find({ $or: [ {supports: []}, {supports: {$ne: req.user._id} } ] }, (err, users: Array<UserDocument>) => {
-                    if (err)
-                        return cb(err);
-
-                    if (users) {
-                        clearInterval(findRepresentativeInterval);
-
-                        cb(false, users);
-                    }
-                });
-            }, 3000);
+			// TODO: run a service worker to find reps
+			UserModel.find({ supports: {$ne: req.user._id} }, (err, users: Array<UserDocument>) => {
+				if (err)
+					return cb(err);
+				
+				cb(false, users || []);
+			});
         }
     }, (errors, results) => {
         if (errors)
@@ -67,6 +64,9 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
         const support: any = results.getSupport;
         let isAvailableRep = false;
 
+		if (reps.length > 0) {
+			console.log("no reps found!");
+		}
         // Filter fit reps
         reps.forEach((user: UserDocument) => {
             if (user.permissions <= USER_PERMISSIONS.REPRESENTATIVE && support.representative.id != user._id && user.supports.indexOf(support._id) == -1 && support.users.indexOf(user._id) == -1) {
@@ -97,7 +97,7 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
  * for reps
  */
 export let getSupports = (req: Request, res: Response, next: NextFunction) => {
-    SupportModel.find({ $or: [ {status: SUPPORT_STATUS.TAKEN, "representative.id": req.user._id }, {status: SUPPORT_STATUS.REQUEST} ] }, (err, supports: Array<ISupport>) => {
+    SupportModel.find({ $or: [ {status: SUPPORT_STATUS.TAKEN, "representative.id": req.user._id, users: req.user._id }, {status: SUPPORT_STATUS.REQUEST, users: req.user._id} ] }, (err, supports: Array<ISupport>) => {
         if (err)
             return next(err);
 
@@ -127,7 +127,7 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
                 UserModel.findById(userID, (err, user) => {
                     if (err)
                         return next(err);
-
+					console.log(repID.equals(userID), repID, userID);
                     if (repID.equals(userID)) {
                         support.status = 3;
                         support.representative = {
@@ -148,7 +148,7 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
                 });
             });
         } else {
-            console.log("No Users", repID);
+            console.log("No supportes - rep id", repID, "support id:", supportID);
         }
 
         req.params.id = supportID;
@@ -194,9 +194,12 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
         if (err)
             return next(err);
 
-        if (!support || support.status < SUPPORT_STATUS.TAKEN || support.messages.length <= 0)
+        if (!support || support.status < SUPPORT_STATUS.TAKEN)
             return res.json({ isAvailableRep: false, chats: [] });
-
+		
+		if (support.messages.length <= 0)
+			return res.json({ isAvailableRep: true, chats: [] });
+	
         ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {
             if (err)
                 return next(err);

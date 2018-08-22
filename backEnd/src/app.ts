@@ -108,7 +108,7 @@ app.post("/support/openSupport", passportConfig.supportAuthorization, passportCo
 app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
 app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
 app.get("/support/getChats/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
-app.get("/support/takeSupport/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.takeSupport);
+app.get("/support/takeSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, supportController.takeSupport);
 
 
 /**

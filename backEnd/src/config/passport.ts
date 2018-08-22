@@ -60,7 +60,10 @@ passport.use(new BearerStrategy((token: string, done: Function) => {
  * Support authorization middleware
  */
 export let supportAuthorization = (req, res, next) => {
-  if (req.get("origin") === "www.cargo-express.co.il" || req.get("origin") && req.get("origin").match("localhost:15255")) {
+  const origin = req.get("origin");
+  // TODO: fix security
+console.log(req.originalUrl);
+  if (origin && (origin === "www.cargo-express.co.il" ||  origin.match("localhost:15255"))) {
     const isPost = req.method == "POST";
 
     req.user = isPost ? req.body.user : {};
