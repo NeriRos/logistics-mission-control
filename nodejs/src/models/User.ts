@@ -8,6 +8,7 @@ import { SupportModel } from "../models/Support";
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  phone: { type: String },
   name: { type: String },
   code: { type: String },
   friends: { type: Array<String>(), default: [] },

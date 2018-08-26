@@ -23,10 +23,10 @@
     "tslint": "tslint -c tslint.json -p tsconfig.json",
     "copy-static-assets": "ts-node copyStaticAssets.ts",
     "debug": "npm run build && npm run watch-debug",
-    "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node,NS\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\" \"cd ..\\angular && npm run watch && cd ..\\nodejs\"",
-    "watch-phone": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node,NS\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\" \"cd ..\\angular && npm run phone && cd ..\\nodejs\"",
-    "watch-debug": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node,NS\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\" \"cd ..\\angular && npm run debug && cd ..\\nodejs\"",
-    "watch-debug-server": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\""
+    "watch": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node,NS,Angular\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold,red.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\" \"cd ..\\nativeScript && npm run watch && cd ..\\nodejs\" \"cd ..\\angular && npm run watch && cd ..\\nodejs\"",
+    "watch-angular": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node,Angular\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\" \"cd ..\\angular && npm run debug && cd ..\\nodejs\"",
+    "watch-phone": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Node,Angular\" -c \"yellow.bold,cyan.bold,green.bold,blue.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\" \"cd ..\\nativeScript && npm run phone && cd ..\\nodejs\"",
+    "watch-debug-server": "concurrently -k -p \"[{name}]\" -n \"Sass,TypeScript,Angular\" -c \"yellow.bold,cyan.bold,green.bold\" \"npm run watch-sass\" \"npm run watch-ts\" \"npm run serve-debug\""
   },
   "dependencies": {
     "async": "^2.6.1",

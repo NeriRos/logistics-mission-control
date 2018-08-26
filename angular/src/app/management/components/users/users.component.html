@@ -1,0 +1,73 @@
+<div class="container-fluid">
+  <div class="row">
+    <table class="table">
+      <thead>
+        <th> # </th>
+        <th> Name </th>
+        <th> Email </th>
+        <th> Phone </th>
+        <th> Permission </th>
+        <th> Supports </th>
+        <th> Actions </th>
+      </thead>
+      <tbody>
+        <ng-template ngFor let-user [ngForOf]="users" let-i="index">
+            <tr *ngIf="!user.isEdit">
+              <td>{{i + 1}}</td>
+              <td>{{user.name}}</td>
+              <td>{{user.email}}</td>
+              <td>{{user.phone}}</td>
+              <td>{{user.permissions}}</td>
+              <td>
+                <ng-template ngFor let-supportID [ngForOf]="user.supports" let-i="index">
+                  <ng-container *ngIf="(supportID | supportClient: supports) as support">
+                    <div class="supportButton">
+                      <a [routerLink]="['/managment/supports', supportID]">
+                        <button class="btn">
+                          {{support}}
+                        </button>
+                      </a>
+                    </div>
+                  </ng-container>
+                </ng-template>
+              </td>
+              <td>
+                <button class="btn" (click)="user.isEdit = true"><i class="fa fa-edit"></i></button>
+                <button class="btn" (click)="delete(user)"><i class="fa fa-trash"></i></button>
+              </td>
+            </tr>
+            <tr *ngIf="user.isEdit">
+              <td>{{i + 1}}</td>
+              <td><input type="text" class="form-control" [(ngModel)]="user.name" [value]="user.name"></td>
+              <td><input type="text" class="form-control" [(ngModel)]="user.email" [value]="user.email"></td>
+              <td><input type="text" class="form-control" [(ngModel)]="user.phone" [value]="user.phone"></td>
+              <td><input type="text" class="form-control" [(ngModel)]="user.permissions" [value]="user.permissions"></td>
+              <td>
+                <ng-template ngFor let-supportID [ngForOf]="user.supports" let-i="index">
+                  <ng-container *ngIf="(supportID | supportClient: supports) as support">
+                    <div class="supportButton">
+                      <a [routerLink]="['/managment/supports', supportID]">
+                        <button class="btn">
+                          {{support}}
+                        </button>
+                      </a>
+                    </div>
+                  </ng-container>
+                </ng-template>
+              </td>
+              <td>
+                <div *ngIf="user.isEdit">
+                  <button class="btn" (click)="edit(user)"><i class="fa fa-save"></i></button>
+                  <button class="btn" (click)="user.isEdit = false"><i class="fa fa-times"></i></button>
+                </div>
+                <div *ngIf="!user.isEdit">
+                  <button class="btn" (click)="user.isEdit = true"><i class="fa fa-edit"></i></button>
+                  <button class="btn" (click)="delete(user)"><i class="fa fa-trash"></i></button>
+                </div>
+              </td>
+            </tr>
+        </ng-template>
+      </tbody>
+    </table>
+  </div>
+</div>

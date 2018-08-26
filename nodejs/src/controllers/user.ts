@@ -115,31 +115,12 @@ export let getAccount = (req: Request, res: Response) => {
  * Update profile information.
  */
 export let postUpdateProfile = (req: Request, res: Response, next: NextFunction) => {
-  req.assert("email", "Please enter a valid email address.").isEmail();
-  req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
+  const newUser = new UserModel(req.body);
+  UserModel.findByIdAndUpdate(req.body._id, newUser, {new: true}, (err, updatedUser) => {
+      if (err)
+          return next(err);
 
-  const errors = req.validationErrors();
-
-  if (errors) {
-    console.log("errors", errors);
-    return res.redirect("/account");
-  }
-
-  UserModel.findById(req.user.id, (err, user: UserDocument) => {
-    if (err) { return next(err); }
-    user.email = req.body.email || "";
-    user.name = req.body.name || "";
-    user.save((err: WriteError) => {
-      if (err) {
-        if (err.code === 11000) {
-          console.log("errors", { msg: "The email address you have entered is already associated with an account." });
-          return res.redirect("/account");
-        }
-        return next(err);
-      }
-      console.log("success", { msg: "Profile information has been updated." });
-      res.redirect("/account");
-    });
+      res.json(updatedUser);
   });
 };
 

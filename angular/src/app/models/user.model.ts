@@ -12,9 +12,14 @@ export interface IUser {
     permissions?: number;
 }
 
-export const USER_PERMISSIONS = {
+export interface IUserManagementExtension extends IUser {
+    isEdit: boolean;
+}
+
+export let USER_PERMISSIONS = {
     ADMIN: 1,
     MANAGER: 2,
     REPRESENTATIVE: 3,
     DELIVERY: 4
 };
+

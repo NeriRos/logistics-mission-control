@@ -194,10 +194,12 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
         if (err)
             return next(err);
 
-        if (!support || support.status < SUPPORT_STATUS.TAKEN)
-            return res.json({ isAvailableRep: false, chats: [] });
+        if (!support)
+            return res.status(500).json({error: "no support found for id:" + req.params.id});
 
-        if (support.messages.length <= 0)
+        if (support.status < SUPPORT_STATUS.TAKEN)
+            return res.json({ isAvailableRep: false, chats: [] });
+        else if (support.messages.length <= 0)
             return res.json({ isAvailableRep: true, chats: [] });
 
         ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {

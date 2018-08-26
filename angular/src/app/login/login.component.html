@@ -1,0 +1,36 @@
+<div class="container">
+  <div class="row">
+    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+      <div class="card card-signin my-5">
+        <div class="card-body">
+          <h5 class="card-title text-center">הרשמה והתחברות</h5>
+          <i (click)="isRegister = false" class="fa fa-arrow-right" *ngIf="isRegister"></i>
+          <form class="form-signin" (submit)="authenticate()">
+            <div class="form-group">
+              <input [(ngModel)]="authenticationDetails.email" type="email" name="email" class="form-control" placeholder="כתובת אימייל" required autofocus>
+            </div>
+            <div class="form-group">
+              <input [(ngModel)]="authenticationDetails.password" type="password" name="password" class="form-control" placeholder="סיסמה" required>
+            </div>
+            <div class="signupInputs" *ngIf="isRegister">
+              <div class="form-group">
+                <input [(ngModel)]="authenticationDetails.name" type="text" name="name" class="form-control" placeholder="שם מלא" required>
+              </div>
+              <div class="form-group">
+                <input [(ngModel)]="authenticationDetails.phone" type="phone" name="phone" class="form-control" placeholder="פלאפון" required>
+              </div>
+              <div class="form-group">
+                <input [(ngModel)]="authenticationDetails.code" type="text" name="code" class="form-control" placeholder="קוד" required>
+              </div>
+            </div>
+            <div class="custom-control custom-checkbox mb-3">
+              <input type="checkbox" class="custom-control-input" name="customCheck1">
+              <label class="custom-control-label" for="customCheck1">זכור סיסמה</label>
+            </div>
+            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit">{{authenticationStatusName}}</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

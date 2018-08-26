@@ -1,0 +1,90 @@
+
+/* You can add global styles to this file, and also import other style files */
+body {
+    padding: 50px;
+}
+input[type="file"] button {
+    border: 0;
+}
+
+
+.component {
+    padding: 10px;
+}
+.component .headerContainer {
+    border-bottom: 1px solid silver;
+    text-align: right;
+}
+.component .header {
+    font-size: 24pt;
+}
+.component .description {
+    font-size: 14pt;
+    opacity: 0.6;
+}
+.component .main {
+    padding-top: 50px;
+}
+.component .main .workspace {
+    background-color: #C6C6C6;
+}
+.component .main .sidePanel {
+    padding: 10px;
+    background-color: #e4e4e4;
+}
+.component .main .sidePanel .sidePanelHeader {
+    border-bottom: 1px solid silver;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+
+/* others */
+.underline {
+    border-bottom: 1px silver solid;
+}
+.list-group {
+    padding-right: 0;
+}
+.button {
+    cursor: pointer;
+}
+
+.company_icon {
+    position: fixed;
+    opacity: 0.7;
+    left: 15px;
+    bottom: 0;
+    z-index: -2;
+    height: 100px;
+}
+.lightx_icon {
+    position: fixed;
+    opacity: 0.7;
+    left: 220px;
+    bottom: 10px;
+    z-index: -2;
+    height: 50px;
+}
+.ssl_icon {
+    position: fixed;
+    opacity: 0.7;
+    height: 50px;
+    left: 320px;
+    bottom: 7px;
+    z-index: -2;
+}
+.copyright {
+    position: fixed;
+    opacity: 0.7;
+    bottom: 0;
+    right: 15px;
+    z-index: -10;
+}
+.etype_icon:hover,
+.ssl_icon:hover,
+.nr_icon:hover,
+.copyright:hover {
+    opacity: 0.99;
+}
+

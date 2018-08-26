@@ -23,6 +23,7 @@ import * as chatController from "./controllers/chat";
 import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
 import * as supportController from "./controllers/support";
+import * as managementController from "./controllers/management";
 import * as passportConfig from "./config/passport";
 
 // Create Express server
@@ -43,6 +44,7 @@ app.set("port", process.env.HTTP_PORT || 80);
 app.set("host", process.env.HOST || "localhost");
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "hbs");
+
 
 app.use(compression());
 app.use(logger("dev"));
@@ -69,6 +71,32 @@ app.use(passport.session());
 app.use(lusca.xframe("SAMEORIGIN"));
 app.use(lusca.xssProtection(true));
 app.use(express.static(path.join(__dirname, "public"), { maxAge: 31557600000 }));
+
+// Cors - allowed origins
+app.use(function(req, res, next) {
+  const allowedOrigins = [
+      "http://localhost",
+      "https://localhost",
+      "http://" + process.env.SERVER_DNS,
+      "http://" + process.env.SERVER_IP,
+      "http://" + process.env.SERVER_IP + ":" + process.env.HTTP_PORT,
+      "http://" + process.env.SERVER_DNS + ":" + process.env.HTTP_PORT,
+      "https://" + process.env.SERVER_DNS,
+      "https://" + process.env.SERVER_IP,
+      "https://" + process.env.SERVER_IP + ":" + process.env.HTTPS_PORT,
+      "https://" + process.env.SERVER_DNS + ":" + process.env.HTTPS_PORT
+      ];
+  const origin = <string>req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+      res.setHeader("Access-Control-Allow-Origin", origin);
+  }
+
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, OPTIONS, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Accepts");
+  res.header("Access-Control-Allow-Credentials", "true");
+
+  next();
+});
 
 /**
  * Authentication
@@ -104,11 +132,28 @@ app.post("/addFriend", passport.authenticate("bearer", { session: false }), pass
 app.get("/chat/getChats", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getChats);
 app.post("/chat/sendMessage", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.sendMessage);
 
+/**
+ * Support routes
+ */
 app.post("/support/openSupport", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.openSupport);
 app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
 app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
 app.get("/support/getChats/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
 app.get("/support/takeSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, supportController.takeSupport);
+
+/**
+ * Management routes
+ */
+app.get("/management/getUsers", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getUsers);
+app.get("/management/getChats", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getChats);
+app.get("/management/getSupports", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getSupports);
+// app.post("/management/updateUser", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.updateUser);
+
+
+app.get("*", function (req, res, next) {
+  console.log("UNKNOEN!", path.resolve("dist/public/index.html"));
+  res.sendFile(path.resolve("dist/public/index.html"));
+});
 
 
 /**
