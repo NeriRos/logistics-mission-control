@@ -138,6 +138,7 @@ app.post("/chat/sendMessage", passport.authenticate("bearer", { session: false }
 app.post("/support/openSupport", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.openSupport);
 app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
 app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
+app.get("/support/getSupportById/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
 app.get("/support/getChats/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
 app.get("/support/takeSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, supportController.takeSupport);
 
@@ -147,7 +148,7 @@ app.get("/support/takeSupport/:id", passport.authenticate("bearer", { session: f
 app.get("/management/getUsers", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getUsers);
 app.get("/management/getChats", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getChats);
 app.get("/management/getSupports", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getSupports);
-// app.post("/management/updateUser", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.updateUser);
+app.post("/management/updateSupport", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.updateSupport);
 
 
 app.get("*", function (req, res, next) {

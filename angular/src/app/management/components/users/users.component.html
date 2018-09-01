@@ -22,7 +22,7 @@
                 <ng-template ngFor let-supportID [ngForOf]="user.supports" let-i="index">
                   <ng-container *ngIf="(supportID | supportClient: supports) as support">
                     <div class="supportButton">
-                      <a [routerLink]="['/managment/supports', supportID]">
+                      <a [routerLink]="['/chat', supportID]">
                         <button class="btn">
                           {{support}}
                         </button>
@@ -46,11 +46,9 @@
                 <ng-template ngFor let-supportID [ngForOf]="user.supports" let-i="index">
                   <ng-container *ngIf="(supportID | supportClient: supports) as support">
                     <div class="supportButton">
-                      <a [routerLink]="['/managment/supports', supportID]">
-                        <button class="btn">
-                          {{support}}
-                        </button>
-                      </a>
+                      <button class="btn">
+                        {{support}}
+                      </button>
                     </div>
                   </ng-container>
                 </ng-template>

@@ -3,12 +3,12 @@ import { NetworkingService } from "../services/network.service";
 import { IUser } from "../models/user.model";
 
 @Injectable()
-export class ManagementService {
+export class ChatService {
     constructor(private network: NetworkingService) {
     }
 
     getUsers(): Promise<any> {
-        return this.network.http("GET", "management/getUsers").toPromise().catch((err) => {
+        return this.network.http("GET", "support/getUsers").toPromise().catch((err) => {
             console.log("error getUsers:", err);
 
             return new Promise((reject) => {
@@ -18,18 +18,8 @@ export class ManagementService {
     }
 
     getSupports(): Promise<any> {
-        return this.network.http("GET", "management/getSupports").toPromise().catch((err) => {
+        return this.network.http("GET", "support/getSupports").toPromise().catch((err) => {
             console.log("error getSupports:", err);
-
-            return new Promise((reject) => {
-                reject({error: err});
-            });
-        });
-    }
-
-    updateSupport(support): Promise<any> {
-        return this.network.http("POST", "management/updateSupport", {}, support).toPromise().catch((err) => {
-            console.log("error updateSupport:", err);
 
             return new Promise((reject) => {
                 reject({error: err});

@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
         {name: "משתמשים", link: "/management/users", permission: USER_PERMISSIONS.ADMIN},
         {name: "סטטיסטיקות", link: "/management/statistics", permission: USER_PERMISSIONS.MANAGER},
         {name: "צפיה בצ'אטים", link: "/management/chatSupervise", permission: USER_PERMISSIONS.MANAGER},
-        {name: "צ'אט", link: "/management/chat", permission: USER_PERMISSIONS.REPRESENTATIVE},
+        {name: "קריאות", link: "/management/support", permission: USER_PERMISSIONS.REPRESENTATIVE},
     ];
 
     menus.forEach(menu => {

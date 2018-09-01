@@ -3,14 +3,15 @@ import { CommonModule } from "@angular/common";
 import { ChatComponent } from "./chat.component";
 import { ChatRoutingModule } from "./chat-routing.module";
 
-import { ManagementService } from "../services/management.service";
+import { ChatService } from "../services/chat.service";
+import { SupportService } from "../services/support.service";
 
 @NgModule({
   imports: [
     CommonModule,
-    ChatRoutingModule,
+    ChatRoutingModule
   ],
-  providers: [ManagementService],
+  providers: [ChatService, SupportService],
   declarations: [ChatComponent]
 })
 export class ChatModule { }

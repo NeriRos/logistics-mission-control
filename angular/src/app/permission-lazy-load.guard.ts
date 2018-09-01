@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { CanLoad, Router, ActivatedRoute, RoutesRecognized, CanActivate } from "@angular/router";
+import { Router, CanActivate } from "@angular/router";
 
 import { UserService } from "./services/login.service";
 import { Observable } from "rxjs/Rx";
@@ -10,7 +10,7 @@ export class PermissionLazyLoadGuard implements CanActivate {
     constructor(private router: Router, private userService: UserService) {
     }
 
-    canActivate(route): Observable<boolean>|boolean {
+    canActivate(route): Observable<boolean> | boolean {
         const role = route.data["role"] as number;
 
         if (!this.userService.isAuthenticated()) {

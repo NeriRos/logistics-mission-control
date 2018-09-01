@@ -5,10 +5,10 @@ import { parallel } from "async";
 import { UserModel } from "../models/User";
 import { SupportModel } from "../models/Support";
 import { SupportDocument, SUPPORT_STATUS, ISupport } from "../types/Support";
-import { UserDocument, IUser, USER_PERMISSIONS } from "../types/User";
+import { UserDocument, USER_PERMISSIONS } from "../types/User";
 import { ChatModel } from "../models/Chat";
 import { IChat } from "../types/Chat";
-import { Schema, Mongoose } from "mongoose";
+import { Mongoose } from "mongoose";
 
 const FIND_REP_INTERVAL_SECONDS = 5;
 
@@ -106,6 +106,19 @@ export let getSupports = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
+ * GET /support/getSupportById/:id
+ * Returns all supports
+ */
+export let getSupportById = (req: Request, res: Response, next: NextFunction) => {
+    SupportModel.findOne({_id: req.params.id}, (err, support) => {
+        if (err)
+            return next(err);
+
+        res.json(support);
+    });
+};
+
+/**
  * GET /support/takeSupport/:id
  * Takes support.
  */
@@ -133,6 +146,7 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
                         support.representative = {
                             id: repID,
                             name: user.name,
+                            email: user.email,
                             picture: user.picture
                         };
                     } else {

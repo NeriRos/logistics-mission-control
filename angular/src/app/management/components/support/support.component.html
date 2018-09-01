@@ -1,0 +1,121 @@
+<div class="container-fluid">
+    <div class="row">
+        <table class="table">
+          <thead>
+            <th> json </th>
+            <th> # </th>
+            <th> Client </th>
+            <th> Rep </th>
+            <th> Support </th>
+            <th> Actions </th>
+          </thead>
+          <tbody>
+            <ng-template ngFor let-support [ngForOf]="supports" let-i="index">
+                <tr>
+                    <td>
+                        {{support.representative | json}}
+                    </td>
+                    <td class="indexNumber">
+                        <strong>{{i + 1}}</strong>
+                    </td>
+                    <td class="clientTable">
+                        <table class="table" *ngIf="support?.client">
+                            <thead>
+                                <th> Name </th>
+                                <th> phone </th>
+                                <th> Business </th>
+                            </thead>
+                            <tbody>
+                                    <tr *ngIf="!support.isEdit">
+                                        <td>{{support.client.name}}</td>
+                                        <td>{{support.client.phone}}</td>
+                                        <td>{{support.client.business}}</td>
+                                    </tr>
+                                    <tr *ngIf="support.isEdit">
+                                        <td><input type="text" class="form-control" [(ngModel)]="support.client.name" [value]="support.client.name"></td>
+                                        <td><input type="text" class="form-control" [(ngModel)]="support.client.email" [value]="support.client.phone"></td>
+                                        <td><input type="text" class="form-control" [(ngModel)]="support.client.business" [value]="support.client.business"></td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td class="repTable">
+                        <table class="table">
+                            <thead>
+                                <th> Name </th>
+                                <th> Email </th>
+                                <th> Picture </th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="!support.isEdit && support?.representative">
+                                    <td>{{support.representative.name}}</td>
+                                    <td>{{support.representative.email}}</td>
+                                    <td>{{support.representative.picture}}</td>
+                                </tr>
+                                <tr *ngIf="support.isEdit">
+                                    <td colspan="3">
+                                        <mat-form-field>
+                                            <mat-select [(value)]="support.representative">
+                                                <mat-option>None</mat-option>
+                                                <ng-template ngFor let-user [ngForOf]="users" let-i="index">
+                                                    <ng-container *ngIf="user.permissions <= LOCAL_USER_PERMISSIONS.REPRESENTATIVE">
+                                                        <mat-option [value]="user">{{user.name}} - {{user.permissions}}</mat-option>
+                                                    </ng-container>
+                                                </ng-template>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="noRep"  *ngIf="!support?.representative && !support.isEdit">
+                            <h3>-</h3>
+                        </div>
+                    </td>
+                    <td class="supportTable">
+                        <table class="table">
+                            <thead>
+                                <th> Status </th>
+                                <th> Users </th>
+                            </thead>
+                            <tbody>
+                                <tr *ngIf="!support.isEdit">
+                                    <td>{{support.status}}</td>
+                                    <td>
+                                        <h6 *ngFor="let user of support?.users">
+                                            <ng-container *ngIf="user | GetUserById: users">
+                                                {{(user | GetUserById: users).name}}
+                                            </ng-container>
+                                        </h6>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="support.isEdit">
+                                    <td><input type="text" class="form-control" [(ngModel)]="support.status" [value]="support.status"></td>
+                                    <td>
+                                        <h6 *ngFor="let user of support?.users">
+                                            <ng-container *ngIf="user | GetUserById: users">
+                                                {{(user | GetUserById: users).name}}
+                                            </ng-container>
+                                        </h6>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                    <td>
+                        <div *ngIf="!support.isEdit">
+                            <a [routerLink]="['/chat', support._id]"><button class="btn"><i class="fa fa-comments"></i></button></a>
+                            <button class="btn" (click)="toggleEdit(support, true)"><i class="fa fa-edit"></i></button>
+                            <button class="btn" (click)="delete(support)"><i class="fa fa-trash"></i></button>
+                        </div>
+                        <div *ngIf="support.isEdit">
+                            <button class="btn" (click)="edit(support)"><i class="fa fa-save"></i></button>
+                            <button class="btn" (click)="toggleEdit(support, false)"><i class="fa fa-times"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+          </tbody>
+        </table>
+    </div>
+  </div>

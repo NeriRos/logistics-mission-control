@@ -10,6 +10,7 @@ export interface ISupport {
     representative?: {
         id: string;
         name: string;
+        email: string;
         picture: string;
     };
     status: number;

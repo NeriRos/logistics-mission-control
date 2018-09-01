@@ -33,6 +33,30 @@ export let getSupports = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
+ * GET /management/updateSupport
+ * Returns all supports
+ */
+export let updateSupport = (req: Request, res: Response, next: NextFunction) => {
+    SupportModel.findById(req.body._id, (err, support) => {
+        if (err)
+            return next(err);
+
+        support.users = req.body.users;
+        support.status = req.body.status;
+        support.messages = req.body.messages;
+        support.client = req.body.client;
+        support.representative = req.body.representative;
+
+        support.save((err) => {
+            if (err)
+                return next(err);
+
+            res.json(support);
+        });
+    });
+};
+
+/**
  * GET /management/getChats
  * Returns all chats
  */

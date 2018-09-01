@@ -1,11 +1,18 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../nodejs/dist/public/",
+    "outDir": "dist",
     "baseUrl": "./",
     "module": "es2015",
-    "types": []
   },
+  "files": [
+    "typings.d.ts",
+  ],
+  "include": [
+    "app/**/*",
+    "main.ts",
+    "polyfills.ts"
+  ],
   "exclude": [
     "test.ts",
     "**/*.spec.ts"

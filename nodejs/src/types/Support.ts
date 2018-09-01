@@ -12,6 +12,7 @@ export type ISupport = {
     representative: {
         id: string;
         name: string;
+        email: string;
         picture: string;
     };
     status: number;

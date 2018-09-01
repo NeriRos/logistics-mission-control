@@ -12,6 +12,7 @@ const supportSchema = new Schema({
   representative: {
     id: { type: String },
     name: { type: String },
+    email: { type: String },
     picture: { type: String }
   },
   status: { type: Number },

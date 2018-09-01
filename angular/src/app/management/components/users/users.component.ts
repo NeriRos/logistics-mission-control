@@ -28,7 +28,7 @@ export class UsersComponent implements OnInit {
 
     getSupportName(supportID) {
         for (const support of this.supports) {
-            console.log(support._id, supportID);
+
             if (support._id === supportID) {
                 return support.client.name;
             }
@@ -36,7 +36,6 @@ export class UsersComponent implements OnInit {
     }
 
     edit(user) {
-        console.log(user);
         this.userService.updateUser(user).subscribe((res) => {
             if (res) {
                 user.isEdit = false;

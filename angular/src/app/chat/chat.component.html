@@ -1,0 +1,18 @@
+
+<div class="container">
+    <div class="row justify-content-center">
+        <ul id="messages">
+            <li *ngFor="let message of chats">
+                <span>{{message.text}}</span>
+            </li>
+        </ul>
+        <div class="row">
+            <div class="col">
+                <input #message class="form-control" autocomplete="off" placeholder="Type Message"/>
+            </div>
+            <div class="col-3">
+                <button class="btn" (click)="submit()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -6,7 +6,7 @@ const routes: Routes = [
     { path: "", redirectTo: "home", pathMatch: "full" },
     { path: "login", loadChildren: "./login/login.module#LoginModule" },
     { path: "home", loadChildren: "./home/home.module#HomeModule", canLoad: [LoggedInLazyLoadGuard] },
-    { path: "chat", loadChildren: "./chat/chat.module#ChatModule", canLoad: [LoggedInLazyLoadGuard] },
+    { path: "chat/:id", loadChildren: "./chat/chat.module#ChatModule", canLoad: [LoggedInLazyLoadGuard] },
     { path: "management", loadChildren: "./management/management.module#ManagementModule", canLoad: [LoggedInLazyLoadGuard] }
 ];
 
