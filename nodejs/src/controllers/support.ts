@@ -1,7 +1,9 @@
 "use strict";
 
 import { Response, Request, NextFunction, json } from "express";
-import { parallel } from "async";
+import { parallel, waterfall } from "async";
+import { Server } from "ws";
+
 import { UserModel } from "../models/User";
 import { SupportModel } from "../models/Support";
 import { SupportDocument, SUPPORT_STATUS, ISupport } from "../types/Support";
@@ -9,8 +11,9 @@ import { UserDocument, USER_PERMISSIONS } from "../types/User";
 import { ChatModel } from "../models/Chat";
 import { IChat } from "../types/Chat";
 import { Mongoose } from "mongoose";
+import { Connection } from "../models/Connection";
 
-const FIND_REP_INTERVAL_SECONDS = 5;
+declare let global: {connections: Array<Connection>};
 
 /**
  * POST /support/openSupport
@@ -19,12 +22,11 @@ const FIND_REP_INTERVAL_SECONDS = 5;
 export let openSupport = (req: Request, res: Response, next: NextFunction) => {
     const client = req.user;
 
-    if (!req.user)
-        return res.status(500).json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
-
-
     parallel({
         getSupport: (cb) => {
+            if (!client)
+                return cb({error: "no client"});
+
             SupportModel.findOne({client: {id: client.id}}, (err, support: SupportDocument) => {
                 if (err)
                     return cb(err);
@@ -41,7 +43,7 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
                         if (err)
                             return cb(err);
 
-                        cb(false, support);
+                        cb(false, savedSupport);
                     });
                 } else
                     cb(false, support);
@@ -92,6 +94,192 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
+ * GET /support/takeSupport/:id
+ * Takes support.
+ */
+export let takeSupport = (req, res: Response, next: NextFunction) => {
+    let supportID = req.params.id;
+    const repID = req.user._id;
+
+    supportID = (new Mongoose()).Types.ObjectId(req.params.id);
+
+    SupportModel.findById(supportID, (err, support: SupportDocument) => {
+        if (err)
+            return next(err);
+
+        if (support.users && support.users.length > 0) {
+            support.users.forEach((userID) => {
+                UserModel.findById(userID, (err, user) => {
+                    if (err)
+                        return next(err);
+
+                    if (repID.equals(userID)) { // Rep found, taking support
+                        support.status = 3;
+                        support.representative = {
+                            id: repID,
+                            name: user.name,
+                            email: user.email,
+                            picture: user.picture
+                        };
+                        support.users = [repID];
+                        user.supports = [supportID];
+                    } else { // Remove from arrays
+                        if (user.supports.length > 0)
+                            user.supports.splice(user.supports.indexOf(support._id), 1);
+
+                        if (support.users.length > 0)
+                            support.users.splice(support.users.indexOf(user._id), 1);
+                    }
+
+                    support.save();
+                    user.save();
+                });
+            });
+        } else {
+            console.log("No supportes - rep id", repID, "support id:", supportID);
+        }
+
+        // Sending welcome message to client
+        sendWelcomeMessage(req, res, next, support);
+    });
+};
+
+/**
+ * GET /support/viewSupport/:id
+ * View support with editing permissions for managers and up.
+ */
+export let viewSupport = (req: Request, res: Response, next: NextFunction) => {
+    const supportID = req.params.id;
+
+    // TODO: add editing permissions
+
+    SupportModel.findById(supportID, (err, support: SupportDocument) => {
+        if (err)
+            return next(err);
+
+        if (req.user.permissions <= USER_PERMISSIONS.MANAGER)
+            res.json(support);
+        else
+            return res.status(500).json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
+    });
+};
+
+/**
+ * GET /support/getChats/:id
+ * return all chats for specific support.
+ */
+export let getChats = (req: Request, res: Response, next: NextFunction) => {
+    SupportModel.findById(req.params.id, (err, support: ISupport) => {
+        if (err)
+            return next(err);
+
+        if (!support)
+            return res.status(500).json({error: "no support found for id: " + req.params.id});
+
+        if (support.status < SUPPORT_STATUS.TAKEN)
+            return res.json({ isAvailableRep: false, chats: [] });
+
+        else if (support.messages.length <= 0 && support.representative)
+            return res.json({ isAvailableRep: true, chats: [], representative: support.representative });
+
+        ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {
+            if (err)
+                return next(err);
+
+            res.json({chats: chats || [], isAvailableRep: true, representative: support.representative});
+        });
+    });
+};
+
+/**
+ * POST /support/sendMessage
+ * Sends a support message.
+ */
+export let sendMessage = (req, res, next) => {
+    const data = req.body;
+
+    if (!req.openSupport)
+        req.openSupport = {
+            isOK: false,
+            initial: false
+        };
+
+    waterfall([
+        (cb) => {
+            SupportModel.findById(data.id, (err, support: SupportDocument) => {
+                if (err)
+                    return cb(err);
+
+                if (!support)
+                    return cb({status: "error", error: "customError", message: "no support found for id: " + data.id});
+
+                const repID = support.representative && support.representative.id ? support.representative.id : "";
+                const isClient = support.client.id == req.user._id;
+                const isRep = repID == req.user._id;
+
+                if ((!req.user || (!isClient && !isRep)) && !req.openSupport.isOK)
+                    return cb({status: "error", error: "customError", message: "UNAUTHORIZED REQUESTER", code: 0});
+
+                cb(false, {support, repID, isClient, isRep});
+            });
+        },
+        (supportData, cb) => {
+            ChatModel.count({ $or: [{from: supportData.support.client.id, to: supportData.support.representative.id}, {from: supportData.support.representative.id, to: supportData.support.client.id}] }, (err, chatCount) => {
+                if (err)
+                    return cb(err);
+
+                cb(false, {supportData, chatCount});
+            });
+        }
+    ], (error: any, result: any) => {
+        if (error && error.error === "customError")
+            return res.status(500).json(error);
+        else if (error)
+            return next(error);
+
+        const support = result.supportData.support;
+        const repID = result.supportData.repID;
+        const isRep = result.supportData.isRep;
+        const isClient = result.supportData.isClient;
+
+        const chat: IChat = {
+            id: (result.chatCount + 1).toString(),
+            message: data.message,
+            from: isRep ? support.representative.id : (isClient ? support.client.id : req.user._id),
+            to: support.status >= SUPPORT_STATUS.TAKEN && support.representative && isClient ? support.representative.id : data.contact || data.to,
+            date: new Date(data.date),
+            status: 1,
+            isSupport: true,
+            initial: req.openSupport.initial
+        };
+
+        const newMessage = new ChatModel(chat);
+
+        newMessage.save((err, savedMessage) => {
+            if (err)
+                return next(err);
+
+            support.messages.push(savedMessage._id);
+
+            support.save((err, savedSupport) => {
+                if (err)
+                    return next(err);
+
+                if (isClient) {
+                    Connection.sendClientMessageById(res, repID, savedMessage);
+                } else if (isRep) {
+                    Connection.sendServerMessage(res, {message: savedMessage, connectionID: data.connectionID, support: savedSupport});
+                    // res.json({status: "ok", msg: "message send successfully", message: newMessage, support: savedSupport});
+                } else {
+                    console.log("NO CLIENT, NO REP");
+                    res.json({error: true, status: "error", message: "NO CLIENT, NO REP"});
+                }
+            });
+        });
+    });
+};
+
+/**
  * GET /support/getSupports
  * Returns all open/taken supports.
  * for reps
@@ -119,165 +307,122 @@ export let getSupportById = (req: Request, res: Response, next: NextFunction) =>
 };
 
 /**
- * GET /support/takeSupport/:id
- * Takes support.
+ * Sends a welcome message to client.
  */
-export let takeSupport = (req, res: Response, next: NextFunction) => {
-    let supportID = req.params.id;
-    const repID = req.user._id;
+export let sendWelcomeMessage = (req, res, next, support, message?: string) => {
+    req.params.id = support._id;
+    req.user._id = (support.representative || {}).id ;
+    req.body.support = support;
+    req.body.date = new Date();
+    req.body.message = (message || `${support.client.name} welcome to dynamichat!`);
+    req.body.contact = support.client.id;
+    req.body.id = support._id;
+    req.openSupport = { isOK: true, initial: true };
 
-    supportID = (new Mongoose()).Types.ObjectId(req.params.id);
-
-    if (!req.user)
-        return res.status(500).json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
-
-    SupportModel.findById(supportID, (err, support: SupportDocument) => {
-        if (err)
-            return next(err);
-
-        if (support.users.length > 0) {
-            support.users.forEach((userID) => {
-                UserModel.findById(userID, (err, user) => {
-                    if (err)
-                        return next(err);
-
-                    if (repID.equals(userID)) {
-                        support.status = 3;
-                        support.representative = {
-                            id: repID,
-                            name: user.name,
-                            email: user.email,
-                            picture: user.picture
-                        };
-                    } else {
-                        if (user.supports.length > 0)
-                            user.supports.splice(user.supports.indexOf(support._id), 1);
-
-                        if (support.users.length > 0)
-                            support.users.splice(support.users.indexOf(user._id), 1);
-                    }
-
-                    support.save();
-                    user.save();
-                });
-            });
-        } else {
-            console.log("No supportes - rep id", repID, "support id:", supportID);
-        }
-
-        req.params.id = supportID;
-        req.user._id = repID;
-        req.body.support = support;
-        req.body.date = new Date();
-        req.body.message = support.client.name + " welcome to dynamichat!";
-        req.body.contact = support.client.id;
-        req.body.id = support._id;
-        req.openSupport = { isOK: true, initial: true };
-
-        sendMessage(req, res, next);
-    });
+    sendMessage(req, res, next);
 };
 
 /**
- * GET /support/viewSupport/:id
- * View support for managers and up.
+ * POST /support/socketInit
+ * inits and creates a connection.
  */
-export let viewSupport = (req: Request, res: Response, next: NextFunction) => {
-    const supportID = req.params.id;
+export let socketInit = (req, res, next) => {
+    if (!req.body.supportID)
+        return res.status(500).json({error: true, message: "no supportID"});
 
-    if (!req.user)
-        return res.status(500).json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
-
-    SupportModel.findById(supportID, (err, support: SupportDocument) => {
-        if (err)
-            return next(err);
-
-        if (req.user.permissions <= USER_PERMISSIONS.MANAGER)
-            res.json(support);
-        else
-            return res.status(500).json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
-    });
-};
-
-/**
- * GET /support/getChats/:id
- * return all chats for specific support.
- */
-export let getChats = (req: Request, res: Response, next: NextFunction) => {
-    SupportModel.findById(req.params.id, (err, support: ISupport) => {
+    SupportModel.findById(req.body.supportID, (err, support: SupportDocument) => {
         if (err)
             return next(err);
 
         if (!support)
-            return res.status(500).json({error: "no support found for id:" + req.params.id});
+            return res.status(500).json({error: "no support found for id" + req.body.supportID });
 
-        if (support.status < SUPPORT_STATUS.TAKEN)
-            return res.json({ isAvailableRep: false, chats: [] });
-        else if (support.messages.length <= 0)
-            return res.json({ isAvailableRep: true, chats: [] });
+        const repID = support.representative && support.representative.id ? support.representative.id : "";
 
-        ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {
-            if (err)
-                return next(err);
-
-            res.json({chats: chats || [], isAvailableRep: true, representative: support.representative});
-        });
+        Connection.sendClientMessageById(res, repID, req.body);
     });
 };
 
 /**
- * POST /support/sendMessage
- * Sends a support message.
+ * Websocket handler, incoming messages and open connection and more.
+ * @param io websocket server object
  */
-export let sendMessage = (req, res: Response, next: NextFunction) => {
-    const data = req.body;
+export let webSocketServerHandler = (io: Server) => {
+    const connections: Array<Connection> = [];
+    global.connections = connections;
 
-    if (!req.openSupport)
-        req.openSupport = {
-            isOK: false,
-            initial: false
+    io.on("connection", (socket) => {
+        socket.on("disconnect", () => {
+            global.connections =  [];
+        });
+
+        socket.on("error", () => {
+            global.connections = [];
+        });
+
+        socket.on("message", (msg: any) => {
+            let data = JSON.parse(msg);
+
+            if (typeof data === "string") {
+                data = JSON.parse(data);
+            }
+
+            // data.userID
+            if (data.init) { // INIT
+                const newConnection = new Connection(socket, data.user, global.connections.length);
+
+                socket.send(msg);
+
+                global.connections.push(newConnection);
+            } else if (data.representativeMessage) { // MESSAGE FROM REP
+                messageHandler(data.representativeMessage, socket);
+            } else if (data.getRepresentative) { // FIND REP
+                const support: SupportDocument = data.support;
+
+                if (support) {
+                    console.log("finding rep interval");
+                    const findRepInterval = setInterval(() => {
+                        SupportModel.findOne({ _id: support._id, representative: { $exists: true } }, (err, supportDoc: SupportDocument) => {
+                            if (err)
+                                return socket.send(err);
+
+                            if (supportDoc && supportDoc.representative) {
+                                clearInterval(findRepInterval);
+                                console.log("REP FOUND", supportDoc.representative.name);
+                                return socket.send(JSON.stringify({representative: supportDoc.representative}));
+                            }
+
+                            console.log("STILL LOOPING");
+                        });
+
+                    }, 5000);
+                }
+            } else {
+                console.log("UNKNOWN SOCKET MESSAGE");
+            }
+        });
+    });
+
+    const messageHandler = (data, socket) => {
+        const req = {
+            user: data.user,
+            body: data,
+            params: { id: data.id },
+            openSupport: {
+                isOK: true,
+                initial: false
+            }
+        }, res = {
+            json: (data) => {
+                socket.send(JSON.stringify(data));
+            },
+            status: (code) => {
+                return res;
+            }
+        }, next = (err) => {
+            socket.send(JSON.stringify({error: err}));
         };
 
-    SupportModel.findById(data.id, (err, support: SupportDocument) => {
-        if (err)
-            return next(err);
-
-        if (!support)
-            return res.status(500).json({error: "no support found."});
-
-        const isClient = support.client.id == req.user._id;
-        const isRep = (support.representative || {id: ""}).id == req.user._id;
-
-        if ((!req.user || (!isClient && !isRep)) && !req.openSupport.isOK)
-            return res.status(500).json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
-
-        ChatModel.count({ $or: [{from: support.client.id, to: support.representative.id}, {from: support.representative.id, to: support.client.id}] }, (err, count) => {
-            if (err)
-                return next(err);
-
-            const chat: IChat = {
-                id: (count + 1).toString(),
-                message: data.message,
-                from: isRep ? support.representative.id : (isClient ? support.client.id : req.user._id),
-                to: support.status >= SUPPORT_STATUS.TAKEN && support.representative && isClient ? support.representative.id : data.contact || data.to,
-                date: new Date(data.date),
-                status: 1,
-                isSupport: true,
-                initial: req.openSupport.initial
-            };
-
-            const newMessage = new ChatModel(chat);
-
-            newMessage.save((err, savedMessage) => {
-                if (err)
-                    return next(err);
-
-                support.messages.push(savedMessage._id);
-
-                support.save();
-
-                res.json({status: "ok", msg: "message send successfully", message: newMessage, support: req.body.support});
-            });
-        });
-    });
+        sendMessage(req, res, next);
+    };
 };

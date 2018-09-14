@@ -47,8 +47,32 @@ export class SupportComponent implements OnInit {
         });
     }
 
+    deleteSupport(supportID) {
+        this.managementService.deleteSupport(supportID).then((res) => {
+            this.supports.forEach((support, index) => {
+                console.log(this.supports.splice(index, 1));
+            });
+        }).catch((err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
+    deleteAll() {
+        this.managementService.deleteSupport(null, true).then((res) => {
+            this.supports = this.supports.filter((support) => {
+                return support.messages.length > 0;
+            });
+        }).catch((err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+
     assignRepresentative(event) {
-        console.log(event);
+        console.log("rep assignded:", event);
     }
 
     toggleEdit(support, mode) {

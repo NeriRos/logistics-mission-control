@@ -1,6 +1,4 @@
 import { Document, Schema } from "mongoose";
-import { IUser, UserDocument } from "../types/User";
-import { IChat, ChatDocument } from "../types/Chat";
 
 export type ISupport = {
     client: {
@@ -17,7 +15,7 @@ export type ISupport = {
     };
     status: number;
     messages: Array<Schema.Types.ObjectId>;
-    users: Array<Schema.Types.ObjectId>;
+    users: Array<Schema.Types.ObjectId | string>;
 };
 export type SupportDocument = Document & ISupport;
 

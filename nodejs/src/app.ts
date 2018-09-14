@@ -45,7 +45,6 @@ app.set("host", process.env.HOST || "localhost");
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "hbs");
 
-
 app.use(compression());
 app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -74,6 +73,7 @@ app.use(express.static(path.join(__dirname, "public"), { maxAge: 31557600000 }))
 
 // Cors - allowed origins
 app.use(function(req, res, next) {
+
   const allowedOrigins = [
       "http://localhost",
       "https://localhost",
@@ -113,6 +113,7 @@ app.post("/signup", userController.postSignup);
  */
 app.get("/api", apiController.getApi);
 app.get("/api/test", passportConfig.isAuthenticated, apiController.test);
+app.get("/api/test2", apiController.test);
 
 /**
  * Protected routes
@@ -135,7 +136,8 @@ app.post("/chat/sendMessage", passport.authenticate("bearer", { session: false }
 /**
  * Support routes
  */
-app.post("/support/openSupport", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.openSupport);
+app.post("/support/openSupport", passportConfig.newSupportAuthorization, passportConfig.isAuthenticated, supportController.openSupport);
+app.post("/support/socketInit", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.socketInit);
 app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
 app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
 app.get("/support/getSupportById/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
@@ -149,10 +151,11 @@ app.get("/management/getUsers", passport.authenticate("bearer", { session: false
 app.get("/management/getChats", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getChats);
 app.get("/management/getSupports", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getSupports);
 app.post("/management/updateSupport", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.updateSupport);
+app.get("/management/deleteSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.deleteSupport);
+
 
 
 app.get("*", function (req, res, next) {
-  console.log("UNKNOEN!", path.resolve("dist/public/index.html"));
   res.sendFile(path.resolve("dist/public/index.html"));
 });
 

@@ -1,8 +1,8 @@
 <div class="container-fluid">
     <div class="row">
-        <table class="table">
+        <table class="table table-bordered supportsTable">
           <thead>
-            <th> json </th>
+            <!-- <th> json </th> -->
             <th> # </th>
             <th> Client </th>
             <th> Rep </th>
@@ -10,11 +10,18 @@
             <th> Actions </th>
           </thead>
           <tbody>
+            <tr>
+                <td>0</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td><button class="btn" (click)="deleteAll()">delete all</button></td>
+            </tr>
             <ng-template ngFor let-support [ngForOf]="supports" let-i="index">
                 <tr>
-                    <td>
+                    <!-- <td>
                         {{support.representative | json}}
-                    </td>
+                    </td> -->
                     <td class="indexNumber">
                         <strong>{{i + 1}}</strong>
                     </td>
@@ -26,16 +33,16 @@
                                 <th> Business </th>
                             </thead>
                             <tbody>
-                                    <tr *ngIf="!support.isEdit">
-                                        <td>{{support.client.name}}</td>
-                                        <td>{{support.client.phone}}</td>
-                                        <td>{{support.client.business}}</td>
-                                    </tr>
-                                    <tr *ngIf="support.isEdit">
-                                        <td><input type="text" class="form-control" [(ngModel)]="support.client.name" [value]="support.client.name"></td>
-                                        <td><input type="text" class="form-control" [(ngModel)]="support.client.email" [value]="support.client.phone"></td>
-                                        <td><input type="text" class="form-control" [(ngModel)]="support.client.business" [value]="support.client.business"></td>
-                                    </tr>
+                                <tr *ngIf="!support.isEdit">
+                                    <td>{{support.client.name}}</td>
+                                    <td>{{support.client.phone}}</td>
+                                    <td>{{support.client.business}}</td>
+                                </tr>
+                                <tr *ngIf="support.isEdit">
+                                    <td><input type="text" class="form-control" [(ngModel)]="support.client.name" [value]="support.client.name"></td>
+                                    <td><input type="text" class="form-control" [(ngModel)]="support.client.email" [value]="support.client.phone"></td>
+                                    <td><input type="text" class="form-control" [(ngModel)]="support.client.business" [value]="support.client.business"></td>
+                                </tr>
                             </tbody>
                         </table>
                     </td>
@@ -106,7 +113,7 @@
                         <div *ngIf="!support.isEdit">
                             <a [routerLink]="['/chat', support._id]"><button class="btn"><i class="fa fa-comments"></i></button></a>
                             <button class="btn" (click)="toggleEdit(support, true)"><i class="fa fa-edit"></i></button>
-                            <button class="btn" (click)="delete(support)"><i class="fa fa-trash"></i></button>
+                            <button class="btn" (click)="deleteSupport(support._id)"><i class="fa fa-trash"></i></button>
                         </div>
                         <div *ngIf="support.isEdit">
                             <button class="btn" (click)="edit(support)"><i class="fa fa-save"></i></button>

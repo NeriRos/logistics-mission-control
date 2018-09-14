@@ -36,7 +36,7 @@ export class Interceptor implements HttpInterceptor {
         if (url.startsWith("http://") || url.startsWith("https://")) {
             return url;
         } else {
-            return `${this.globals.protocol}://${this.globals.ip}:${this.globals.port}${url.startsWith("/") ? url : "/" + url }`;
+            return `${this.globals.server.uri}${url.startsWith("/") ? url : "/" + url }`;
         }
     }
 }

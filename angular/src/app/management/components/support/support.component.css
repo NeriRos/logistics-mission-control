@@ -1,3 +1,19 @@
 .table td, .table th {
    text-align: center;
 }
+
+table.supportsTable td {
+    padding-top: 0;
+}
+table.supportsTable th {
+    border-top: 0;
+}
+
+table.supportsTable table th, table.supportsTable table td {
+    border-right: 0;
+    border-left: 0;
+}
+
+table.supportsTable table tr:last-child td {
+    border-bottom: 0;
+}

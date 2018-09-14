@@ -56,6 +56,21 @@ passport.use(new BearerStrategy((token: string, done: Function) => {
     done({error: new Error("No token")});
 }));
 
+export let newSupportAuthorization = (req, res, next) => {
+  const origin = req.get("origin");
+  // TODO: fix security
+  // console.log(req.originalUrl);
+  if (origin && (origin === "www.cargo-express.co.il" ||  origin.match("localhost"))) {
+
+    req.user = req.body.user || {};
+    req.user._id = mongoose.Types.ObjectId();
+
+    next();
+  } else {
+    passport.authenticate("bearer", { session: false })(req, res, next);
+  }
+};
+
 /**
  * Support authorization middleware
  */
@@ -63,14 +78,22 @@ export let supportAuthorization = (req, res, next) => {
   const origin = req.get("origin");
   // TODO: fix security
   // console.log(req.originalUrl);
-  if (origin && (origin === "www.cargo-express.co.il" ||  origin.match("localhost:15255"))) {
+  if (origin && (origin === "www.cargo-express.co.il" ||  origin.match("localhost:12555"))) {
     const isPost = req.method == "POST";
+
+    if (req.body.ws_php_body) {
+      req.body = JSON.parse(req.body.ws_php_body);
+    }
 
     req.user = isPost ? req.body.user : {};
 
-    if (req.body.isNewSupport)
-      req.user._id = mongoose.Types.ObjectId(("000000000000" + (req.query.id || "0")).slice(-12));
-    req.user._id = req.user._id || req.user.id || req.query.id;
+    if (req.user) {
+      req.user._id = req.user._id || req.user.id || req.query.id;
+    } else if (req.body) {
+      console.log("NO USER", req.body);
+
+      return res.status(500).json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
+    }
 
     next();
   } else {

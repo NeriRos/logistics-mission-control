@@ -8,7 +8,6 @@ export class LoggedInLazyLoadGuard implements CanLoad {
     constructor(private router: Router, private userService: UserService) { }
 
     canLoad(): boolean {
-        console.log("CANLOAD");
         if (!this.userService.isAuthenticated()) {
             this.router.navigate(["login"]);
         }

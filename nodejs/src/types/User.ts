@@ -2,6 +2,7 @@ import { Document, Schema } from "mongoose";
 import { SupportDocument } from "../types/Support";
 
 export type IUser = {
+    id?: string;
     email: string;
     password: string;
     confirmPassword?: string;
@@ -20,6 +21,8 @@ export type UserDocument = Document & IUser;
 export const USER_PERMISSIONS = {
     ADMIN: 1,
     MANAGER: 2,
-    REPRESENTATIVE: 3,
-    DELIVERY: 4
+    BOOKKEEPING: 3,
+    LOGISTICS: 4,
+    REPRESENTATIVE: 5,
+    DELIVERY: 6
 };

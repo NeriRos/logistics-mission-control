@@ -1,16 +1,25 @@
 
 <div class="container">
-    <div class="row justify-content-center">
-        <ul id="messages">
-            <li *ngFor="let message of chats">
-                <span>{{message.text}}</span>
-            </li>
-        </ul>
-        <div class="row">
+    <div class="col-12">
+        <div class="row justify-content-center">
+            <ul id="messages" #messages>
+                <li *ngFor="let chat of chats" [class]="'message ' + messageSender(chat)">
+                    <div class="col-6 messageBody">
+                        <div class="row">
+                            <span class="text">{{chat.message}}</span>
+                        </div>
+                        <div class="row">
+                            <span class="date">{{chat.date | dataToTime}}</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="row justify-content-center">
             <div class="col">
                 <input #message class="form-control" autocomplete="off" placeholder="Type Message"/>
             </div>
-            <div class="col-3">
+            <div class="col-1">
                 <button class="btn" (click)="submit()">Send</button>
             </div>
         </div>

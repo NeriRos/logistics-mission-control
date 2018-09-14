@@ -53,13 +53,24 @@
             "development": {
               "optimization": true,
               "outputHashing": "none",
-              "sourceMap": true,
-              "extractCss": true,
+              "sourceMap": false,
+              "extractCss": false,
               "namedChunks": true,
               "aot": false,
-              "extractLicenses": true,
-              "vendorChunk": true,
+              "extractLicenses": false,
+              "vendorChunk": false,
               "buildOptimizer": false
+            },
+            "development-aot": {
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "extractCss": false,
+              "namedChunks": true,
+              "aot": true,
+              "extractLicenses": false,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
           }
         },

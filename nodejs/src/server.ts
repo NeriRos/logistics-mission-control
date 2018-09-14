@@ -1,6 +1,8 @@
 import * as errorHandler from "errorhandler";
 import * as socketio from "socket.io";
-import { socketIOHandler } from "./controllers/chat";
+import * as WebSocket from "ws";
+import { webSocketServerHandler } from "./controllers/support";
+
 const app = require("./app");
 
 /**
@@ -16,8 +18,9 @@ const server = app.listen(app.get("port"), app.get("host"), () => {
   console.log("  Press CTRL-C to stop\n");
 });
 
-// Socket IO
-const io = socketio(server);
-socketIOHandler(io);
+const wss = new WebSocket.Server({ port: 8889 });
+
+webSocketServerHandler(wss);
+
 
 export = server;

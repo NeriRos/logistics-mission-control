@@ -27,6 +27,16 @@ export class ChatService {
         });
     }
 
+    getChats(supportID): Promise<any> {
+        return this.network.http("GET", `support/getChats/${supportID}`).toPromise().catch((err) => {
+            console.log("error getSupports:", err);
+
+            return new Promise((reject) => {
+                reject({error: err});
+            });
+        });
+    }
+
     handleErrors(error: Error) {
         console.error(error.message);
 

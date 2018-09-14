@@ -15,6 +15,8 @@ export interface IUser {
 export const USER_PERMISSIONS = {
     ADMIN: 1,
     MANAGER: 2,
-    REPRESENTATIVE: 3,
-    DELIVERY: 4
+    BOOKKEEPING: 3,
+    LOGISTICS: 4,
+    REPRESENTATIVE: 5,
+    DELIVERY: 6
 };

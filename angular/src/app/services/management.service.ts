@@ -37,6 +37,16 @@ export class ManagementService {
         });
     }
 
+    deleteSupport(supportID, all: boolean = false) {
+        return this.network.http("GET", `management/deleteSupport/${all ? "all" : supportID}`).toPromise().catch((err) => {
+            console.log("error deleteSupport:", err);
+
+            return new Promise((reject) => {
+                reject({error: err});
+            });
+        });
+    }
+
     handleErrors(error: Error) {
         console.error(error.message);
 

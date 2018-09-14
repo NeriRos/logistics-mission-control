@@ -4,4 +4,4 @@ interface NodeModule {
   id: string;
 }
 declare const $: any;
-declare const io: any;
+// declare const io: any;

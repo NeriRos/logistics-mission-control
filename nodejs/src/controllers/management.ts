@@ -4,6 +4,9 @@ import { Response, Request, NextFunction } from "express";
 import { UserModel } from "../models/User";
 import { SupportModel } from "../models/Support";
 import { ChatModel } from "../models/Chat";
+import { SUPPORT_STATUS } from "../types/Support";
+import { Schema, Mongoose, Types } from "mongoose";
+import { sendWelcomeMessage } from "../controllers/support";
 
 
 /**
@@ -45,14 +48,36 @@ export let updateSupport = (req: Request, res: Response, next: NextFunction) => 
         support.status = req.body.status;
         support.messages = req.body.messages;
         support.client = req.body.client;
-        support.representative = req.body.representative;
 
-        support.save((err) => {
-            if (err)
-                return next(err);
+        if (support.representative != req.body.representative || !support.representative) {
+            // Update status
+            if (support.status <= SUPPORT_STATUS.REQUEST)
+                support.status = SUPPORT_STATUS.TAKEN;
 
-            res.json(support);
-        });
+            // Set representative
+            support.representative = req.body.representative;
+            support.representative.id = support.representative.id || req.body.representative._id;
+            support.users = [support.representative.id];
+
+            // Send welcome message
+            support.save((err) => {
+                if (err)
+                    return next(err);
+
+                sendWelcomeMessage(req, res, next, support, `A representative has joined the conversation, rep name: ${support.representative.name}`);
+            });
+        } else {
+            console.log("NOT SATISFIED");
+        }
+    });
+};
+
+export let deleteSupport = (req: Request, res: Response, next: NextFunction) => {
+    SupportModel.remove(req.params.id === "all" ? {messages: []} : {_id: req.params.id}, (err) => {
+        if (err)
+            next(err);
+
+        res.json({status: "ok"});
     });
 };
 

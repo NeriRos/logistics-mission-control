@@ -5,9 +5,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "clear": "del /Q /S ..\\nodejs\\dist\\public\\*",
+    "clear": "del /Q /S ..\\nodejs\\dist\\public\\*  >nul 2>&1",
     "predebug": "npm run clear",
     "debug": "ng build -c development --watch --output-path ..\\nodejs\\dist\\public --delete-output-path false",
+    "predebug-aot": "npm run clear",
+    "debug-aot": "ng build -c development-aot --watch --output-path ..\\nodejs\\dist\\public --delete-output-path false",
     "build": "ng build --output-path ..\\nodejs\\dist\\public",
     "test": "ng test",
     "lint": "ng lint",
@@ -31,6 +33,7 @@
     "hammerjs": "^2.0.8",
     "rxjs": "^6.2.2",
     "rxjs-compat": "^6.2.2",
+    "socket.io-client": "^2.1.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
