@@ -8,16 +8,18 @@ import { SupportComponent } from "./support.component";
 
 import { ManagementService } from "../../../services/management.service";
 import { UserService } from "../../../services/login.service";
-import { GetUserById } from "../../../pipes/get-user-by-id.pipe";
+
+import { SharedModule } from "../../../shared/shared.module";
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     SupportRoutingModule,
-    MatSelectModule
+    MatSelectModule,
+    SharedModule
   ],
   providers: [ManagementService, UserService],
-  declarations: [SupportComponent, GetUserById]
+  declarations: [SupportComponent]
 })
 export class SupportModule { }

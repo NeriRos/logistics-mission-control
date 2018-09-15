@@ -4,6 +4,7 @@
           <thead>
             <!-- <th> json </th> -->
             <th> # </th>
+            <th> Date </th>
             <th> Client </th>
             <th> Rep </th>
             <th> Support </th>
@@ -24,6 +25,9 @@
                     </td> -->
                     <td class="indexNumber">
                         <strong>{{i + 1}}</strong>
+                    </td>
+                    <td class="date">
+                        <strong>{{support.createdAt | dateToTime : true}}</strong>
                     </td>
                     <td class="clientTable">
                         <table class="table" *ngIf="support?.client">

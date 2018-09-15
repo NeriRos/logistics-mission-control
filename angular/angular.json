@@ -61,6 +61,17 @@
               "vendorChunk": false,
               "buildOptimizer": false
             },
+            "development-ext": {
+              "optimization": true,
+              "outputHashing": "none",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": true,
+              "aot": false,
+              "extractLicenses": false,
+              "vendorChunk": true,
+              "buildOptimizer": false
+            },
             "development-aot": {
               "optimization": true,
               "outputHashing": "none",

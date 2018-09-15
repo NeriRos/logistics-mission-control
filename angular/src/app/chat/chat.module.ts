@@ -5,14 +5,17 @@ import { ChatRoutingModule } from "./chat-routing.module";
 
 import { ChatService } from "../services/chat.service";
 import { SupportService } from "../services/support.service";
-import { DataToTimePipe } from "../pipes/data-to-time.pipe";
+// import { DateToTimePipe } from "../pipes/date-to-time.pipe";
+
+import { SharedModule } from "../shared/shared.module";
 
 @NgModule({
   imports: [
     CommonModule,
-    ChatRoutingModule
+    ChatRoutingModule,
+    SharedModule
   ],
   providers: [ChatService, SupportService],
-  declarations: [ChatComponent, DataToTimePipe]
+  declarations: [ChatComponent]
 })
 export class ChatModule { }

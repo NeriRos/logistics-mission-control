@@ -10,6 +10,8 @@
     "debug": "ng build -c development --watch --output-path ..\\nodejs\\dist\\public --delete-output-path false",
     "predebug-aot": "npm run clear",
     "debug-aot": "ng build -c development-aot --watch --output-path ..\\nodejs\\dist\\public --delete-output-path false",
+    "predebug-ext": "npm run clear",
+    "debug-ext": "ng build -c development-ext --watch --output-path ..\\nodejs\\dist\\public --delete-output-path false",
     "build": "ng build --output-path ..\\nodejs\\dist\\public",
     "test": "ng test",
     "lint": "ng lint",
