@@ -15,7 +15,7 @@ export class Connection {
         this.id = id;
     }
 
-    public sendClientMessage(cb: Response, message: any) {
+    public sendClientMessage(message: any, cb: any = {representative: {}, json: (data) => {}}) {
         if (message.init) {
             console.log("Sending init message for connection:", message.connectionID, "to client");
         }
@@ -25,8 +25,14 @@ export class Connection {
         } else if (this.socket.readyState === 3) {
             cb.json({error: true, status: "error", message: "CONNECTION CLOSED"});
         } else if (this.socket && this.socket.readyState === 1) {
-            this.socket.send(JSON.stringify(message));
-            cb.json({error: false, status: "ok", message: "message sent successfully!"});
+            this.socket.send(JSON.stringify(message)); // send message to representative
+            const response: any = {error: false, status: "ok", message: "message sent successfully!"};
+
+            if (message.init) {
+                response.representative = cb.representative;
+            }
+
+            cb.json(response); // send ok to php server
         }
     }
 
@@ -41,27 +47,29 @@ export class Connection {
     }
 
     static findConnectionByUserId(userID: string): Connection {
+        let result: any = {id: -1};
         for (const connection of global.connections.reverse()) {
-            if (connection.user && connection.user._id == userID) {
-                return connection;
+            if (connection.user && connection.user._id == userID && connection.id > result.id) {
+                result = connection;
             }
         }
 
-        return undefined;
+        return result.id == -1 ? undefined : result;
     }
 
-    static sendClientMessageById(cb: Response, userID: string, message: any) {
+    static sendClientMessageByUserId(cb: Response, userID: string, message: any) {
         const connection = Connection.findConnectionByUserId(userID);
 
         if (connection) {
-            connection.sendClientMessage(cb, message);
+            console.log("FOUND CONNECTION id " + connection.id + " WITH READYSTATE:", connection.socket.readyState);
+            connection.sendClientMessage(message, cb);
         } else {
             console.log("NO CONNECTION FOUND FOR ID:", userID);
-            cb.json({error: true, status: "error", message: "NO CONNECTION FOUND FOR ID: " + userID});
+            cb.json({error: true, status: "error", message: "NO CONNECTION FOUND FOR USER ID: " + userID});
         }
     }
 
-    static sendServerMessage(cb: Response, message: any) {
+    static sendServerMessage(cb: Response | {json: any}, message: any) {
         const options = {
             hostname: "localhost",
             port: 9001,
@@ -72,15 +80,26 @@ export class Connection {
             }
         };
         const req = http.request(options, (res) => {
-            if (res.statusCode === 200) {
-                cb.json({error: false, status: "ok", message: "Message received by php server"});
-            }
+            let data = "";
+
+            res.on("data", (chunk) => {
+                data += chunk;
+            }).on("end", () => {
+                if (res.statusCode === 200) {
+                    cb.json({error: false, status: "ok", message: JSON.parse(data)});
+                }
+                if (res.statusCode === 500) {
+                    cb.json({error: true, status: "error", message: data});
+                }
+            });
         });
+
         req.on("error", function(e) {
             cb.json({error: true, status: "error", message: "message was not sent to php server"});
         });
         // console.log("Sending message to php:", message);
         // write data to request body
+
         req.write(JSON.stringify(message));
         req.end();
     }

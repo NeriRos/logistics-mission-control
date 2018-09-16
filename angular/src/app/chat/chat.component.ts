@@ -112,6 +112,7 @@ export class ChatComponent implements OnInit {
 
             this.socket.onclose = (e) => {
                 console.log("socket closed");
+                alert("client logged off (socketclosed)");
             };
 
             this.socket.onerror = (e) => {
@@ -123,15 +124,30 @@ export class ChatComponent implements OnInit {
     }
 
     socketMessageHandler(data) {
-        if (data.init)  {
-            console.log("PHP CONNECTION ID:", data.connectionID);
+        if (typeof data === "string") {
+            data = JSON.parse(data);
+        }
 
+        console.log("GOT DATA", data);
+
+        if (data.error || (data.response && data.response.error)) {
+            console.log("Received error from socket server:", data.message || data.response.message);
+            return;
+        } else if (data.init)  {
             this.phpConnectionID = data.connectionID;
-        } else if (data.error) {
-            console.log("Received error from socket server:", data.error);
+
+            console.log("PHP CONNECTION ID:", this.phpConnectionID);
+        } else if (data.getConnectionID) {
+            this.phpConnectionID = data.response.message.connectionID;
+
+            console.log("php CONNECTION ID:", this.phpConnectionID);
         } else { // Got message from client
             if (typeof data.status !== "undefined" && (typeof data.status === "number" || data.status === "ok")) {
-                this.addMessages(data.message);
+                if (typeof data.message.message === "object") {
+                    data = data.message.message;
+                }
+
+                this.addMessages(data);
             } else if (data.status === "error") {
                 console.log("ERROR:", data);
             }
@@ -140,7 +156,6 @@ export class ChatComponent implements OnInit {
 
     addMessages(message) {
         this.zone.run(() => {
-            console.log("adding message", message);
             this.chats.push(message);
 
             this.scrollToLastMessage();

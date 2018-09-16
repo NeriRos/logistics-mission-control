@@ -141,6 +141,7 @@ app.post("/support/socketInit", passportConfig.supportAuthorization, passportCon
 app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
 app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
 app.get("/support/getSupportById/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
+app.get("/support/getSupportRepresentative/:supportID", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportRepresentative);
 app.get("/support/getChats/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
 app.get("/support/takeSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, supportController.takeSupport);
 

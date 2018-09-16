@@ -232,8 +232,10 @@ export let sendMessage = (req, res, next) => {
             });
         }
     ], (error: any, result: any) => {
-        if (error && error.error === "customError")
+        if (error && error.error === "customError") {
+            console.log("custom error in sending message", error);
             return res.status(500).json(error);
+        }
         else if (error)
             return next(error);
 
@@ -266,10 +268,11 @@ export let sendMessage = (req, res, next) => {
                     return next(err);
 
                 if (isClient) {
-                    Connection.sendClientMessageById(res, repID, savedMessage);
+                    // Send message to nodejs client and return response to php http request.
+                    Connection.sendClientMessageByUserId(res, repID, savedMessage);
                 } else if (isRep) {
+                    // Send message to php http server.
                     Connection.sendServerMessage(res, {message: savedMessage, connectionID: data.connectionID, support: savedSupport});
-                    // res.json({status: "ok", msg: "message send successfully", message: newMessage, support: savedSupport});
                 } else {
                     console.log("NO CLIENT, NO REP");
                     res.json({error: true, status: "error", message: "NO CLIENT, NO REP"});
@@ -323,23 +326,44 @@ export let sendWelcomeMessage = (req, res, next, support, message?: string) => {
 };
 
 /**
+ * GET /support/getSupportRepresentative/:supportID
+ * returns the support representative.
+ */
+export let getSupportRepresentative = (req, res, next) => {
+    if (!req.params.supportID)
+        return res.status(500).json({status: "error", error: true, message: "no supportID"});
+
+    SupportModel.findById(req.params.supportID, (err, support: SupportDocument) => {
+        if (err)
+            return next(err);
+
+        if (!support)
+            return res.status(500).json({status: "error", error: true, message: "no support found for id" + req.params.supportID });
+
+        res.json({status: "ok", error: false, message: {isRepresentative: !!support.representative.id, representative: support.representative } });
+    });
+};
+
+/**
  * POST /support/socketInit
  * inits and creates a connection.
  */
 export let socketInit = (req, res, next) => {
     if (!req.body.supportID)
-        return res.status(500).json({error: true, message: "no supportID"});
+        return res.status(500).json({status: "error", error: true, message: "no supportID"});
 
     SupportModel.findById(req.body.supportID, (err, support: SupportDocument) => {
         if (err)
             return next(err);
 
         if (!support)
-            return res.status(500).json({error: "no support found for id" + req.body.supportID });
+            return res.status(500).json({status: "error", error: true, message: "no support found for id" + req.body.supportID });
 
         const repID = support.representative && support.representative.id ? support.representative.id : "";
 
-        Connection.sendClientMessageById(res, repID, req.body);
+        res.representative = support.representative;
+
+        Connection.sendClientMessageByUserId(res, repID, req.body);
     });
 };
 
@@ -361,49 +385,37 @@ export let webSocketServerHandler = (io: Server) => {
         });
 
         socket.on("message", (msg: any) => {
-            let data = JSON.parse(msg);
+            const data = JSON.parse(msg);
+            const newConnection = new Connection(socket, data.user, global.connections.length);
 
-            if (typeof data === "string") {
-                data = JSON.parse(data);
-            }
+            global.connections.push(newConnection);
 
-            // data.userID
-            if (data.init) { // INIT
-                const newConnection = new Connection(socket, data.user, global.connections.length);
-
-                socket.send(msg);
-
-                global.connections.push(newConnection);
-            } else if (data.representativeMessage) { // MESSAGE FROM REP
-                messageHandler(data.representativeMessage, socket);
-            } else if (data.getRepresentative) { // FIND REP
-                const support: SupportDocument = data.support;
-
-                if (support) {
-                    console.log("finding rep interval");
-                    const findRepInterval = setInterval(() => {
-                        SupportModel.findOne({ _id: support._id, representative: { $exists: true } }, (err, supportDoc: SupportDocument) => {
-                            if (err)
-                                return socket.send(err);
-
-                            if (supportDoc && supportDoc.representative) {
-                                clearInterval(findRepInterval);
-                                console.log("REP FOUND", supportDoc.representative.name);
-                                return socket.send(JSON.stringify({representative: supportDoc.representative}));
-                            }
-
-                            console.log("STILL LOOPING");
-                        });
-
-                    }, 5000);
-                }
-            } else {
-                console.log("UNKNOWN SOCKET MESSAGE");
-            }
+            messageHandler(newConnection, data);
         });
     });
 
-    const messageHandler = (data, socket) => {
+    const messageHandler = (connection, data) => {
+        // data.userID
+        if (data.init) { // INIT
+            const res = {
+                json: (data) => {
+                    if (data.message.phpData && data.message.phpData.length > 0) {
+                        data.message.phpData = JSON.parse(data.message.phpData);
+                    }
+                    connection.sendClientMessage(JSON.stringify({getConnectionID: true, response: data}));
+                }
+            };
+
+            Connection.sendServerMessage(res, {getConnectionID: true, supportID: data.support._id});
+            connection.sendClientMessage(data);
+        } else if (data.representativeMessage) { // MESSAGE FROM REP
+            messageSender(data.representativeMessage, connection);
+        } else {
+            console.log("UNKNOWN SOCKET MESSAGE");
+        }
+    };
+
+    const messageSender = (data, connection) => {
         const req = {
             user: data.user,
             body: data,
@@ -414,15 +426,16 @@ export let webSocketServerHandler = (io: Server) => {
             }
         }, res = {
             json: (data) => {
-                socket.send(JSON.stringify(data));
+                connection.sendClientMessage(data);
             },
             status: (code) => {
                 return res;
             }
         }, next = (err) => {
-            socket.send(JSON.stringify({error: err}));
+            connection.sendClientMessage({error: err});
         };
 
         sendMessage(req, res, next);
     };
 };
+
