@@ -46,4 +46,6 @@ db/
 
 *.js
 !angular/hooks/**/*.js
+!angular/src/assets/**/*.js
 !nodejs/src/public/**/*.js
+
