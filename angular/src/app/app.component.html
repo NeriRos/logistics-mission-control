@@ -1,13 +1,13 @@
 <div class="container">
     <div class="row">
         <div class="col-12">
-        <div class="menu row">
-            <div class="menuItem col" *ngFor="let menuItem of menus">
-            <div class="form-group">
-                <a [routerLink]="menuItem.link"><button class="btn">{{menuItem.name}}</button></a>
+            <div class="menu row">
+                <div class="menuItem col" *ngFor="let menuItem of menus">
+                    <div class="form-group">
+                        <a [routerLink]="menuItem.link"><button class="btn">{{menuItem.name}}</button></a>
+                    </div>
+                </div>
             </div>
-            </div>
-        </div>
         </div>
     </div>
     <hr>

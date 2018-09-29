@@ -7,7 +7,8 @@ import { Component, OnInit } from "@angular/core";
 })
 export class ManagementComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

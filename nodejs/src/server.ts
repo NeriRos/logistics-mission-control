@@ -1,7 +1,10 @@
 import * as errorHandler from "errorhandler";
-import * as socketio from "socket.io";
 import * as WebSocket from "ws";
-import { webSocketServerHandler } from "./controllers/support";
+import { websocketChatServerHandler, websocketMissionsServerHandler } from "./controllers/support";
+import { Connection } from "mongoose";
+
+declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
+global.connections = {chat: [], missions: []};
 
 const app = require("./app");
 
@@ -18,9 +21,10 @@ const server = app.listen(app.get("port"), app.get("host"), () => {
   console.log("  Press CTRL-C to stop\n");
 });
 
-const wss = new WebSocket.Server({ port: 8889 });
+const websocketChatServer = new WebSocket.Server({ port: 8890 });
+const websocketMissionsServer = new WebSocket.Server({ port: 8891 });
 
-webSocketServerHandler(wss);
-
+websocketChatServerHandler(websocketChatServer);
+websocketMissionsServerHandler(websocketMissionsServer);
 
 export = server;

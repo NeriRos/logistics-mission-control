@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from "@angular/core";
 import { ISupport } from "../models/support.model";
-import { IChat } from "../models/chat.model";
+import { IChat, Chat } from "../models/chat.model";
 import { ChatService } from "../services/chat.service";
 import { ActivatedRoute } from "@angular/router";
 import { IUser } from "../models/user.model";
@@ -33,9 +33,21 @@ export class ChatComponent implements OnInit {
         private globals: Globals,
         private zone: NgZone
     ) {
+
+    }
+
+    ngOnInit() {
         this.router.params.subscribe((params) => {
             this.supportPromise = this.supportService.getSupportById(params.id).then((support: ISupport) => {
                 this.support = support;
+
+                this.chatService.getChats(support._id).then((chats) => {
+                    this.zone.run(() => {
+                        this.chats = chats.chats;
+
+                        this.scrollToLastMessage();
+                    });
+                });
 
                 return support;
             });
@@ -43,20 +55,6 @@ export class ChatComponent implements OnInit {
 
         this.userService.getUser().subscribe((user) => {
             this.user = user;
-        });
-    }
-
-    ngOnInit() {
-        this.supportPromise.then((support) => {
-            this.chatService.getChats(support._id).then((chats) => {
-                this.zone.run(() => {
-                    this.chats = chats.chats;
-
-                    this.scrollToLastMessage();
-                });
-            });
-
-            return support;
         });
 
         this.initSocket();
@@ -86,6 +84,16 @@ export class ChatComponent implements OnInit {
             support: this.support
         };
 
+        // const newMessage = Chat.newMessage(this.message.nativeElement.value, this.user._id, this.support.client.id, true);
+        // newMessage.setId(this.support._id);
+
+        // const repMessage = {
+        //     message: newMessage,
+        //     user: this.user,
+        //     support: this.support,
+        //     connectionID: this.phpConnectionID
+        // };
+
         this.socket.send(JSON.stringify({representativeMessage: newMessage}));
 
         return false;
@@ -93,7 +101,7 @@ export class ChatComponent implements OnInit {
 
     initSocket() {
         try {
-            this.socket = new WebSocket(this.globals.socketServer.uri);
+            this.socket = new WebSocket(this.globals.socketServer.chat.uri);
 
             this.socket.onmessage = (msg) => {
                 const data = JSON.parse(msg.data);

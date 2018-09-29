@@ -13,7 +13,7 @@ import { IChat } from "../types/Chat";
 import { Mongoose } from "mongoose";
 import { Connection } from "../models/Connection";
 
-declare let global: {connections: Array<Connection>};
+declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
 
 /**
  * POST /support/openSupport
@@ -371,24 +371,94 @@ export let socketInit = (req, res, next) => {
  * Websocket handler, incoming messages and open connection and more.
  * @param io websocket server object
  */
-export let webSocketServerHandler = (io: Server) => {
-    const connections: Array<Connection> = [];
-    global.connections = connections;
-
+export let websocketChatServerHandler = (io: Server) => {
     io.on("connection", (socket) => {
         socket.on("disconnect", () => {
-            global.connections =  [];
+            global.connections.chat =  [];
         });
 
         socket.on("error", () => {
-            global.connections = [];
+            global.connections.chat = [];
         });
 
         socket.on("message", (msg: any) => {
             const data = JSON.parse(msg);
-            const newConnection = new Connection(socket, data.user, global.connections.length);
+            const newConnection = new Connection(socket, data.user, global.connections.chat.length);
 
-            global.connections.push(newConnection);
+            global.connections.chat.push(newConnection);
+
+            messageHandler(newConnection, data);
+        });
+    });
+
+    const messageHandler = (connection, data) => {
+        // data.userID
+        if (data.init) { // INIT
+            const res = {
+                json: (data) => {
+                    if (data.message.phpData && data.message.phpData.length > 0) {
+                        data.message.phpData = JSON.parse(data.message.phpData);
+                    }
+                    connection.sendClientMessage(JSON.stringify({getConnectionID: true, response: data}));
+                }
+            };
+
+            Connection.sendServerMessage(res, {getConnectionID: true, supportID: data.support._id});
+            connection.sendClientMessage(data);
+        } else if (data.representativeMessage) { // MESSAGE FROM REP
+            messageSender(data.representativeMessage, connection);
+        } else {
+            console.log("UNKNOWN SOCKET MESSAGE");
+        }
+    };
+
+    const messageSender = (data, connection) => {
+        const req = {
+            user: data.user,
+            body: data,
+            params: { id: data.id },
+            openSupport: {
+                isOK: true,
+                initial: false
+            }
+        }, res = {
+            json: (data) => {
+                connection.sendClientMessage(data);
+            },
+            status: (code) => {
+                return res;
+            }
+        }, next = (err) => {
+            connection.sendClientMessage({error: err});
+        };
+
+        sendMessage(req, res, next);
+    };
+};
+
+
+/**
+ * Websocket handler, incoming messages and open connection and more.
+ * @param io websocket server object
+ */
+export let websocketMissionsServerHandler = (io: Server) => {
+    const connections: Array<Connection> = [];
+    global.connections.chat = connections;
+
+    io.on("connection", (socket) => {
+        socket.on("disconnect", () => {
+            global.connections.chat =  [];
+        });
+
+        socket.on("error", () => {
+            global.connections.chat = [];
+        });
+
+        socket.on("message", (msg: any) => {
+            const data = JSON.parse(msg);
+            const newConnection = new Connection(socket, data.user, global.connections.chat.length);
+
+            global.connections.chat.push(newConnection);
 
             messageHandler(newConnection, data);
         });

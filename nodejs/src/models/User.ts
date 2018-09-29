@@ -5,6 +5,13 @@ import { createToken } from "../controllers/user";
 import { ISupport, SupportDocument } from "../types/Support";
 import { SupportModel } from "../models/Support";
 
+export const userLiteSchema = new Schema({
+    email: {type: String},
+    name: {type: String},
+    picture: {type: String},
+    permissions: {type: Number}
+});
+
 const userSchema = new Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },

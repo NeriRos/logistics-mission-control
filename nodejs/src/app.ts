@@ -24,6 +24,7 @@ import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
 import * as supportController from "./controllers/support";
 import * as managementController from "./controllers/management";
+import * as missionsController from "./controllers/missions";
 import * as passportConfig from "./config/passport";
 
 // Create Express server
@@ -154,6 +155,13 @@ app.get("/management/getSupports", passport.authenticate("bearer", { session: fa
 app.post("/management/updateSupport", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.updateSupport);
 app.get("/management/deleteSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.deleteSupport);
 
+/**
+ * Missions routes
+ */
+app.get("/missions/getMissionsByCreatorID/:creatorID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.getMissionsByCreatorID);
+app.get("/missions/getUnhandledMissions/:receiverID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.getUnhandledMissions);
+app.get("/missions/changeMissionStatus/:missionId/:status", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.changeMissionStatus);
+app.post("/missions/createMission", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.createMission);
 
 
 app.get("*", function (req, res, next) {

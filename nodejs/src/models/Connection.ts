@@ -2,7 +2,7 @@ import { IUser, UserDocument } from "../types/User";
 import * as http from "http";
 import { Response } from "express";
 
-declare let global: {connections: Array<Connection>};
+declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
 
 export class Connection {
     socket: WebSocket;
@@ -37,7 +37,7 @@ export class Connection {
     }
 
     static findConnectionById(id: number): Connection {
-        for (const connection of global.connections) {
+        for (const connection of global.connections.chat) {
             if (connection.id == id) {
                 return connection;
             }
@@ -48,7 +48,7 @@ export class Connection {
 
     static findConnectionByUserId(userID: string): Connection {
         let result: any = {id: -1};
-        for (const connection of global.connections.reverse()) {
+        for (const connection of global.connections.chat.reverse()) {
             if (connection.user && connection.user._id == userID && connection.id > result.id) {
                 result = connection;
             }

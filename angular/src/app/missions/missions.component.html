@@ -1,0 +1,36 @@
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col">
+            <div class="row justify-content-center">
+                <div class="col text-center">
+                    <div class="myMissions">
+                        <h2>My Missions</h2>
+                        <hr>
+                        <div class="missions">
+                            <ng-template ngFor let-mission [ngForOf]="myMissions">
+                                <app-mission-item [missionKind]="'myMissions'" [mission]="mission"></app-mission-item>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-center">
+                    <div class="unhandledMissions">
+                        <h2>Missions To Handle</h2>
+                        <hr>
+                        <div class="missions">
+                            <ng-template ngFor let-mission [ngForOf]="unhandledMissions">
+                                <app-mission-item [missionKind]="'unhandledMissions'" [mission]="mission"></app-mission-item>
+                            </ng-template>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+                <div class="col-2">
+                    <button mat-raised-button (click)="openCreateMission()">create mission</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

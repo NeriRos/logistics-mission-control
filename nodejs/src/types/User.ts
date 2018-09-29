@@ -16,6 +16,14 @@ export type IUser = {
     supports?: Array<Schema.Types.ObjectId>;
 };
 
+export type IUserLite = {
+    _id?: string;
+    email: string;
+    name?: string;
+    picture?: string;
+    permissions?: number;
+};
+
 export type UserDocument = Document & IUser;
 
 export const USER_PERMISSIONS = {

@@ -1,0 +1,11 @@
+.missions {
+    display: flex;
+    /* justify-content: center; */
+    flex-direction: column;
+}
+
+.missions app-mission-item {
+    margin-bottom: 10px;
+}
+
+

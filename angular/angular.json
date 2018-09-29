@@ -59,10 +59,11 @@
               "aot": false,
               "extractLicenses": false,
               "vendorChunk": false,
-              "buildOptimizer": false
+              "buildOptimizer": false,
+              "deleteOutputPath": false
             },
             "development-ext": {
-              "optimization": true,
+              "optimization": false,
               "outputHashing": "none",
               "sourceMap": true,
               "extractCss": true,
@@ -70,7 +71,8 @@
               "aot": false,
               "extractLicenses": false,
               "vendorChunk": true,
-              "buildOptimizer": false
+              "buildOptimizer": false,
+              "deleteOutputPath": true
             },
             "development-aot": {
               "optimization": true,
@@ -81,7 +83,8 @@
               "aot": true,
               "extractLicenses": false,
               "vendorChunk": false,
-              "buildOptimizer": true
+              "buildOptimizer": true,
+              "deleteOutputPath": false
             }
           }
         },

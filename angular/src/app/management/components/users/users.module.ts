@@ -5,18 +5,20 @@ import { FormsModule } from "@angular/forms";
 import { UsersComponent } from "./users.component";
 import { UsersRoutingModule } from "./users-routing.module";
 import { ManagementService } from "../../../services/management.service";
-import { SupportClientPipe } from "../../../pipes/support-client.pipe";
+import { PipesModule } from "../../../shared/pipes.module";
 
 @NgModule({
   imports: [
     CommonModule,
     UsersRoutingModule,
-    FormsModule
+    FormsModule,
+    PipesModule
   ],
+  exports: [PipesModule],
   providers: [
     UsersComponent,
     ManagementService
   ],
-  declarations: [UsersComponent, SupportClientPipe]
+  declarations: [UsersComponent]
 })
 export class UsersModule { }

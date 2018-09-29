@@ -12,6 +12,14 @@ export interface IUser {
     permissions?: number;
 }
 
+export interface IUserLite {
+    _id?: string;
+    email: string;
+    name?: string;
+    picture?: string;
+    permissions?: number;
+}
+
 export interface IUserManagementExtension extends IUser {
     isEdit: boolean;
 }

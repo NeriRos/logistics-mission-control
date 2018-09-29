@@ -1,13 +1,25 @@
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule } from "@angular/forms";
-
-import { DateToTimePipe } from "../pipes/date-to-time.pipe";
-import { GetUserById } from "../pipes/get-user-by-id.pipe";
+import { ReactiveFormsModule, FormsModule } from "@angular/forms";
+import { MatSelectModule, MatInputModule, MatDialogModule, MatButtonModule } from "@angular/material";
 
 @NgModule({
-  imports:      [ CommonModule ],
-  declarations: [ DateToTimePipe, GetUserById ],
-  exports:      [ DateToTimePipe, GetUserById ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDialogModule,
+    MatButtonModule
+  ],
+  exports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDialogModule,
+    MatButtonModule
+  ]
 })
 export class SharedModule { }

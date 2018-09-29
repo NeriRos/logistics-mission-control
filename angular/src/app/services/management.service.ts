@@ -1,14 +1,16 @@
 import { Injectable } from "@angular/core";
 import { NetworkingService } from "../services/network.service";
-import { IUser } from "../models/user.model";
 
 @Injectable()
 export class ManagementService {
+    private prefix;
+
     constructor(private network: NetworkingService) {
+        this.prefix = "management";
     }
 
     getUsers(): Promise<any> {
-        return this.network.http("GET", "management/getUsers").toPromise().catch((err) => {
+        return this.network.http("GET", `${this.prefix}/getUsers`).toPromise().catch((err) => {
             console.log("error getUsers:", err);
 
             return new Promise((reject) => {
@@ -18,7 +20,7 @@ export class ManagementService {
     }
 
     getSupports(): Promise<any> {
-        return this.network.http("GET", "management/getSupports").toPromise().catch((err) => {
+        return this.network.http("GET", `${this.prefix}/getSupports`).toPromise().catch((err) => {
             console.log("error getSupports:", err);
 
             return new Promise((reject) => {
@@ -28,7 +30,7 @@ export class ManagementService {
     }
 
     updateSupport(support): Promise<any> {
-        return this.network.http("POST", "management/updateSupport", {}, support).toPromise().catch((err) => {
+        return this.network.http("POST", `${this.prefix}/updateSupport`, {}, support).toPromise().catch((err) => {
             console.log("error updateSupport:", err);
 
             return new Promise((reject) => {
@@ -38,7 +40,7 @@ export class ManagementService {
     }
 
     deleteSupport(supportID, all: boolean = false) {
-        return this.network.http("GET", `management/deleteSupport/${all ? "all" : supportID}`).toPromise().catch((err) => {
+        return this.network.http("GET", `${this.prefix}/deleteSupport/${all ? "all" : supportID}`).toPromise().catch((err) => {
             console.log("error deleteSupport:", err);
 
             return new Promise((reject) => {

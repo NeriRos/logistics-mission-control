@@ -10,11 +10,20 @@ export class Globals {
         uri?: string
     };
     socketServer: {
-        dns: string,
-        ip: string,
-        port: string,
-        protocol: string,
-        uri?: string
+        chat: {
+            dns: string,
+            ip: string,
+            port: string,
+            protocol: string,
+            uri: string
+        };
+        missions: {
+            dns: string,
+            ip: string,
+            port: string,
+            protocol: string,
+            uri: string
+        };
     };
 
     readonly DEFAULT_USER_PICTURE = "default_user";
@@ -23,7 +32,27 @@ export class Globals {
         // this.server = { ip: "141.226.21.44", dns: "cargo-express.co.il", port: "8887", protocol: "http" };
         this.server = { ip: "127.0.0.1", dns: "localhost", port: "8888", protocol: "http" };
         this.server.uri = this.server.protocol + "://" + this.server.ip + ":" + this.server.port;
-        this.socketServer = { ip: "127.0.0.1", dns: "localhost", port: "8889", protocol: "ws" };
-        this.socketServer.uri = this.socketServer.protocol + "://" + this.socketServer.ip + ":" + this.socketServer.port;
+
+        this.socketServer = {
+            chat: {
+                ip: "127.0.0.1",
+                dns: "localhost",
+                port: "8890",
+                protocol: "ws",
+                uri: ""
+            },
+            missions: {
+                ip: "127.0.0.1",
+                dns: "localhost",
+                port: "8891",
+                protocol: "ws",
+                uri: ""
+            }
+        };
+
+        // tslint:disable-next-line:max-line-length
+        this.socketServer.chat.uri = this.socketServer.chat.protocol + "://" + this.socketServer.chat.ip + ":" + this.socketServer.chat.port;
+        // tslint:disable-next-line:max-line-length
+        this.socketServer.missions.uri = this.socketServer.missions.protocol + "://" + this.socketServer.missions.ip + ":" + this.socketServer.missions.port;
     }
 }

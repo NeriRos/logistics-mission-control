@@ -1,14 +1,16 @@
 import { Injectable } from "@angular/core";
 import { NetworkingService } from "../services/network.service";
-import { IUser } from "../models/user.model";
 
 @Injectable()
 export class ChatService {
+    private prefix: string;
+
     constructor(private network: NetworkingService) {
+        this.prefix = "support";
     }
 
     getUsers(): Promise<any> {
-        return this.network.http("GET", "support/getUsers").toPromise().catch((err) => {
+        return this.network.http("GET", `${this.prefix}/getUsers`).toPromise().catch((err) => {
             console.log("error getUsers:", err);
 
             return new Promise((reject) => {
@@ -18,7 +20,7 @@ export class ChatService {
     }
 
     getSupports(): Promise<any> {
-        return this.network.http("GET", "support/getSupports").toPromise().catch((err) => {
+        return this.network.http("GET", `${this.prefix}/getSupports`).toPromise().catch((err) => {
             console.log("error getSupports:", err);
 
             return new Promise((reject) => {
@@ -28,7 +30,7 @@ export class ChatService {
     }
 
     getChats(supportID): Promise<any> {
-        return this.network.http("GET", `support/getChats/${supportID}`).toPromise().catch((err) => {
+        return this.network.http("GET", `${this.prefix}/getChats/${supportID}`).toPromise().catch((err) => {
             console.log("error getSupports:", err);
 
             return new Promise((reject) => {
