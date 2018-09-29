@@ -29,7 +29,7 @@ export class Globals {
     readonly DEFAULT_USER_PICTURE = "default_user";
 
     constructor() {
-        this.productionInit();
+        this.debugInit();
     }
 
     productionInit() {
