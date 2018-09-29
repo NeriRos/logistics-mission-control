@@ -78,10 +78,13 @@ app.use(function(req, res, next) {
   const allowedOrigins = [
       "http://localhost",
       "https://localhost",
+
       "http://" + process.env.SERVER_DNS,
       "http://" + process.env.SERVER_IP,
       "http://" + process.env.SERVER_IP + ":" + process.env.HTTP_PORT,
       "http://" + process.env.SERVER_DNS + ":" + process.env.HTTP_PORT,
+      "http://" + process.env.SERVER_IP + ":" + process.env.ACTUAL_HTTP_PORT,
+
       "https://" + process.env.SERVER_DNS,
       "https://" + process.env.SERVER_IP,
       "https://" + process.env.SERVER_IP + ":" + process.env.HTTPS_PORT,
