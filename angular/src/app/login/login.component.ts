@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
                 }).catch((err) => {
                     console.log("[!] Error register", err);
                 });
-            } else {
+            } else if (!this.isRegister) {
                 this.userService.login(user).then((userData) => {
                     if (!userData.error) {
                         this.helpers.navigate(["home"]);
@@ -54,6 +54,11 @@ export class LoginComponent implements OnInit {
                 }).catch((err) => {
                     console.log("Login was unsuccessful", err);
                 });
+            } else if (user.confirmPassword !== user.password) {
+                alert("Passwords don't match");
+                console.log("Password dont match:", user.confirmPassword, user.password);
+            } else {
+                console.log("error login!");
             }
         } else {
             alert("Form or user is not valid..");
