@@ -76,21 +76,26 @@ app.use(express.static(path.join(__dirname, "public"), { maxAge: 31557600000 }))
 app.use(function(req, res, next) {
 
   const allowedOrigins = [
-      "http://localhost",
-      "https://localhost",
 
-      "http://" + process.env.SERVER_DNS,
-      "http://" + process.env.SERVER_IP,
-      "http://" + process.env.SERVER_IP + ":" + process.env.HTTP_PORT,
-      "http://" + process.env.SERVER_DNS + ":" + process.env.HTTP_PORT,
-      "http://" + process.env.SERVER_IP + ":" + process.env.ACTUAL_HTTP_PORT,
+    "http://localhost" + ":" + process.env.ACTUAL_HTTP_PORT,
+    "http://127.0.0.1" + ":" + process.env.ACTUAL_HTTP_PORT,
+    "http://localhost" + ":" + process.env.HTTP_PORT,
+    "https://localhost" + ":" + process.env.HTTPS_PORT,
+    "http://127.0.0.1" + ":" + process.env.HTTP_PORT,
+    "https://127.0.0.1" + ":" + process.env.HTTPS_PORT,
 
-      "https://" + process.env.SERVER_DNS,
-      "https://" + process.env.SERVER_IP,
-      "https://" + process.env.SERVER_IP + ":" + process.env.HTTPS_PORT,
-      "https://" + process.env.SERVER_DNS + ":" + process.env.HTTPS_PORT
-      ];
+    "http://" + process.env.SERVER_IP + ":" + process.env.HTTP_PORT,
+    "http://" + process.env.SERVER_DNS + ":" + process.env.HTTP_PORT,
+
+    "http://" + process.env.SERVER_IP + ":" + process.env.ACTUAL_HTTP_PORT,
+    "http://" + process.env.SERVER_DNS + ":" + process.env.ACTUAL_HTTP_PORT,
+
+    "https://" + process.env.SERVER_IP + ":" + process.env.HTTPS_PORT,
+    "https://" + process.env.SERVER_DNS + ":" + process.env.HTTPS_PORT
+  ];
+
   const origin = <string>req.headers.origin;
+
   if (allowedOrigins.indexOf(origin) > -1) {
       res.setHeader("Access-Control-Allow-Origin", origin);
   }
