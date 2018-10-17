@@ -3,14 +3,15 @@
 import { Response, Request, NextFunction } from "express";
 import { ChatModel } from "../models/Chat";
 import { IChat } from "../types/Chat";
+import { UserModel } from "../models/User";
 
 /**
- * GET /chat/getChats
+ * GET /chat/getChats/:friendId
  * Returns all chats.
  */
 export let getChats = (req: Request, res: Response, next: NextFunction) => {
     const userID = req.user._id;
-    const friendID = req.params.id;
+    const friendID = req.params.friendId;
 
     ChatModel.find({ $or: [{from: userID, to: friendID}, {from: friendID, to: userID}] }, (err, chats: Array<IChat>) => {
         if (err)
@@ -24,7 +25,7 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
  * POST /chat/sendMessage
  * Sends a message.
  */
-export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
+export let sendMessage = (req, res, next) => {
     const userID = req.user._id;
     const friendID = req.body.to;
 
@@ -47,13 +48,33 @@ export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
             };
             const newMessage = new ChatModel(chat);
 
-            newMessage.save((err) => {
+            newMessage.save((err, savedMessage) => {
                 if (err)
                     return next(err);
 
-                res.json({status: "ok", msg: "message send successfully"});
+                res.json({status: "ok", msg: "message send successfully", savedMessage: savedMessage});
             });
         } else
             res.status(500).json({error: "Unauthorized sender."});
     });
+};
+
+/**
+ * GET /chat/getFriend/:friendId
+ * Returns a friend to chat with.
+ */
+export let getFriend = (req: Request, res: Response, next: NextFunction) => {
+    const friendID = req.params.friendId;
+
+    if (!req.user)
+        return res.json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
+
+    UserModel.findById(friendID, (err, friend) => {
+        if (err) {
+            return next(err);
+        }
+
+        res.json(friend);
+    });
+
 };

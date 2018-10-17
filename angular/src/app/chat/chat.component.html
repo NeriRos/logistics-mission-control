@@ -1,8 +1,9 @@
 
 <div class="container">
-    <div class="col-12">
+    <div class="col-10">
         <div class="row justify-content-center">
             <ul id="messages" #messages>
+                <li class="message" *ngIf="!chats.isAvailableRep && chats.chats?.length > 0">Waiting for representative</li>
                 <li *ngFor="let chat of chats" [class]="'message ' + messageSender(chat)">
                     <div class="col-6 messageBody">
                         <div class="row">
@@ -20,8 +21,18 @@
                 <input #message class="form-control" autocomplete="off" placeholder="Type Message"/>
             </div>
             <div class="col-1">
-                <button class="btn" (click)="submit()">Send</button>
+                <button class="btn" (click)="submit()" [disabled]="!!!connection">Send</button>
             </div>
+        </div>
+    </div>
+    <div class="col-2" *ngIf="!isSupport">
+        <div class="row justify-content-center align-items-start">
+            <ul id="contacts" #contacts>
+                <li *ngFor="let friend of friends" class="friend">
+                    <img [src]="friend.picture" [alt]="friend.name">
+                    <label>{{friend.name}}</label>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

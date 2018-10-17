@@ -2,6 +2,25 @@ import { Injectable } from "@angular/core";
 
 @Injectable()
 export class Globals {
+    static SOCKET_EVENTS = {
+        MISSIONS_INIT: "innerChatInit",
+
+        CHAT_INIT: "chatInit",
+        CHAT_MESSAGE: "chatMessage",
+
+        CLIENT_MESSAGE: "clientMessage",
+
+        SUPPORT_INIT: "supportInit",
+        SUPPORT_MESSAGE: "supportMessage",
+
+        MESSAGE_CALLBACK: "messageCallback",
+        ERROR: "error",
+
+        MESSAGE_READ: "messageRead",
+        GET_CONNECTION_ID: "getConnectionID",
+        FIND_AVAILABLE_REP: "findAvailableRep"
+    };
+
     server: {
         dns: string,
         ip: string,

@@ -16,7 +16,9 @@ export class HelpersService {
                 queryParams: data
             };
 
-            this.router.navigate(route, options);
+            this.router.navigate(route, options).catch(err => {
+                console.log("Routing error:", err);
+            });
         });
     }
 }

@@ -1,0 +1,18 @@
+.contactImage {
+    height: 80px;
+    width: inherit;
+}
+
+#contacts {
+    list-style-type: none;
+}
+
+.friend {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.friend:hover {
+    font-weight: bold;
+}

@@ -1,6 +1,6 @@
 import * as errorHandler from "errorhandler";
 import * as WebSocket from "ws";
-import { websocketChatServerHandler, websocketMissionsServerHandler } from "./controllers/support";
+import { websocketChatServerHandler } from "./controllers/clientSocketApi";
 import { Connection } from "mongoose";
 
 declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
@@ -22,9 +22,9 @@ const server = app.listen(app.get("port"), app.get("host"), () => {
 });
 
 const websocketChatServer = new WebSocket.Server({ port: 8890 });
-const websocketMissionsServer = new WebSocket.Server({ port: 8891 });
+// const websocketMissionsServer = new WebSocket.Server({ port: 8891 });
 
 websocketChatServerHandler(websocketChatServer);
-websocketMissionsServerHandler(websocketMissionsServer);
+// websocketMissionsServerHandler(websocketMissionsServer);
 
 export = server;

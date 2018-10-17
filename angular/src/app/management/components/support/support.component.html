@@ -115,7 +115,7 @@
                     </td>
                     <td>
                         <div *ngIf="!support.isEdit">
-                            <a [routerLink]="['/chat', support._id]"><button class="btn"><i class="fa fa-comments"></i></button></a>
+                            <a [routerLink]="['/support', support._id]" [class.disabled]="support.status < LOCAL_SUPPORT_STATUS.TAKEN"><button class="btn"><i class="fa fa-comments"></i></button></a>
                             <button class="btn" (click)="toggleEdit(support, true)"><i class="fa fa-edit"></i></button>
                             <button class="btn" (click)="deleteSupport(support._id)"><i class="fa fa-trash"></i></button>
                         </div>

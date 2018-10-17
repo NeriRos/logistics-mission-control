@@ -49,7 +49,7 @@ export let updateSupport = (req: Request, res: Response, next: NextFunction) => 
         support.messages = req.body.messages;
         support.client = req.body.client;
 
-        if (support.representative != req.body.representative || !support.representative) {
+        if (typeof req.body.representative !== "undefined" && (support.representative != req.body.representative || !support.representative)) {
             // Update status
             if (support.status <= SUPPORT_STATUS.REQUEST)
                 support.status = SUPPORT_STATUS.TAKEN;
@@ -67,17 +67,23 @@ export let updateSupport = (req: Request, res: Response, next: NextFunction) => 
                 sendWelcomeMessage(req, res, next, support, `A representative has joined the conversation, rep name: ${support.representative.name}`);
             });
         } else {
-            console.log("NOT SATISFIED");
+            res.json({error: true, status: "noRepresentativeInBody", message: "there is no representative in body"});
         }
     });
 };
 
+/**
+ * GET /management/deleteSupport/:supportId
+ * delete support by id
+ */
 export let deleteSupport = (req: Request, res: Response, next: NextFunction) => {
-    SupportModel.remove(req.params.id === "all" ? {messages: []} : {_id: req.params.id}, (err) => {
+    const supportId = req.params.supportId;
+
+    SupportModel.remove(supportId === "all" ? {"messages.1": { "$exists": false }} : {_id: supportId}, (err) => {
         if (err)
             next(err);
 
-        res.json({status: "ok"});
+        res.json({error: false, status: "ok", message: "support id: " + supportId + " deleted successfully"});
     });
 };
 

@@ -7,9 +7,10 @@ const routes: Routes = [
     { path: "login", loadChildren: "./login/login.module#LoginModule" },
     { path: "home", loadChildren: "./home/home.module#HomeModule", canLoad: [LoggedInLazyLoadGuard] },
     { path: "chat/:id", loadChildren: "./chat/chat.module#ChatModule", canLoad: [LoggedInLazyLoadGuard]},
+    { path: "support/:id", loadChildren: "./supportChat/support-chat.module#SupportChatModule", canLoad: [LoggedInLazyLoadGuard]},
     { path: "missions", loadChildren: "./missions/missions.module#MissionsModule", canLoad: [LoggedInLazyLoadGuard] },
     { path: "management", loadChildren: "./management/management.module#ManagementModule", canLoad: [LoggedInLazyLoadGuard] },
-    { path: "testing", loadChildren: "./testing/testing.module#TestingModule", canLoad: [LoggedInLazyLoadGuard] }
+    { path: "contacts", loadChildren: "./contacts/contacts.module#ContactsModule", canLoad: [LoggedInLazyLoadGuard] }
 ];
 
 @NgModule({

@@ -1,14 +1,16 @@
 import { Injectable } from "@angular/core";
 import { IChat } from "../models/chat.model";
 import { NetworkingService } from "./network.service";
+import { ChatService } from "./chat.service";
 
 @Injectable()
-export class SupportService {
-    private prefix: string;
+export class SupportService extends ChatService {
 
-    constructor(private network: NetworkingService) {
+    constructor(protected network: NetworkingService) {
+        super(network);
         this.prefix = "support";
     }
+    protected prefix: string;
 
     getSupports() {
         return this.network.http("GET", `${this.prefix}/getSupports`).toPromise();
@@ -24,9 +26,5 @@ export class SupportService {
 
     sendMessage(message: IChat) {
         return this.network.http("POST", `${this.prefix}/sendMessage`, {}, message).toPromise();
-    }
-
-    getChats(id: string) {
-        return this.network.http("GET", `${this.prefix}/getChats/${id}`).toPromise();
     }
 }
