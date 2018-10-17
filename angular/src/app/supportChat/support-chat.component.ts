@@ -37,7 +37,6 @@ export class SupportChatComponent extends ChatComponent {
             {trigger: Globals.SOCKET_EVENTS.SUPPORT_INIT, function: this.onSocketSupportInit},
             {trigger: Globals.SOCKET_EVENTS.CLIENT_MESSAGE, function: this.onSocketMessage},
             {trigger: Globals.SOCKET_EVENTS.SUPPORT_MESSAGE, function: this.onSocketMessage},
-            {trigger: Globals.SOCKET_EVENTS.MESSAGE_READ, function: this.onSocketMessageRead},
             {trigger: Globals.SOCKET_EVENTS.GET_CONNECTION_ID, function: this.onSocketGetConnectionId},
             {trigger: Globals.SOCKET_EVENTS.FIND_AVAILABLE_REP, function: () => {}},
         );
@@ -95,7 +94,7 @@ export class SupportChatComponent extends ChatComponent {
         const message = this.parseServerMessage(data);
 
         if (typeof message.status !== "undefined" && (typeof message.status === "number" || message.status === "ok")) {
-            const serverMessage = {messageId: message.id, user: this.user, support: this.support};
+            const serverMessage = {chat: message, user: this.user, support: this.support};
 
             this.connection.sendServerMessage(serverMessage, Globals.SOCKET_EVENTS.MESSAGE_READ);
             this.addMessages(message);

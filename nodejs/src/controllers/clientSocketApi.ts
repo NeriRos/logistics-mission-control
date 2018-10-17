@@ -8,8 +8,9 @@ import { ISocketEventMessage } from "../types/interfaces";
 import { ISupport } from "../types/Support";
 
 import { sendMessage as sendChatMessage } from "./chat";
-import { sendMessage as sendSupportMessage } from "./support";
 import { prepareAndSendSupportMessage } from "./dynamiChatApi";
+import { ChatModel } from "../models/Chat";
+import { CHAT_STATUS, IChat } from "../types/Chat";
 
 declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
 
@@ -97,7 +98,15 @@ export let clientSocketEventHandlers = {
 
                 rtdata.nodeConnectionId = connection.id;
 
-                connection.sendClientMessage(rtdata, Connection.SOCKET_EVENTS.SUPPORT_INIT);
+                const responseData = {
+                    nodeConnectionId: rtdata.nodeConnectionId,
+                    phpConnectionId: rtdata.phpConnectionId,
+                    representative: rtdata.representative
+                };
+
+                console.log("Sending init message with connection ids php:", responseData.phpConnectionId, "and node: ", responseData.nodeConnectionId, " to client");
+
+                connection.sendClientMessage(rtdata, Connection.SOCKET_EVENTS.SUPPORT_INIT, responseData);
             }
         ));
     },
@@ -149,32 +158,51 @@ export let clientSocketEventHandlers = {
         // TODO: update db for new status, add new status to data.
         // TODO: if support send message to server.
 
-        Connection.sendServerMessage(data, SOCKET_EVENTS.MESSAGE_READ, customResponse(
-            (rtdata) => {
-                const connection = Connection.findConnectionByUserId(userId);
-
-                if (connection) {
-                    connection.sendClientMessage(rtdata, SOCKET_EVENTS.MESSAGE_READ, customResponse(
-                        (res) => {
-                            if (res.error) {
-                                Output.error("Error in sending message read to node client: " + res.message);
-                            }
-                        })
-                    );
-                } else {
-                    const message: ISocketEventMessage = {
-                        error: {
-                            message: CONNECTION_MESSAGE_TEXTS[CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE] + " - " + userId,
-                            code: CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE
-                        }
-                    };
-
-                    Output.error("onMessageRead error", message, userId);
-
-                    Connection.sendMessageToSocket(socket, message, Connection.SOCKET_EVENTS.MESSAGE_CALLBACK);
-                }
+        ChatModel.findById(data.chat._id, (err, chat) => {
+            if (err) {
+                // TODO: error handling
+                return Output.error("Error finding chat:", err, "chat id: " + data.chat._id);
             }
-        ));
+
+            chat.status = CHAT_STATUS.READ;
+
+            chat.save((err, savedChat: IChat) => {
+                if (err) {
+                    // TODO: error handling
+                    return Output.error("Error saving chat:", err);
+                }
+
+                data.chat = savedChat;
+
+                Connection.sendServerMessage(data, SOCKET_EVENTS.MESSAGE_READ, customResponse(
+                    (rtdata) => {
+                        const connection = Connection.findConnectionByUserId(userId);
+
+                        if (connection) {
+                            connection.sendClientMessage(rtdata, SOCKET_EVENTS.MESSAGE_READ, {chat: rtdata.chat}, customResponse(
+                                (res) => {
+                                    if (res.error) {
+                                        Output.error("Error in sending message read to node client: " + res.message);
+                                    }
+                                }));
+                        } else {
+                            const message: ISocketEventMessage = {
+                                error: {
+                                    message: CONNECTION_MESSAGE_TEXTS[CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE] + " - " + userId,
+                                    code: CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE
+                                }
+                            };
+
+                            Output.error("onMessageRead error", message, userId);
+
+                            Connection.sendMessageToSocket(socket, message, Connection.SOCKET_EVENTS.MESSAGE_CALLBACK);
+                        }
+                    }
+                ));
+            });
+        });
+    },
+    onMissionInit: (socket: WebSocket, data: ISocketEventMessage) => {
     }
 };
 

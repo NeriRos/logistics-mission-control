@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, NgZone } from "@angular/core";
 import { ISupport } from "../models/support.model";
-import { IChat, Chat } from "../models/chat.model";
+import { IChat, Chat, CHAT_STATUS } from "../models/chat.model";
 import { ChatService } from "../services/chat.service";
 import { ActivatedRoute } from "@angular/router";
 import { IUser } from "../models/user.model";
@@ -44,6 +44,7 @@ export class ChatComponent implements OnInit {
             {trigger: ((data) => data.error || (data.response && data.response.error)), function: this.onSocketError},
             {trigger: Globals.SOCKET_EVENTS.CHAT_INIT, function: this.onSocketOpen},
             {trigger: Globals.SOCKET_EVENTS.MESSAGE_CALLBACK, function: this.onSocketMessageCallback},
+            {trigger: Globals.SOCKET_EVENTS.MESSAGE_READ, function: this.onSocketMessageRead},
             {trigger: Globals.SOCKET_EVENTS.CHAT_MESSAGE, function: this.onSocketMessage}
         ];
     }
@@ -190,9 +191,11 @@ export class ChatComponent implements OnInit {
         console.log("MESSAGE READDDDD", data);
 
         this.chats.map((chat) => {
-            if (chat.id === data.chatId) {
+            if (chat.id === data.chat.id) {
                 console.log("found chat", chat);
-                chat.status = data.status;
+                chat.status = data.chat.status;
+
+                document.getElementById(chat.id).querySelector(".status i").className = "fa " + this.getStatusMark(chat.status);
             }
 
             return chat;
@@ -231,6 +234,17 @@ export class ChatComponent implements OnInit {
             return "representative";
         } else {
             return "client";
+        }
+    }
+
+    getStatusMark(status: number) {
+        switch (status) {
+            case CHAT_STATUS.NEW:
+                return "";
+            case CHAT_STATUS.SENT:
+                return "fa-check";
+            case CHAT_STATUS.READ:
+                return "fa-check-double";
         }
     }
 }

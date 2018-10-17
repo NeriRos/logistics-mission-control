@@ -6,9 +6,11 @@ import { Connection, SOCKET_EVENTS, CONNECTION_MESSAGE_TEXTS, CONNECTION_MESSAGE
 
 import { SupportDocument } from "../types/Support";
 
-import { clientSocketEventHandlers, findAvailableRepsWithSocket, customResponse } from "./clientSocketApi";
-import { ISupportMessageBody } from "~/types/interfaces";
+import { findAvailableRepsWithSocket, customResponse } from "./clientSocketApi";
+import { ISupportMessageBody } from "../types/interfaces";
 import { sendMessage } from "./support";
+import { ChatModel } from "../models/Chat";
+import { CHAT_STATUS } from "../types/Chat";
 
 
 /**
@@ -42,13 +44,42 @@ export let supportInit = (req, res, next) => {
  * Sends a support message to node client from php client data.
  */
 export let clientMessage = (req, res: Response, next) => {
-    if (req.body && req.body.support && req.body.support.representative) {
+    if (req.body && req.body.support) {
+        prepareAndSendSupportMessage(req.body, res, next);
+    } else {
+        Output.error("clientMessage Not satisfied", req.body);
+    }
+};
+
+/**
+ * Sends a support message to node client from php client data.
+ */
+export let messageRead = (req, res: Response, next) => {
+    if (req.body && req.body.support && req.body.chat) {
         const connection = Connection.findConnectionByUserId(req.body.support.representative.id);
 
-        if (!connection)
-            return res.json({error: true, status: "error", message: "NO CONNECTION FOUND FOR USER ID: " + req.body.support.representative.id});
+        ChatModel.findById(req.body.chat._id, (err, chat) => {
+            if (err)
+                next(err);
 
-        prepareAndSendSupportMessage(req.body, res, next);
+            chat.status = CHAT_STATUS.READ;
+
+            chat.save((err, savedChat) => {
+                if (err)
+                    next(err);
+
+                if (!connection)
+                    return res.json({error: true, status: "error", message: "NO CONNECTION FOUND FOR USER ID: " + req.body.support.representative.id});
+
+                req.body.chat = savedChat;
+
+                connection.sendClientMessage(req.body, SOCKET_EVENTS.MESSAGE_READ, undefined, customResponse(
+                    (rtdata) => {
+                        res.json(rtdata);
+                    }
+                ));
+            });
+        });
     } else {
         Output.error("clientMessage Not satisfied", req.body);
     }
@@ -69,6 +100,9 @@ export let dynamiChatApi = (req: Request, res: Response, next: NextFunction) => 
             break;
         case SOCKET_EVENTS.CLIENT_MESSAGE:
             clientMessage(req, res, next);
+            break;
+        case SOCKET_EVENTS.MESSAGE_READ:
+            messageRead(req, res, next);
             break;
 
         default:

@@ -4,13 +4,14 @@
         <div class="row justify-content-center">
             <ul id="messages" #messages>
                 <li class="message" *ngIf="!chats.isAvailableRep && chats.chats?.length > 0">Waiting for representative</li>
-                <li *ngFor="let chat of chats" [class]="'message ' + messageSender(chat)">
+                <li *ngFor="let chat of chats" [class]="'message ' + messageSender(chat)" [id]="chat.id">
                     <div class="col-6 messageBody">
                         <div class="row">
                             <span class="text">{{chat.message}}</span>
                         </div>
                         <div class="row">
                             <span class="date">{{chat.date | dateToTime}}</span>
+                            <span class="status"><i [class]="'fa ' + getStatusMark(chat.status)"></i></span>
                         </div>
                     </div>
                 </li>

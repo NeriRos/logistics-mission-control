@@ -15,9 +15,9 @@ export interface IChat {
 }
 
 export const CHAT_STATUS = {
-  NEW: 1,
-  SENT: 2,
-  READ: 3
+  NEW: 0,
+  SENT: 1,
+  READ: 2
 };
 
 export class Chat implements IChat {

@@ -14,6 +14,7 @@ import { UserDocument, USER_PERMISSIONS } from "../types/User";
 import { IChat, ChatDocument } from "../types/Chat";
 
 import { notifyPhpForAvailableRep } from "./clientSocketApi";
+import { Output } from "../models/output";
 
 /**
  * POST /support/openSupport
@@ -271,7 +272,7 @@ export let sendMessage = (req, res, next) => {
 
         const newMessage = new ChatModel(chat);
 
-        newMessage.save((err, savedMessage: ChatDocument ) => {
+        newMessage.save((err, savedMessage: ChatDocument) => {
             if (err)
                 return next(err);
 
@@ -290,7 +291,7 @@ export let sendMessage = (req, res, next) => {
                     // Send message to php http server.
                     Connection.sendServerMessage({chat: savedMessage, phpConnectionId: data.phpConnectionId, support: savedSupport}, Connection.SOCKET_EVENTS.SUPPORT_MESSAGE, res);
                 } else {
-                    console.log("NO CLIENT, NO REP");
+                    Output.error("NO CLIENT, NO REP");
                     res.json({error: true, status: "error", message: "NO CLIENT, NO REP"});
                 }
             });

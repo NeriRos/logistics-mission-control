@@ -38,26 +38,23 @@ export class Connection {
         this.id = id;
     }
 
-    public sendClientMessage(message: ISocketEventMessage, event: string, cb: any = {representative: {}, json: (data) => {}}) {
+    public sendClientMessage(message: ISocketEventMessage, event: string, responseData?: Object, cb?: any) {
         let response: any = {error: false, status: "ok", message: "message sent successfully!", event};
+
+        Object.keys(message).forEach((key) => {
+            response[key] = message[key];
+        });
 
         if (!this.socket) {
             response = {error: true, status: "error", message: "NO SOCKET"};
         } else if (this.socket.readyState === 3) {
-            response = {error: true, status: "error", message: "CONNECTION CLOSED"};
+            response = {error: true, status: "error", message: "CONNECTION TO CLOSED"};
         } else if (this.socket.readyState === 1) {
-            if (event === SOCKET_EVENTS.SUPPORT_INIT) {
-                response.representative = message.representative;
-                response.nodeConnectionId = message.nodeConnectionId;
-                response.phpConnectionId = message.phpConnectionId;
-
-                console.log("Sending init message with phpConnection:", response.phpConnectionId, "and nodeConnection: ", response.nodeConnectionId, " to client");
-            }
-
             Connection.sendMessageToSocket(this.socket, message, event); // send message to representative
         }
 
-        cb.json(response);
+        if (cb && typeof cb !== "undefined")
+            cb.json(response);
     }
 
     static findConnectionById(id: number): Connection {
@@ -91,7 +88,7 @@ export class Connection {
         const connection = Connection.findConnectionByUserId(userID);
 
         if (connection) {
-            connection.sendClientMessage(message, event, cb);
+            connection.sendClientMessage(message, event, undefined, cb);
         } else {
             cb.json(global.connections.chat.length > 0 ?
                 {error: true, status: "noConnection", message: "NO CONNECTION FOUND FOR USER ID: " + userID} :
@@ -142,7 +139,7 @@ export class Connection {
 
     static sendMessageToAllReps(message: ISocketEventMessage, event: string, cb: Response | {json: any} = {json: () => {}}) {
         for (const connection of global.connections.chat) {
-            connection.sendClientMessage(message, event, cb);
+            connection.sendClientMessage(message, event, undefined, cb);
         }
     }
 
