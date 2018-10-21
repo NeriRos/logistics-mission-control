@@ -27,14 +27,14 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild("textfield") tf: ElementRef;
 
     me: IUser;
-    friend: IUser = {email: ""};
+    conversant: IUser = {email: ""};
 
     numberOfAddedItems: number = 0;
 
     list: ListView;
     textField: TextField;
     chats$: ObservableArray<IChat>;
-    friends$: ObservableArray<IUser>;
+    conversants$: ObservableArray<IUser>;
 
     requestChatsInterval: any;
 
@@ -50,21 +50,21 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
                 protected globals: Globals) {
         this.page.actionBarHidden = false;
 
-        // Get friend details from referring component.
+        // Get conversant details from referring component.
         this.route.queryParams.subscribe((params) => {
-            if (!params.friend && !this.friend) {
+            if (!params.conversant && !this.conversant) {
                 return this.helpers.navigate(["contacts"]);
             }
 
-            this.friend = this.friend || JSON.parse(params.friend);
-            this.friend.picture = this.friend.picture || this.globals.DEFAULT_USER_PICTURE;
+            this.conversant = this.conversant || JSON.parse(params.conversant);
+            this.conversant.picture = this.conversant.picture || this.globals.DEFAULT_USER_PICTURE;
         });
     }
 
     async ngOnInit() {
         this.me = await this.userService.getUser().toPromise();
-        if (this.friend._id) {
-            this.getChats(this.chatService, this.friend._id);
+        if (this.conversant._id) {
+            this.getChats(this.chatService, this.conversant._id);
         }
     }
 
@@ -99,13 +99,13 @@ export class ChatComponent implements OnInit, AfterViewInit, OnDestroy {
     composeAndSendMessage() {
         let newMessage;
 
-        if (this.friend && this.textField.text && this.textField.text.length > 0) {
+        if (this.conversant && this.textField.text && this.textField.text.length > 0) {
             const date = new Date();
 
             newMessage = {
                 message: this.textField.text,
                 from: this.me._id,
-                to: this.friend._id,
+                to: this.conversant._id,
                 time: date.toTimeString().split(" ")[0],
                 date
             };

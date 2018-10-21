@@ -2,6 +2,7 @@ import { Document, Schema } from "mongoose";
 import { SupportDocument } from "../types/Support";
 
 export type IUser = {
+    _id?: string;
     id?: string;
     email: string;
     password: string;
@@ -9,7 +10,7 @@ export type IUser = {
     phone?: string;
     name?: string;
     code?: string;
-    friends?: Array<string>;
+    conversants?: Array<string>;
     picture?: string;
     token?: string;
     permissions?: number;
@@ -33,4 +34,8 @@ export const USER_PERMISSIONS = {
     LOGISTICS: 4,
     REPRESENTATIVE: 5,
     DELIVERY: 6
+};
+
+export let isPermitted = (user, permissionLevel): boolean => {
+    return user.permissions <= permissionLevel;
 };

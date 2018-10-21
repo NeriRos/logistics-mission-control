@@ -1,3 +1,5 @@
+import { IUser } from "./user.model";
+import { ISupport } from "./support.model";
 
 export interface IChat {
   message: string;
@@ -13,9 +15,9 @@ export interface IChat {
 }
 
 export const CHAT_STATUS = {
-  NEW: 1,
-  SENT: 2,
-  READ: 3
+  NEW: 0,
+  SENT: 1,
+  READ: 2
 };
 
 export class Chat implements IChat {
@@ -37,6 +39,8 @@ export class Chat implements IChat {
     this.date = date;
     this.isSupport = isSupport;
     this.initial = initial;
+
+
 
     this.time = date.toTimeString().split(" ")[0];
   }

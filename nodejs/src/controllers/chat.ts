@@ -3,16 +3,17 @@
 import { Response, Request, NextFunction } from "express";
 import { ChatModel } from "../models/Chat";
 import { IChat } from "../types/Chat";
+import { UserModel } from "../models/User";
 
 /**
- * GET /chat/getChats
+ * GET /chat/getChats/:conversantId
  * Returns all chats.
  */
 export let getChats = (req: Request, res: Response, next: NextFunction) => {
     const userID = req.user._id;
-    const friendID = req.params.id;
+    const conversantID = req.params.conversantId;
 
-    ChatModel.find({ $or: [{from: userID, to: friendID}, {from: friendID, to: userID}] }, (err, chats: Array<IChat>) => {
+    ChatModel.find({ $or: [{from: userID, to: conversantID}, {from: conversantID, to: userID}] }, (err, chats: Array<IChat>) => {
         if (err)
             return next(err);
 
@@ -24,14 +25,14 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
  * POST /chat/sendMessage
  * Sends a message.
  */
-export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
+export let sendMessage = (req, res, next) => {
     const userID = req.user._id;
-    const friendID = req.body.to;
+    const conversantID = req.body.to;
 
     if (!req.user)
         return res.json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
 
-    ChatModel.count({ $or: [{from: userID, to: friendID}, {from: friendID, to: userID}] }, (err, count) => {
+    ChatModel.count({ $or: [{from: userID, to: conversantID}, {from: conversantID, to: userID}] }, (err, count) => {
         if (err)
             return next(err);
 
@@ -40,20 +41,40 @@ export let sendMessage = (req: Request, res: Response, next: NextFunction) => {
                 id: (count + 1).toString(),
                 message: req.body.message,
                 from: userID,
-                to: friendID,
+                to: conversantID,
                 date: new Date(req.body.date),
                 status: 1,
                 isSupport: false
             };
             const newMessage = new ChatModel(chat);
 
-            newMessage.save((err) => {
+            newMessage.save((err, savedMessage) => {
                 if (err)
                     return next(err);
 
-                res.json({status: "ok", msg: "message send successfully"});
+                res.json({status: "ok", msg: "message send successfully", savedMessage: savedMessage});
             });
         } else
             res.status(500).json({error: "Unauthorized sender."});
     });
+};
+
+/**
+ * GET /chat/getConversant/:conversantId
+ * Returns a conversant to chat with.
+ */
+export let getConversant = (req: Request, res: Response, next: NextFunction) => {
+    const conversantID = req.params.conversantId;
+
+    if (!req.user)
+        return res.json({status: "error", error: true, message: "UNAUTHORIZED", code: 0});
+
+    UserModel.findById(conversantID, (err, conversant) => {
+        if (err) {
+            return next(err);
+        }
+
+        res.json(conversant);
+    });
+
 };

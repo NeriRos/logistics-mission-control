@@ -35,7 +35,7 @@ export class SupportChatComponent extends ChatComponent implements AfterContentI
     }
 
     ngAfterContentInit() {
-        this.friend = this.client;
+        this.conversant = this.client;
         this.support = this.selectedSupport;
     }
 
@@ -49,13 +49,13 @@ export class SupportChatComponent extends ChatComponent implements AfterContentI
     composeAndSendMessage() {
         let newMessage;
 
-        if (this.friend && this.textField.text && this.textField.text.length > 0) {
+        if (this.conversant && this.textField.text && this.textField.text.length > 0) {
             const date = new Date();
 
             newMessage = {
                 message: this.textField.text,
                 from: this.me._id,
-                to: this.friend._id,
+                to: this.conversant._id,
                 time: date.toTimeString().split(" ")[0],
                 id: this.support._id,
                 date

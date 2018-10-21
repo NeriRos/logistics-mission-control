@@ -1,27 +1,41 @@
 
 <div class="container">
-    <div class="col-12">
+    <div class="col-10">
         <div class="row justify-content-center">
             <ul id="messages" #messages>
-                <li *ngFor="let chat of chats" [class]="'message ' + messageSender(chat)">
+                <li class="message" *ngIf="!isConversantOnline">{{conversantOfflineText}}</li>
+                <li *ngFor="let chat of chats" [class]="'message ' + messageSender(chat)" [id]="chat.id">
                     <div class="col-6 messageBody">
                         <div class="row">
                             <span class="text">{{chat.message}}</span>
                         </div>
                         <div class="row">
                             <span class="date">{{chat.date | dateToTime}}</span>
+                            <span class="status"><i *ngIf="messageSender(chat) === 'representative'" [class]="'fa ' + (chat.status | statusToMark)"></i></span>
                         </div>
                     </div>
                 </li>
             </ul>
+            <!-- <app-messages-test [myId]="user._id" [conversantsClasses]="conversantsClasses" [chats]="chats"
+                conversantOfflineText="conversant is not online" (messagesElement)="messages"></app-messages-test> -->
         </div>
         <div class="row justify-content-center">
             <div class="col">
                 <input #message class="form-control" autocomplete="off" placeholder="Type Message"/>
             </div>
             <div class="col-1">
-                <button class="btn" (click)="submit()">Send</button>
+                <button class="btn" (click)="submit()" [disabled]="!!!connection">Send</button>
             </div>
+        </div>
+    </div>
+    <div class="col-2" *ngIf="!isSupport">
+        <div class="row justify-content-center align-items-start">
+            <ul id="contacts" #contacts>
+                <li *ngFor="let conversant of conversants" class="conversant">
+                    <img [src]="conversant.picture" [alt]="conversant.name">
+                    <label>{{conversant.name}}</label>
+                </li>
+            </ul>
         </div>
     </div>
 </div>

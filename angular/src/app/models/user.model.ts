@@ -6,7 +6,7 @@ export interface IUser {
     name?: string;
     code?: string;
     token?: string;
-    friends?: Array<string>;
+    conversants?: Array<string>;
     picture?: string;
     supports?: Array<string>;
     permissions?: number;

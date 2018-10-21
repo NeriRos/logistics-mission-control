@@ -8,12 +8,12 @@ export class ContactsService {
 
     }
 
-    getFriends(): Observable<any> {
-        return this.network.http("GET", `/getFriends`);
+    getConversants(): Observable<any> {
+        return this.network.http("GET", `/getConversants`);
     }
 
-    addFriend(email: string): Observable<any> {
-        return this.network.http("POST", `/addFriend`, {}, {email});
+    addConversant(email: string): Observable<any> {
+        return this.network.http("POST", `/addConversant`, {}, {email});
     }
 
 }

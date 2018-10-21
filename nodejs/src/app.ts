@@ -25,7 +25,9 @@ import * as userController from "./controllers/user";
 import * as supportController from "./controllers/support";
 import * as managementController from "./controllers/management";
 import * as missionsController from "./controllers/missions";
+import * as contactsController from "./controllers/contacts";
 import * as passportConfig from "./config/passport";
+import * as dynamiChatApiController from "./controllers/dynamiChatApi";
 
 // Create Express server
 const app = express();
@@ -132,27 +134,28 @@ app.post("/account/profile", passport.authenticate("bearer", { session: false })
 app.post("/account/password", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post("/account/delete", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get("/account/unlink/:provider", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getOauthUnlink);
-app.get("/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getFriends);
-app.post("/addFriend", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.addFriend);
+app.get("/getConversants", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getConversants);
+app.post("/addConversant", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.addConversant);
 
 
 /**
  * Chat routes
  */
-app.get("/chat/getChats", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getChats);
+app.get("/chat/getChats/:conversantId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getChats);
 app.post("/chat/sendMessage", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.sendMessage);
+app.get("/chat/getConversant/:conversantId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getConversant);
 
 /**
  * Support routes
  */
 app.post("/support/openSupport", passportConfig.newSupportAuthorization, passportConfig.isAuthenticated, supportController.openSupport);
-app.post("/support/socketInit", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.socketInit);
 app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
 app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
-app.get("/support/getSupportById/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
-app.get("/support/getSupportRepresentative/:supportID", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportRepresentative);
-app.get("/support/getChats/:id", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
-app.get("/support/takeSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, supportController.takeSupport);
+app.get("/support/getSupportById/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
+app.get("/support/getConversant/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
+app.get("/support/getSupportRepresentative/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportRepresentative);
+app.get("/support/getChats/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
+app.get("/support/takeSupport/:supportID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, supportController.takeSupport);
 
 /**
  * Management routes
@@ -161,7 +164,7 @@ app.get("/management/getUsers", passport.authenticate("bearer", { session: false
 app.get("/management/getChats", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getChats);
 app.get("/management/getSupports", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.getSupports);
 app.post("/management/updateSupport", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.updateSupport);
-app.get("/management/deleteSupport/:id", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.deleteSupport);
+app.get("/management/deleteSupport/:supportId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, managementController.deleteSupport);
 
 /**
  * Missions routes
@@ -170,6 +173,16 @@ app.get("/missions/getMissionsByCreatorID/:creatorID", passport.authenticate("be
 app.get("/missions/getUnhandledMissions/:receiverID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.getUnhandledMissions);
 app.get("/missions/changeMissionStatus/:missionId/:status", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.changeMissionStatus);
 app.post("/missions/createMission", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.createMission);
+
+/**
+ * dynamiChatApi routes
+ */
+app.post("/dynamiChatApi/:event", passportConfig.supportAuthorization, passportConfig.isAuthenticated, dynamiChatApiController.dynamiChatApi);
+
+/**
+ * Contacts routes
+ */
+app.get("/contacts/getConversants", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, contactsController.getConversants);
 
 
 app.get("*", function (req, res, next) {

@@ -78,7 +78,7 @@ export let supportAuthorization = (req, res, next) => {
   const origin = req.get("origin");
   // TODO: fix security
   // console.log(req.originalUrl);
-  if (origin && (origin === "www.cargo-express.co.il" ||  origin.match("localhost:12555"))) {
+  if (origin && (origin === "www.cargo-express.co.il" ||  origin.match("localhost:7347"))) {
     const isPost = req.method == "POST";
 
     if (req.body.ws_php_body) {

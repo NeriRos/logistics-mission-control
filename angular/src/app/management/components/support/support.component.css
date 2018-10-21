@@ -17,3 +17,15 @@ table.supportsTable table th, table.supportsTable table td {
 table.supportsTable table tr:last-child td {
     border-bottom: 0;
 }
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+ }
+
+ a.disabled button {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}

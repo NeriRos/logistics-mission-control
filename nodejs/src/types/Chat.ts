@@ -1,6 +1,7 @@
 import { Document } from "mongoose";
 
 export type IChat = {
+    _id?: string;
     id: string;
     message: string;
     from: string;
@@ -12,3 +13,9 @@ export type IChat = {
 };
 
 export type ChatDocument = Document & IChat;
+
+export const CHAT_STATUS = {
+    "NEW": 0,
+    "RECEIVED": 1,
+    "READ": 2
+};

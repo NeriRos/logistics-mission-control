@@ -18,7 +18,7 @@ const userSchema = new Schema({
   phone: { type: String },
   name: { type: String },
   code: { type: String },
-  friends: { type: Array<String>(), default: [] },
+  conversants: { type: Array<String>(), default: [] },
   token: { type: String },
   picture: { type: String },
   secured: { type: Boolean },

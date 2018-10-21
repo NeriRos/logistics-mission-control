@@ -1,0 +1,8 @@
+<div class="row justify-content-center align-items-start">
+  <ul id="contacts">
+    <li *ngFor="let conversant of conversants" class="conversant" (click)="chatWith(conversant)">
+      <img class="contactImage" [src]="'/assets/images/' + conversant.picture + '.png'" [alt]="conversant.name"/>
+      <label>{{conversant.name}}</label>
+    </li>
+  </ul>
+</div>

@@ -23,4 +23,8 @@ describe("SupportComponent", () => {
   it("should be created", () => {
     expect(component).toBeTruthy();
   });
+
+  // it("should delete support and remove from array", () => {
+  //   expect(component).toBeTruthy();
+  // });
 });

@@ -13,15 +13,12 @@ import { Interceptor } from "./services/interceptor.service";
 
 import { Globals } from "./shared/globals";
 
-import { PreloadSelectedModulesList } from "./custom-preloading-strategy";
 import { PermissionLazyLoadGuard } from "./permission-lazy-load.guard";
 import { LoggedInLazyLoadGuard } from "./logged-in-lazy-load.guard";
-import { TestingComponent } from "./testing/testing.component";
 
 @NgModule({
   declarations: [
-    AppComponent,
-    TestingComponent
+    AppComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [
@@ -32,7 +29,6 @@ import { TestingComponent } from "./testing/testing.component";
     HttpClientModule
   ],
   providers: [
-    // PreloadSelectedModulesList,
     LoggedInLazyLoadGuard,
     PermissionLazyLoadGuard,
     UserService,

@@ -1,0 +1,18 @@
+.contactImage {
+    height: 80px;
+    width: inherit;
+}
+
+#contacts {
+    list-style-type: none;
+}
+
+.conversant {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.conversant:hover {
+    font-weight: bold;
+}

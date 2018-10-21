@@ -1,8 +1,7 @@
 import { Component, OnInit, NgZone } from "@angular/core";
-import { ISupport } from "../../../models/support.model";
+import { ISupport, SUPPORT_STATUS } from "../../../models/support.model";
 import { IUser, USER_PERMISSIONS } from "../../../models/user.model";
 import { ManagementService } from "../../../services/management.service";
-import { UserService } from "../../../services/login.service";
 
 @Component({
     selector: "app-support",
@@ -15,10 +14,10 @@ export class SupportComponent implements OnInit {
     users: Array<IUser> = [];
 
     LOCAL_USER_PERMISSIONS = USER_PERMISSIONS;
+    LOCAL_SUPPORT_STATUS = SUPPORT_STATUS;
 
     constructor(
         private managementService: ManagementService,
-        private userService: UserService,
         private zone: NgZone
     ) { }
 
@@ -43,6 +42,12 @@ export class SupportComponent implements OnInit {
         this.managementService.updateSupport(support).then((res) => {
             if (res) {
                 support.isEdit = false;
+
+                this.supports.forEach((updatedSupport, index) => {
+                    if (updatedSupport._id === res.support._id) {
+                        this.supports[index] = res.support;
+                    }
+                });
             }
         });
     }
@@ -50,7 +55,9 @@ export class SupportComponent implements OnInit {
     deleteSupport(supportID) {
         this.managementService.deleteSupport(supportID).then((res) => {
             this.supports.forEach((support, index) => {
-                console.log(this.supports.splice(index, 1));
+                if (supportID === support._id) {
+                    console.log(this.supports.splice(index, 1));
+                }
             });
         }).catch((err) => {
             if (err) {
@@ -61,9 +68,12 @@ export class SupportComponent implements OnInit {
 
     deleteAll() {
         this.managementService.deleteSupport(null, true).then((res) => {
-            this.supports = this.supports.filter((support) => {
-                return support.messages.length > 0;
-            });
+            if (!res.error) {
+                this.supports = this.supports.filter((support) => {
+                    console.log("support.messages", support.messages);
+                    return support.messages.length > 0;
+                });
+            }
         }).catch((err) => {
             if (err) {
                 console.log(err);
@@ -75,7 +85,7 @@ export class SupportComponent implements OnInit {
         console.log("rep assignded:", event);
     }
 
-    toggleEdit(support, mode) {
+    toggleEdit(support, mode: boolean) {
         this.zone.run(() => {
             support.isEdit = mode;
         });

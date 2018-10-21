@@ -10,7 +10,9 @@ import { ChatComponent } from "./chat.component";
 import { ChatService } from "../services/chat.service";
 import { SupportService } from "../services/support.service";
 import { UserService } from "../services/login.service";
+import { MessagesComponent } from "./messages.component";
 
+// TODO: fix messagesComponent
 
 @NgModule({
   imports: [

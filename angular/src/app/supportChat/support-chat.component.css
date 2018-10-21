@@ -1,0 +1,40 @@
+ul#messages {
+    list-style: none;
+    height: 500px;
+    overflow-y: scroll;
+    padding-left: 5px;
+}
+
+.message {
+    margin-top: 5px;
+}
+.messageBody {
+    padding: 5px 20px 5px 20px;
+    border-radius: 5px;
+}
+
+.representative {
+    text-align: right;
+    display: flex;
+    justify-content: flex-start;
+}
+.client {
+    text-align: left;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.client .messageBody {
+    background-color: green;
+    border-bottom-left-radius: 0;
+}
+.representative .messageBody {
+    background-color: grey;
+    border-bottom-right-radius: 0;
+}
+.client .messageBody .row {
+    justify-content: flex-end;
+}
+.representative .messageBody .row {
+    justify-content: flex-start;
+}

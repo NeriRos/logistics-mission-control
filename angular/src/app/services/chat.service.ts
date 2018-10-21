@@ -3,40 +3,18 @@ import { NetworkingService } from "../services/network.service";
 
 @Injectable()
 export class ChatService {
-    private prefix: string;
+    protected prefix: string;
 
-    constructor(private network: NetworkingService) {
-        this.prefix = "support";
+    constructor(protected network: NetworkingService) {
+        this.prefix = "chat";
     }
 
-    getUsers(): Promise<any> {
-        return this.network.http("GET", `${this.prefix}/getUsers`).toPromise().catch((err) => {
-            console.log("error getUsers:", err);
-
-            return new Promise((reject) => {
-                reject({error: err});
-            });
-        });
+    getChats(id: string): Promise<any> {
+        return this.network.http("GET", `${this.prefix}/getChats/${id}`).toPromise();
     }
 
-    getSupports(): Promise<any> {
-        return this.network.http("GET", `${this.prefix}/getSupports`).toPromise().catch((err) => {
-            console.log("error getSupports:", err);
-
-            return new Promise((reject) => {
-                reject({error: err});
-            });
-        });
-    }
-
-    getChats(supportID): Promise<any> {
-        return this.network.http("GET", `${this.prefix}/getChats/${supportID}`).toPromise().catch((err) => {
-            console.log("error getSupports:", err);
-
-            return new Promise((reject) => {
-                reject({error: err});
-            });
-        });
+    getConversantById(conversantID): Promise<any> {
+        return this.network.http("GET", `${this.prefix}/getConversant/${conversantID}`).toPromise();
     }
 
     handleErrors(error: Error) {

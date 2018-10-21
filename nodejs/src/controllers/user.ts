@@ -308,15 +308,15 @@ export let postForgot = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * GET /getFriends
+ * GET /getConversants
  * returns the ids of all account assosiated with the request account
  */
-export let getFriends = (req: Request, res: Response, next: NextFunction) => {
-  UserModel.find({friends: req.user._id}, (err, users) => {
+export let getConversants = (req: Request, res: Response, next: NextFunction) => {
+  UserModel.find({conversants: req.user._id}, (err, users) => {
       if (err)
           return next(err);
 
-      const friends = users.map(user => {
+      const conversants = users.map(user => {
           return {
               _id: user._id,
               email: user.email,
@@ -325,15 +325,15 @@ export let getFriends = (req: Request, res: Response, next: NextFunction) => {
           };
       });
 
-      res.json(friends);
+      res.json(conversants);
   });
 };
 
 /**
- * POST /addFriends
+ * POST /addConversants
  * returns the ids of all account assosiated with the request account
  */
-export let addFriend = (req: Request, res: Response, next: NextFunction) => {
+export let addConversant = (req: Request, res: Response, next: NextFunction) => {
   req.assert("email", "Email is not valid").isEmail();
   req.sanitize("email").normalizeEmail({ gmail_remove_dots: false });
 
@@ -347,35 +347,35 @@ export let addFriend = (req: Request, res: Response, next: NextFunction) => {
       return res.json({status: "error", error: errors});
   }
 
-  UserModel.findOne({email: email}, (err, friend) => {
+  UserModel.findOne({email: email}, (err, conversant) => {
       if (err)
           return next(err);
-      if (!friend)
-        return res.json({status: "no friend", code: 1});
-      if (friend.friends.indexOf(userID) != -1)
+      if (!conversant)
+        return res.json({status: "no conversant", code: 1});
+      if (conversant.conversants.indexOf(userID) != -1)
           return res.json({status: "already added", code: 2});
 
-      const friendDetails = {
-        email: friend.email,
-        name: friend.name,
-        picture: friend.picture
+      const conversantDetails = {
+        email: conversant.email,
+        name: conversant.name,
+        picture: conversant.picture
       };
 
-      friend.friends.push(userID);
-      friend.save((err) => {
+      conversant.conversants.push(userID);
+      conversant.save((err) => {
           if (err)
               return next(err);
 
-          if (req.user.friends.indexOf(userID) == -1) {
-              req.user.friends.push(friend._id);
+          if (req.user.conversants.indexOf(userID) == -1) {
+              req.user.conversants.push(conversant._id);
               req.user.save(() => {
                   if (err)
                       return next(err);
 
-                  res.json({status: "ok", user: friendDetails});
+                  res.json({status: "ok", user: conversantDetails});
               });
           } else {
-            res.json({status: "ok", msg: "waiting accept", user: friendDetails, code: 3});
+            res.json({status: "ok", msg: "waiting accept", user: conversantDetails, code: 3});
           }
       });
   });

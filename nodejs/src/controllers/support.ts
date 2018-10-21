@@ -2,18 +2,19 @@
 
 import { Response, Request, NextFunction, json } from "express";
 import { parallel, waterfall } from "async";
-import { Server } from "ws";
+import { Mongoose } from "mongoose";
 
 import { UserModel } from "../models/User";
 import { SupportModel } from "../models/Support";
-import { SupportDocument, SUPPORT_STATUS, ISupport } from "../types/Support";
-import { UserDocument, USER_PERMISSIONS } from "../types/User";
 import { ChatModel } from "../models/Chat";
-import { IChat } from "../types/Chat";
-import { Mongoose } from "mongoose";
-import { Connection } from "../models/Connection";
+import { Connection, SOCKET_EVENTS } from "../models/Connection";
 
-declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
+import { SupportDocument, SUPPORT_STATUS, ISupport, TRepresentative } from "../types/Support";
+import { UserDocument, USER_PERMISSIONS } from "../types/User";
+import { IChat, ChatDocument } from "../types/Chat";
+
+import { notifyPhpForAvailableRep } from "./clientSocketApi";
+import { Output } from "../models/output";
 
 /**
  * POST /support/openSupport
@@ -50,7 +51,6 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
             });
         },
         findReps: (cb) => {
-            // TODO: run a service worker to find reps
             UserModel.find({ supports: {$ne: req.user._id} }, (err, users: Array<UserDocument>) => {
                 if (err)
                     return cb(err);
@@ -94,14 +94,14 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * GET /support/takeSupport/:id
+ * GET /support/takeSupport/:supportId
  * Takes support.
  */
 export let takeSupport = (req, res: Response, next: NextFunction) => {
-    let supportID = req.params.id;
+    let supportID = req.params.supportId;
     const repID = req.user._id;
 
-    supportID = (new Mongoose()).Types.ObjectId(req.params.id);
+    supportID = (new Mongoose()).Types.ObjectId(supportID);
 
     SupportModel.findById(supportID, (err, support: SupportDocument) => {
         if (err)
@@ -133,6 +133,12 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
 
                     support.save();
                     user.save();
+
+                    Connection.sendServerMessage({support}, SOCKET_EVENTS.FIND_AVAILABLE_REP, {json:
+                        (rtdata) => {
+                            console.log("Sent representative to php:", rtdata);
+                        }
+                    });
                 });
             });
         } else {
@@ -151,8 +157,6 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
 export let viewSupport = (req: Request, res: Response, next: NextFunction) => {
     const supportID = req.params.id;
 
-    // TODO: add editing permissions
-
     SupportModel.findById(supportID, (err, support: SupportDocument) => {
         if (err)
             return next(err);
@@ -165,16 +169,18 @@ export let viewSupport = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * GET /support/getChats/:id
+ * GET /support/getChats/:supportId
  * return all chats for specific support.
  */
 export let getChats = (req: Request, res: Response, next: NextFunction) => {
-    SupportModel.findById(req.params.id, (err, support: ISupport) => {
+    const supportId = req.params.supportId;
+
+    SupportModel.findById(supportId, (err, support: ISupport) => {
         if (err)
             return next(err);
 
         if (!support)
-            return res.status(500).json({error: "no support found for id: " + req.params.id});
+            return res.status(500).json({error: "no support found for id: " + supportId});
 
         if (support.status < SUPPORT_STATUS.TAKEN)
             return res.json({ isAvailableRep: false, chats: [] });
@@ -182,9 +188,12 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
         else if (support.messages.length <= 0 && support.representative)
             return res.json({ isAvailableRep: true, chats: [], representative: support.representative });
 
+
         ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {
             if (err)
                 return next(err);
+
+            notifyPhpForAvailableRep(support, chats[0]);
 
             res.json({chats: chats || [], isAvailableRep: true, representative: support.representative});
         });
@@ -213,7 +222,10 @@ export let sendMessage = (req, res, next) => {
                 if (!support)
                     return cb({status: "error", error: "customError", message: "no support found for id: " + data.id});
 
-                const repID = support.representative && support.representative.id ? support.representative.id : "";
+                if (typeof support.representative === "undefined")
+                    return cb({status: "error", error: "customError", message: "no representative got for id: " + data.id});
+
+                const repID = typeof support.representative !== "undefined" && support.representative.id ? support.representative.id : "";
                 const isClient = support.client.id == req.user._id;
                 const isRep = repID == req.user._id;
 
@@ -224,7 +236,8 @@ export let sendMessage = (req, res, next) => {
             });
         },
         (supportData, cb) => {
-            ChatModel.count({ $or: [{from: supportData.support.client.id, to: supportData.support.representative.id}, {from: supportData.support.representative.id, to: supportData.support.client.id}] }, (err, chatCount) => {
+            ChatModel.count({ $or: [{from: supportData.support.client.id, to: supportData.support.representative.id},
+                 {from: supportData.support.representative.id, to: supportData.support.client.id}] }, (err, chatCount) => {
                 if (err)
                     return cb(err);
 
@@ -257,7 +270,7 @@ export let sendMessage = (req, res, next) => {
 
         const newMessage = new ChatModel(chat);
 
-        newMessage.save((err, savedMessage) => {
+        newMessage.save((err, savedMessage: ChatDocument) => {
             if (err)
                 return next(err);
 
@@ -267,14 +280,16 @@ export let sendMessage = (req, res, next) => {
                 if (err)
                     return next(err);
 
-                if (isClient) {
+                if (req.openSupport.initial) {
+                    return res.json({support: savedSupport});
+                } else if (isClient) {
                     // Send message to nodejs client and return response to php http request.
-                    Connection.sendClientMessageByUserId(res, repID, savedMessage);
+                    Connection.sendClientMessageByUserId({chat: savedMessage}, Connection.SOCKET_EVENTS.CLIENT_MESSAGE, repID, res);
                 } else if (isRep) {
                     // Send message to php http server.
-                    Connection.sendServerMessage(res, {message: savedMessage, connectionID: data.connectionID, support: savedSupport});
+                    Connection.sendServerMessage({chat: savedMessage, phpConnectionId: data.phpConnectionId, support: savedSupport}, Connection.SOCKET_EVENTS.SUPPORT_MESSAGE, res);
                 } else {
-                    console.log("NO CLIENT, NO REP");
+                    Output.error("NO CLIENT, NO REP");
                     res.json({error: true, status: "error", message: "NO CLIENT, NO REP"});
                 }
             });
@@ -297,11 +312,11 @@ export let getSupports = (req: Request, res: Response, next: NextFunction) => {
 };
 
 /**
- * GET /support/getSupportById/:id
- * Returns all supports
+ * GET /support/getSupportById/:supportId
+ * Returns support by id
  */
 export let getSupportById = (req: Request, res: Response, next: NextFunction) => {
-    SupportModel.findOne({_id: req.params.id}, (err, support) => {
+    SupportModel.findOne({_id: req.params.supportId}, (err, support) => {
         if (err)
             return next(err);
 
@@ -326,186 +341,22 @@ export let sendWelcomeMessage = (req, res, next, support, message?: string) => {
 };
 
 /**
- * GET /support/getSupportRepresentative/:supportID
+ * GET /support/getSupportRepresentative/:supportId
  * returns the support representative.
  */
 export let getSupportRepresentative = (req, res, next) => {
-    if (!req.params.supportID)
+    const supportId = req.params.supportId;
+
+    if (!supportId)
         return res.status(500).json({status: "error", error: true, message: "no supportID"});
 
-    SupportModel.findById(req.params.supportID, (err, support: SupportDocument) => {
+    SupportModel.findById(supportId, (err, support: SupportDocument) => {
         if (err)
             return next(err);
 
         if (!support)
-            return res.status(500).json({status: "error", error: true, message: "no support found for id" + req.params.supportID });
+            return res.status(500).json({status: "error", error: true, message: "no support found for id" + supportId });
 
         res.json({status: "ok", error: false, message: {isRepresentative: !!support.representative.id, representative: support.representative } });
     });
 };
-
-/**
- * POST /support/socketInit
- * inits and creates a connection.
- */
-export let socketInit = (req, res, next) => {
-    if (!req.body.supportID)
-        return res.status(500).json({status: "error", error: true, message: "no supportID"});
-
-    SupportModel.findById(req.body.supportID, (err, support: SupportDocument) => {
-        if (err)
-            return next(err);
-
-        if (!support)
-            return res.status(500).json({status: "error", error: true, message: "no support found for id" + req.body.supportID });
-
-        const repID = support.representative && support.representative.id ? support.representative.id : "";
-
-        res.representative = support.representative;
-
-        Connection.sendClientMessageByUserId(res, repID, req.body);
-    });
-};
-
-/**
- * Websocket handler, incoming messages and open connection and more.
- * @param io websocket server object
- */
-export let websocketChatServerHandler = (io: Server) => {
-    io.on("connection", (socket) => {
-        socket.on("disconnect", () => {
-            global.connections.chat =  [];
-        });
-
-        socket.on("error", () => {
-            global.connections.chat = [];
-        });
-
-        socket.on("message", (msg: any) => {
-            const data = JSON.parse(msg);
-            const newConnection = new Connection(socket, data.user, global.connections.chat.length);
-
-            global.connections.chat.push(newConnection);
-
-            messageHandler(newConnection, data);
-        });
-    });
-
-    const messageHandler = (connection, data) => {
-        // data.userID
-        if (data.init) { // INIT
-            const res = {
-                json: (data) => {
-                    if (data.message.phpData && data.message.phpData.length > 0) {
-                        data.message.phpData = JSON.parse(data.message.phpData);
-                    }
-                    connection.sendClientMessage(JSON.stringify({getConnectionID: true, response: data}));
-                }
-            };
-
-            Connection.sendServerMessage(res, {getConnectionID: true, supportID: data.support._id});
-            connection.sendClientMessage(data);
-        } else if (data.representativeMessage) { // MESSAGE FROM REP
-            messageSender(data.representativeMessage, connection);
-        } else {
-            console.log("UNKNOWN SOCKET MESSAGE");
-        }
-    };
-
-    const messageSender = (data, connection) => {
-        const req = {
-            user: data.user,
-            body: data,
-            params: { id: data.id },
-            openSupport: {
-                isOK: true,
-                initial: false
-            }
-        }, res = {
-            json: (data) => {
-                connection.sendClientMessage(data);
-            },
-            status: (code) => {
-                return res;
-            }
-        }, next = (err) => {
-            connection.sendClientMessage({error: err});
-        };
-
-        sendMessage(req, res, next);
-    };
-};
-
-
-/**
- * Websocket handler, incoming messages and open connection and more.
- * @param io websocket server object
- */
-export let websocketMissionsServerHandler = (io: Server) => {
-    const connections: Array<Connection> = [];
-    global.connections.chat = connections;
-
-    io.on("connection", (socket) => {
-        socket.on("disconnect", () => {
-            global.connections.chat =  [];
-        });
-
-        socket.on("error", () => {
-            global.connections.chat = [];
-        });
-
-        socket.on("message", (msg: any) => {
-            const data = JSON.parse(msg);
-            const newConnection = new Connection(socket, data.user, global.connections.chat.length);
-
-            global.connections.chat.push(newConnection);
-
-            messageHandler(newConnection, data);
-        });
-    });
-
-    const messageHandler = (connection, data) => {
-        // data.userID
-        if (data.init) { // INIT
-            const res = {
-                json: (data) => {
-                    if (data.message.phpData && data.message.phpData.length > 0) {
-                        data.message.phpData = JSON.parse(data.message.phpData);
-                    }
-                    connection.sendClientMessage(JSON.stringify({getConnectionID: true, response: data}));
-                }
-            };
-
-            Connection.sendServerMessage(res, {getConnectionID: true, supportID: data.support._id});
-            connection.sendClientMessage(data);
-        } else if (data.representativeMessage) { // MESSAGE FROM REP
-            messageSender(data.representativeMessage, connection);
-        } else {
-            console.log("UNKNOWN SOCKET MESSAGE");
-        }
-    };
-
-    const messageSender = (data, connection) => {
-        const req = {
-            user: data.user,
-            body: data,
-            params: { id: data.id },
-            openSupport: {
-                isOK: true,
-                initial: false
-            }
-        }, res = {
-            json: (data) => {
-                connection.sendClientMessage(data);
-            },
-            status: (code) => {
-                return res;
-            }
-        }, next = (err) => {
-            connection.sendClientMessage({error: err});
-        };
-
-        sendMessage(req, res, next);
-    };
-};
-
