@@ -13,8 +13,8 @@ export class ChatService {
         return this.network.http("GET", `${this.prefix}/getChats/${id}`).toPromise();
     }
 
-    getFriendById(friendID): Promise<any> {
-        return this.network.http("GET", `${this.prefix}/getFriend/${friendID}`).toPromise();
+    getConversantById(conversantID): Promise<any> {
+        return this.network.http("GET", `${this.prefix}/getConversant/${conversantID}`).toPromise();
     }
 
     handleErrors(error: Error) {

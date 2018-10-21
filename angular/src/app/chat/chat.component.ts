@@ -21,13 +21,18 @@ export class ChatComponent implements OnInit {
     @ViewChild("messages") messages: ElementRef;
 
     chats: Array<IChat> = [];
-    friend: IUser | ISupport | any;
-    friends: Array<IUser> = [];
-    friendPromise: Promise<IUser | ISupport>;
+    conversant: IUser | ISupport | any;
+    conversants: Array<IUser> = [];
+    conversantPromise: Promise<IUser | ISupport>;
     user: IUser;
     userPromise: Promise<IUser>;
     connection: Connection;
     serverService: ChatService | SupportService;
+
+    isSupport = false;
+    isConversantOnline = false;
+    conversantOfflineText: string;
+    conversantsClasses = {me: "me", conversant: "conversant"};
 
     socketEvents: Array<{trigger: string | Function, function: Function}> = [];
 
@@ -40,6 +45,7 @@ export class ChatComponent implements OnInit {
         protected zone: NgZone
     ) {
         this.serverService = chatService;
+        this.conversantOfflineText = "Waiting for conversant";
         this.socketEvents = [
             {trigger: ((data) => data.error || (data.response && data.response.error)), function: this.onSocketError},
             {trigger: Globals.SOCKET_EVENTS.CHAT_INIT, function: this.onSocketOpen},
@@ -51,14 +57,14 @@ export class ChatComponent implements OnInit {
 
     ngOnInit() {
         this.router.params.subscribe((params) => {
-            this.friendPromise = this.serverService.getFriendById(params.id).then((friend) => {
-                this.friend = friend;
+            this.conversantPromise = this.serverService.getConversantById(params.id).then((conversant) => {
+                this.conversant = conversant;
 
-                this.serverService.getChats(friend._id).then((chats) => {
+                this.serverService.getChats(conversant._id).then((chats) => {
                     this.initChats(chats);
                 });
 
-                return friend;
+                return conversant;
             });
         });
 
@@ -75,6 +81,9 @@ export class ChatComponent implements OnInit {
     initChats(chats) {
         this.zone.run(() => {
             this.chats = chats;
+
+            // TODO: set is conversant online dynamicly
+            this.isConversantOnline = true;
 
             this.scrollToLastMessage();
         });
@@ -98,7 +107,7 @@ export class ChatComponent implements OnInit {
         const newMessage = new Chat(
             this.message.nativeElement.value,
             this.user._id,
-            this.friend._id,
+            this.conversant._id,
             new Date(),
             false,
             false
@@ -118,11 +127,11 @@ export class ChatComponent implements OnInit {
             };
 
             socket.onopen = (e) => {
-                this.friendPromise.then((friend: IUser) => {
-                    this.connection = Connection.newConnection(socket, friend);
-                    this.onSocketOpen(friend);
+                this.conversantPromise.then((conversant: IUser) => {
+                    this.connection = Connection.newConnection(socket, conversant);
+                    this.onSocketOpen(conversant);
 
-                    return friend;
+                    return conversant;
                 });
 
                 console.log("connection established!");
@@ -140,9 +149,9 @@ export class ChatComponent implements OnInit {
         }
     }
 
-    onSocketOpen(friend) {
+    onSocketOpen(conversant) {
         if (this.connection) {
-            this.connection.sendServerMessage({friendId: friend._id, user: this.user}, Globals.SOCKET_EVENTS.CHAT_INIT);
+            this.connection.sendServerMessage({conversantId: conversant._id, user: this.user}, Globals.SOCKET_EVENTS.CHAT_INIT);
         } else {
             console.log("No connection");
         }
@@ -153,7 +162,7 @@ export class ChatComponent implements OnInit {
             data = JSON.parse(data);
         }
 
-        console.log("GOT DATA", data);
+        console.log("event:", data.event, "data:", data);
 
         let isEventFound = false;
 
@@ -174,12 +183,13 @@ export class ChatComponent implements OnInit {
 
     onSocketInit(data: SocketEventMessage) {
         this.connection.nodeConnectionId = data.nodeConnectionId;
+        this.connection.phpConnectionId = data.phpConnectionId;
     }
 
     onSocketMessage(data) {
         const message = this.parseServerMessage(data);
         if (typeof message.status !== "undefined" && (typeof message.status === "number" || message.status === "ok")) {
-            this.connection.sendServerMessage({messageId: message.id, friendId: this.user._id}, Globals.SOCKET_EVENTS.MESSAGE_READ);
+            this.connection.sendServerMessage({messageId: message.id, conversantId: this.user._id}, Globals.SOCKET_EVENTS.MESSAGE_READ);
 
             this.addMessages(message);
         } else if (data.status === "error") {
@@ -188,14 +198,14 @@ export class ChatComponent implements OnInit {
     }
 
     onSocketMessageRead(data) {
-        console.log("MESSAGE READDDDD", data);
-
         this.chats.map((chat) => {
             if (chat.id === data.chat.id) {
-                console.log("found chat", chat);
                 chat.status = data.chat.status;
+                const statusElement = document.getElementById(chat.id).querySelector(".status");
 
-                document.getElementById(chat.id).querySelector(".status i").className = "fa " + this.getStatusMark(chat.status);
+                // statusElement.querySelector("i").className = "fa " + this.getStatusMark(chat.status);
+
+                statusElement.appendChild(statusElement.childNodes[0]);
             }
 
             return chat;
@@ -234,17 +244,6 @@ export class ChatComponent implements OnInit {
             return "representative";
         } else {
             return "client";
-        }
-    }
-
-    getStatusMark(status: number) {
-        switch (status) {
-            case CHAT_STATUS.NEW:
-                return "";
-            case CHAT_STATUS.SENT:
-                return "fa-check";
-            case CHAT_STATUS.READ:
-                return "fa-check-double";
         }
     }
 }

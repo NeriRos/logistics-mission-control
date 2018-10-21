@@ -14,9 +14,9 @@ import { IUser } from "~/models/user.model";
 export class FabComponent {
     @ViewChild("fabContainer") fabContainer: ElementRef;
     // tslint:disable-next-line:no-input-rename
-    @Input("friends") friends: ObservableArray<IUser>;
+    @Input("conversants") conversants: ObservableArray<IUser>;
     // tslint:disable-next-line:no-input-rename
-    @Input("friendsNumber") friendsNumber: number;
+    @Input("conversantsNumber") conversantsNumber: number;
 
     isFabOpen = false;
 
@@ -27,7 +27,7 @@ export class FabComponent {
         const fab: View = <View>args.object;
         const buttons: Array<ViewBase> = [];
 
-        for (let index = 0; index < this.friendsNumber; index++) {
+        for (let index = 0; index < this.conversantsNumber; index++) {
             buttons.push(this.page.getViewById("person" + index));
         }
 

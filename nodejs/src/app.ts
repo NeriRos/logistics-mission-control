@@ -134,16 +134,16 @@ app.post("/account/profile", passport.authenticate("bearer", { session: false })
 app.post("/account/password", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post("/account/delete", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.postDeleteAccount);
 app.get("/account/unlink/:provider", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getOauthUnlink);
-app.get("/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getFriends);
-app.post("/addFriend", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.addFriend);
+app.get("/getConversants", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.getConversants);
+app.post("/addConversant", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, userController.addConversant);
 
 
 /**
  * Chat routes
  */
-app.get("/chat/getChats/:friendId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getChats);
+app.get("/chat/getChats/:conversantId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getChats);
 app.post("/chat/sendMessage", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.sendMessage);
-app.get("/chat/getFriend/:friendId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getFriend);
+app.get("/chat/getConversant/:conversantId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, chatController.getConversant);
 
 /**
  * Support routes
@@ -152,7 +152,7 @@ app.post("/support/openSupport", passportConfig.newSupportAuthorization, passpor
 app.post("/support/sendMessage", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.sendMessage);
 app.get("/support/getSupports", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupports);
 app.get("/support/getSupportById/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
-app.get("/support/getFriend/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
+app.get("/support/getConversant/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportById);
 app.get("/support/getSupportRepresentative/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getSupportRepresentative);
 app.get("/support/getChats/:supportId", passportConfig.supportAuthorization, passportConfig.isAuthenticated, supportController.getChats);
 app.get("/support/takeSupport/:supportID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, supportController.takeSupport);
@@ -182,7 +182,7 @@ app.post("/dynamiChatApi/:event", passportConfig.supportAuthorization, passportC
 /**
  * Contacts routes
  */
-app.get("/contacts/getFriends", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, contactsController.getFriends);
+app.get("/contacts/getConversants", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, contactsController.getConversants);
 
 
 app.get("*", function (req, res, next) {

@@ -78,5 +78,5 @@ export let CONNECTION_MESSAGE_CODES = {
 
 export let CONNECTION_MESSAGE_TEXTS = {
     [CONNECTION_MESSAGE_CODES.ERROR]: "Unknown error",
-    [CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE]: "Friend is not online"
+    [CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE]: "Conversant is not online"
 };

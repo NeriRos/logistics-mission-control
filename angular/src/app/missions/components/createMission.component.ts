@@ -60,7 +60,7 @@ import { MISSION_URGENCY } from "../../models/mission.model";
         </div>
     </mat-dialog-content>
     <mat-dialog-actions>
-        <button mat-button (click)="closeDialog()">Close</button>
+        <button mat-button (click)="closeDialog(undefined)">Close</button>
         <button mat-button (click)="closeDialog(this.createMissionForm)">Create</button>
     </mat-dialog-actions>
     `

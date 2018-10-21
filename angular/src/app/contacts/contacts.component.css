@@ -7,12 +7,12 @@
     list-style-type: none;
 }
 
-.friend {
+.conversant {
     display: flex;
     justify-content: center;
     flex-direction: column;
 }
 
-.friend:hover {
+.conversant:hover {
     font-weight: bold;
 }

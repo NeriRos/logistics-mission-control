@@ -9,7 +9,7 @@ export class ContactsService {
         this.prefix = "contacts";
     }
 
-    getFriends() {
-        return this.network.http("GET", `${this.prefix}/getFriends`).toPromise();
+    getConversants() {
+        return this.network.http("GET", `${this.prefix}/getConversants`).toPromise();
     }
 }

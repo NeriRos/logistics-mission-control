@@ -140,9 +140,9 @@ export let clientSocketEventHandlers = {
                 initial: false
             }
         }, res = customResponse((data) => {
-            const friendConnection = Connection.findConnectionByUserId(data.user);
-            if (friendConnection) {
-                friendConnection.sendClientMessage(data.message, Connection.SOCKET_EVENTS.CHAT_MESSAGE);
+            const conversantConnection = Connection.findConnectionByUserId(data.user);
+            if (conversantConnection) {
+                conversantConnection.sendClientMessage(data.message, Connection.SOCKET_EVENTS.CHAT_MESSAGE);
             } else {
                 Connection.sendMessageToSocket(socket, {error: {data, message: CONNECTION_MESSAGE_TEXTS[CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE] + " - but message sent", code: CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE}}, Connection.SOCKET_EVENTS.MESSAGE_CALLBACK);
             }
@@ -155,12 +155,10 @@ export let clientSocketEventHandlers = {
     onMessageRead: (socket: WebSocket, data: ISocketEventMessage) => {
         const userId = data.user._id;
 
-        // TODO: update db for new status, add new status to data.
-        // TODO: if support send message to server.
-
         ChatModel.findById(data.chat._id, (err, chat) => {
             if (err) {
-                // TODO: error handling
+                Connection.sendMessageToSocket(socket, {error: {message: "chat not found - id: " + data.chat._id, status: "chatNotFound"}}, Connection.SOCKET_EVENTS.ERROR);
+
                 return Output.error("Error finding chat:", err, "chat id: " + data.chat._id);
             }
 
@@ -168,7 +166,8 @@ export let clientSocketEventHandlers = {
 
             chat.save((err, savedChat: IChat) => {
                 if (err) {
-                    // TODO: error handling
+                    Connection.sendMessageToSocket(socket, {error: {message: "chat couldn't save", status: "chatNotSaved"}}, Connection.SOCKET_EVENTS.ERROR);
+
                     return Output.error("Error saving chat:", err);
                 }
 
@@ -210,8 +209,8 @@ export let findAvailableRepsWithSocket = (support: ISupport) => {
     Connection.sendMessageToAllReps({support}, SOCKET_EVENTS.FIND_AVAILABLE_REP);
 };
 
-export let notifyPhpForAvailableRep = (support: ISupport) => {
-    Connection.sendServerMessage({support}, SOCKET_EVENTS.FIND_AVAILABLE_REP);
+export let notifyPhpForAvailableRep = (support: ISupport, chat: IChat) => {
+    Connection.sendServerMessage({support, chat}, SOCKET_EVENTS.FIND_AVAILABLE_REP);
 };
 
 export function customResponse(cb: Function, statusCb?: Function): {json: Function, status: Function} {

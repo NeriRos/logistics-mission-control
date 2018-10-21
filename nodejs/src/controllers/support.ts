@@ -51,7 +51,6 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
             });
         },
         findReps: (cb) => {
-            // TODO: run a service worker to find reps
             UserModel.find({ supports: {$ne: req.user._id} }, (err, users: Array<UserDocument>) => {
                 if (err)
                     return cb(err);
@@ -158,8 +157,6 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
 export let viewSupport = (req: Request, res: Response, next: NextFunction) => {
     const supportID = req.params.id;
 
-    // TODO: add editing permissions
-
     SupportModel.findById(supportID, (err, support: SupportDocument) => {
         if (err)
             return next(err);
@@ -191,11 +188,12 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
         else if (support.messages.length <= 0 && support.representative)
             return res.json({ isAvailableRep: true, chats: [], representative: support.representative });
 
-        notifyPhpForAvailableRep(support);
 
         ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {
             if (err)
                 return next(err);
+
+            notifyPhpForAvailableRep(support, chats[0]);
 
             res.json({chats: chats || [], isAvailableRep: true, representative: support.representative});
         });

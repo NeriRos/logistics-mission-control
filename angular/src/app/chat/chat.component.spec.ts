@@ -4,6 +4,9 @@ import { ChatComponent } from "./chat.component";
 import { ChatModule } from "./chat.module";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs/Observable";
+import { NetworkingService } from "../services/network.service";
+import { Globals } from "../shared/globals";
+import { HttpClientModule } from "@angular/common/http";
 
 describe("ChatComponent", () => {
   let component: ChatComponent;
@@ -12,12 +15,16 @@ describe("ChatComponent", () => {
   beforeEach(async(() => {
     const fakeActivatedRoute = {
       snapshot: { data: { } },
-      params: new Observable()
+      params: new Observable<any>()
     } as ActivatedRoute;
 
     TestBed.configureTestingModule({
-      imports: [ ChatModule ],
-      providers: [ {provide: ActivatedRoute, useValue: fakeActivatedRoute} ],
+      imports: [ ChatModule, HttpClientModule],
+      providers: [
+        {provide: ActivatedRoute, useValue: fakeActivatedRoute},
+        NetworkingService,
+        Globals
+      ],
     })
     .compileComponents();
   }));

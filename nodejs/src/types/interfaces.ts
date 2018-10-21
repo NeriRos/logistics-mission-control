@@ -12,7 +12,7 @@ export interface ISocketEventMessage {
     phpConnectionId?: number;
     nodeConnectionId?: number;
     messageId?: string;
-    friendId?: string;
+    conversantId?: string;
     representative?: TRepresentative;
 }
 

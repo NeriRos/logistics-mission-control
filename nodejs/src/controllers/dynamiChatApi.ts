@@ -28,14 +28,15 @@ export let supportInit = (req, res, next) => {
         if (!support)
             return res.status(500).json({status: "error", error: true, message: "no support found for id" + req.body.supportId });
 
+        const resultData = req.body;
         const repID = support.representative && support.representative.id ? support.representative.id : "";
 
-        req.body.representative = support.representative;
-        req.body.nodeConnectionId = Connection.getIdByUserId(support.representative.id);
+        resultData.representative = support.representative;
+        resultData.nodeConnectionId = Connection.getConnectionIdByUserId(repID);
+
+        Connection.sendClientMessageByUserId(resultData, SOCKET_EVENTS.SUPPORT_INIT, repID, res);
 
         findAvailableRepsWithSocket(support);
-
-        Connection.sendClientMessageByUserId(req.body, SOCKET_EVENTS.SUPPORT_INIT, repID, res);
     });
 };
 

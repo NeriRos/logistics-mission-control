@@ -10,7 +10,7 @@ export type IUser = {
     phone?: string;
     name?: string;
     code?: string;
-    friends?: Array<string>;
+    conversants?: Array<string>;
     picture?: string;
     token?: string;
     permissions?: number;

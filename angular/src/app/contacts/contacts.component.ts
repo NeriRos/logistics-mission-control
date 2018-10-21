@@ -10,17 +10,17 @@ import { HelpersService } from "../services/helpers.service";
   styleUrls: ["./contacts.component.css"]
 })
 export class ContactsComponent implements OnInit {
-  friends: Array<IUser> = [];
+  conversants: Array<IUser> = [];
 
   constructor(protected contactService: ContactsService, protected helpers: HelpersService) { }
 
   ngOnInit() {
-    this.contactService.getFriends().then((friends) => {
-      this.friends = friends;
+    this.contactService.getConversants().then((conversants) => {
+      this.conversants = conversants;
     });
   }
 
-  chatWith(friend: IUser) {
-    this.helpers.navigate([`chat/${friend._id}`]);
+  chatWith(conversant: IUser) {
+    this.helpers.navigate([`chat/${conversant._id}`]);
   }
 }

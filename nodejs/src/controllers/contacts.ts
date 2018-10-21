@@ -5,17 +5,17 @@ import { UserModel } from "../models/User";
 import { USER_PERMISSIONS, isPermitted } from "../types/User";
 
 /**
- * GET /contacts/getFriends
+ * GET /contacts/getConversants
  */
-export let getFriends = (req: Request, res: Response, next: NextFunction) => {
+export let getConversants = (req: Request, res: Response, next: NextFunction) => {
     const requestUser = req.user;
 
     // if (isPermitted(requestUser, USER_PERMISSIONS.LOGISTICS)) {
-        UserModel.find({friends: requestUser._id}, (err, friends) => {
+        UserModel.find({conversants: requestUser._id}, (err, conversants) => {
             if (err)
                 return next(err);
 
-            res.json(friends);
+            res.json(conversants);
         });
     // } else {
     //     res.json({problem: true, message: "NO PERMISSION TO REQUEST FRIENDS"});

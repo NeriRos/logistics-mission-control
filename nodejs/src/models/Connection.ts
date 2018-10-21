@@ -79,7 +79,7 @@ export class Connection {
         return result.id == -1 ? undefined : result;
     }
 
-    static getIdByUserId(userId: string) {
+    static getConnectionIdByUserId(userId: string) {
         const connection = Connection.findConnectionByUserId(userId);
         return connection ? connection.id : -1;
     }
@@ -128,6 +128,9 @@ export class Connection {
                 Output.error("Request failed:", e);
                 cb.json({error: true, status: "error", message: "message was not sent to php server" + JSON.stringify(e)});
             });
+        }).on("error", (e) => {
+            Output.error("Request failed:", e);
+            cb.json({error: true, status: "error", message: "message was not sent to php server" + JSON.stringify(e)});
         });
         // console.log("Sending message to php:", message);
         // write data to request body
@@ -159,7 +162,7 @@ export let CONNECTION_MESSAGE_CODES = {
 };
 export let CONNECTION_MESSAGE_TEXTS = {
     [CONNECTION_MESSAGE_CODES.ERROR]: "Unknown error",
-    [CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE]: "Friend is not online"
+    [CONNECTION_MESSAGE_CODES.FRIEND_OFFLINE]: "Conversant is not online"
 };
 export let SOCKET_EVENTS = {
     MISSIONS_INIT: "innerChatInit",

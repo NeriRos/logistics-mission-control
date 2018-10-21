@@ -15,7 +15,7 @@ import { UserService } from "~/services/login.service";
 export class ContactsComponent implements OnInit {
   @ViewChild("newPerson") newPerson: ElementRef;
 
-  _friends: Array<IUser>;
+  _conversants: Array<IUser>;
   layout: ListViewLinearLayout;
   private numberOfAddedItems: number = 0;
 
@@ -33,13 +33,13 @@ export class ContactsComponent implements OnInit {
   }
 
   addContact(email: string) {
-    this.contactsService.addFriend(email).subscribe((res) => {
-      this._friends.push(res);
+    this.contactsService.addConversant(email).subscribe((res) => {
+      this._conversants.push(res);
     });
   }
 
   chatWith(user: IUser) {
-    this.helpers.navigate(["chat"], {friend: JSON.stringify(user)});
+    this.helpers.navigate(["chat"], {conversant: JSON.stringify(user)});
   }
 
   onLoadMoreItemsRequested(args: ListViewEventData) {
@@ -70,18 +70,18 @@ export class ContactsComponent implements OnInit {
 
   private async initDataItems() {
     this.ngZone.run(async () => {
-      this.contactsService.getFriends().subscribe((res) => {
+      this.contactsService.getConversants().subscribe((res) => {
           this.numberOfAddedItems = res.length || 0;
-          this._friends = res;
+          this._conversants = res;
       });
     });
   }
 
-  get friends(): Array<IUser> {
-    return this._friends;
+  get conversants(): Array<IUser> {
+    return this._conversants;
   }
 
-  get friendsNumber(): number {
+  get conversantsNumber(): number {
     return this.numberOfAddedItems;
   }
 }

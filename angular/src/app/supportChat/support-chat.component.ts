@@ -2,7 +2,7 @@ import { Component, NgZone } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { ISupport } from "../models/support.model";
-import { Chat } from "../models/chat.model";
+import { Chat, IChat } from "../models/chat.model";
 
 import {ChatComponent} from "../chat/chat.component";
 
@@ -30,9 +30,11 @@ export class SupportChatComponent extends ChatComponent {
     ) {
         super(router, userService, chatService, supportService, globals, zone);
 
-        this.serverService = supportService;
+        this.isSupport = true;
+        this.conversantOfflineText = "Waiting for representative";
+        this.conversantsClasses = {me: "representative", conversant: "client"};
 
-        // tslint:disable-next-line:max-line-length
+        this.serverService = supportService;
         this.socketEvents.push(
             {trigger: Globals.SOCKET_EVENTS.SUPPORT_INIT, function: this.onSocketSupportInit},
             {trigger: Globals.SOCKET_EVENTS.CLIENT_MESSAGE, function: this.onSocketMessage},
@@ -63,9 +65,11 @@ export class SupportChatComponent extends ChatComponent {
         return newMessage;
     }
 
-    initChats(chats) {
+    initChats(chats: {chats: IChat[], isAvailableRep: boolean}) {
         this.zone.run(() => {
             this.chats = chats.chats;
+
+            this.isConversantOnline = chats.isAvailableRep && this.chats.length > 0;
 
             this.scrollToLastMessage();
         });
@@ -114,6 +118,6 @@ export class SupportChatComponent extends ChatComponent {
     }
 
     get support(): ISupport {
-        return <ISupport>this.friend;
+        return <ISupport>this.conversant;
     }
 }

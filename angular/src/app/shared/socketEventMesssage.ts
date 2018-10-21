@@ -11,5 +11,5 @@ export interface SocketEventMessage {
     phpConnectionId?: number;
     nodeConnectionId?: number;
     messageId?: string;
-    friendId?: string;
+    conversantId?: string;
 }

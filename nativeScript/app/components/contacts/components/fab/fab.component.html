@@ -1,6 +1,6 @@
 <View>
     <GridLayout #fabContainer rows="auto,*">
-        <ListView [items]="friends">
+        <ListView [items]="conversants">
             <ng-template let-item="item" let-idx="index">
                 <Image tap="doThis" [id]="'person'+idx" [src]="'res://' + item.picture" class="speed-button" row="1"></Image>
             </ng-template>
