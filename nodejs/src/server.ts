@@ -3,8 +3,8 @@ import * as WebSocket from "ws";
 import { websocketChatServerHandler } from "./controllers/clientSocketApi";
 import { Connection } from "mongoose";
 
-declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
-global.connections = {chat: [], missions: []};
+declare let global: {connections: {chats: Array<Connection>, missions: Array<Connection>}};
+global.connections = {chats: [], missions: []};
 
 const app = require("./app");
 

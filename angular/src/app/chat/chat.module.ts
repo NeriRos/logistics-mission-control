@@ -27,6 +27,6 @@ import { MessagesComponent } from "./messages.component";
     ChatService,
     SupportService
   ],
-  declarations: [ChatComponent]
+  declarations: [ChatComponent, MessagesComponent]
 })
 export class ChatModule { }

@@ -12,6 +12,7 @@ import { MissionsService } from "../services/missions.service";
 import { ManagementService } from "../services/management.service";
 import { SharedModule } from "../shared/shared.module";
 import { MissionItemComponent } from "./components/missionItem.component";
+import { Globals } from "../shared/globals";
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { MissionItemComponent } from "./components/missionItem.component";
   providers: [
     MissionsService,
     UserService,
-    ManagementService
+    ManagementService,
+    Globals
   ],
   declarations: [MissionsComponent, CreateMissionComponent, MissionItemComponent],
   entryComponents: [CreateMissionComponent]

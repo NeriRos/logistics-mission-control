@@ -1,6 +1,7 @@
 import { ISupport, TRepresentative } from "~/types/Support";
 import { IChat } from "~/types/Chat";
 import { IUser } from "~/types/User";
+import { IMission } from "./Mission";
 
 export interface ISocketEventMessage {
     event?: string;
@@ -14,6 +15,7 @@ export interface ISocketEventMessage {
     messageId?: string;
     conversantId?: string;
     representative?: TRepresentative;
+    mission?: IMission;
 }
 
 export interface ISupportMessageBody {

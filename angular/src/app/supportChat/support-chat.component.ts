@@ -11,13 +11,14 @@ import { UserService } from "../services/login.service";
 
 import { Globals } from "../shared/globals";
 import { ChatService } from "../services/chat.service";
-import { SocketEventMessage } from "../shared/socketEventMesssage";
+import { ISocketEventMessage } from "../shared/socketEventMesssage";
+import { CONNECTION_MESSAGE_TEXTS } from "../models/connection.model";
 
 
 @Component({
     selector: "app-support",
     templateUrl: "../chat/chat.component.html",
-    styleUrls: ["../chat/chat.component.css"]
+    styleUrls: ["./support-chat.component.css"]
 })
 export class SupportChatComponent extends ChatComponent {
     constructor(
@@ -31,7 +32,7 @@ export class SupportChatComponent extends ChatComponent {
         super(router, userService, chatService, supportService, globals, zone);
 
         this.isSupport = true;
-        this.conversantOfflineText = "Waiting for representative";
+        this.conversantOfflineText = "Waiting for client";
         this.conversantsClasses = {me: "representative", conversant: "client"};
 
         this.serverService = supportService;
@@ -46,20 +47,22 @@ export class SupportChatComponent extends ChatComponent {
     }
 
     submit() {
-        const newMessage = this.constructNewMessage();
+        const messageText = this.message.nativeElement.value;
+        if (messageText && messageText.length > 0) {
+            const newMessage = this.constructNewMessage(messageText);
 
-        this.connection.sendServerMessage(newMessage, Globals.SOCKET_EVENTS.SUPPORT_MESSAGE);
+            this.connection.sendServerMessage(newMessage, Globals.SOCKET_EVENTS.SUPPORT_MESSAGE);
+        }
 
         return false;
     }
 
-    constructNewMessage() {
+    constructNewMessage(message): ISocketEventMessage {
         const newMessage = {
-            chat: new Chat(this.message.nativeElement.value, this.user._id, this.support.client.id, new Date(), true, false),
+            chat: new Chat(message, this.user._id, this.support.client.id, new Date(), true, false),
             user: this.user,
             support: this.support,
-            supportId: this.support._id,
-            phpConnectionId: this.connection.phpConnectionId
+            supportId: this.support._id
         };
 
         return newMessage;
@@ -68,6 +71,7 @@ export class SupportChatComponent extends ChatComponent {
     initChats(chats: {chats: IChat[], isAvailableRep: boolean}) {
         this.zone.run(() => {
             this.chats = chats.chats;
+            this.conversantDetails = this.conversant.client;
 
             this.isConversantOnline = chats.isAvailableRep && this.chats.length > 0;
 
@@ -85,9 +89,9 @@ export class SupportChatComponent extends ChatComponent {
 
     /**
      * set connection's nodeConnectionId for session keeping with node server.
-     * @param {SocketEventMessage} data with nodeConnectionId
+     * @param {ISocketEventMessage} data with nodeConnectionId
      */
-    onSocketSupportInit(data: SocketEventMessage) {
+    onSocketSupportInit(data: ISocketEventMessage) {
         this.connection.nodeConnectionId = data.nodeConnectionId;
         this.connection.phpConnectionId = data.phpConnectionId;
 
@@ -109,9 +113,9 @@ export class SupportChatComponent extends ChatComponent {
 
     /**
      * set connection's phpConnectionId for session keeping with php server.
-     * @param {SocketEventMessage} data with nodeConnectionId and phpConnectionId
+     * @param {ISocketEventMessage} data with nodeConnectionId and phpConnectionId
      */
-    onSocketGetConnectionId(data: SocketEventMessage) {
+    onSocketGetConnectionId(data: ISocketEventMessage) {
         this.connection.phpConnectionId = data.phpConnectionId;
 
         console.log("[+] PHP connection id:", data.phpConnectionId);

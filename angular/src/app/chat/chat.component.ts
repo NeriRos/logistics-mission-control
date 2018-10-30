@@ -8,7 +8,7 @@ import { UserService } from "../services/login.service";
 import { SupportService } from "../services/support.service";
 import { Globals } from "../shared/globals";
 import { Connection } from "../models/connection.model";
-import { SocketEventMessage } from "../shared/socketEventMesssage";
+import { ISocketEventMessage } from "../shared/socketEventMesssage";
 
 
 @Component({
@@ -22,6 +22,7 @@ export class ChatComponent implements OnInit {
 
     chats: Array<IChat> = [];
     conversant: IUser | ISupport | any;
+    conversantDetails: IUser;
     conversants: Array<IUser> = [];
     conversantPromise: Promise<IUser | ISupport>;
     user: IUser;
@@ -81,6 +82,7 @@ export class ChatComponent implements OnInit {
     initChats(chats) {
         this.zone.run(() => {
             this.chats = chats;
+            this.conversantDetails = this.conversant;
 
             // TODO: set is conversant online dynamicly
             this.isConversantOnline = true;
@@ -96,16 +98,19 @@ export class ChatComponent implements OnInit {
     }
 
     submit() {
-        const newMessage = this.constructNewMessage();
+        const messageText = this.message.nativeElement.value;
+        if (messageText && messageText.length > 0) {
+            const newMessage = this.constructNewMessage(messageText);
 
-        this.connection.sendServerMessage(newMessage, Globals.SOCKET_EVENTS.CHAT_MESSAGE);
+            this.connection.sendServerMessage(newMessage, Globals.SOCKET_EVENTS.CHAT_MESSAGE);
+        }
 
         return false;
     }
 
-    constructNewMessage(): any {
+    constructNewMessage(message): ISocketEventMessage {
         const newMessage = new Chat(
-            this.message.nativeElement.value,
+            message,
             this.user._id,
             this.conversant._id,
             new Date(),
@@ -113,12 +118,12 @@ export class ChatComponent implements OnInit {
             false
         );
 
-        return {message: newMessage, user: this.user};
+        return {chat: newMessage, user: this.user};
     }
 
     initSocket() {
         try {
-            const socket = new WebSocket(this.globals.socketServer.chat.uri);
+            const socket = new WebSocket(this.globals.socketServer.uri);
 
             socket.onmessage = (msg) => {
                 const data = JSON.parse(msg.data);
@@ -157,7 +162,7 @@ export class ChatComponent implements OnInit {
         }
     }
 
-    socketMessageHandler(socket, data: SocketEventMessage) {
+    socketMessageHandler(socket, data: ISocketEventMessage) {
         if (typeof data === "string") {
             data = JSON.parse(data);
         }
@@ -169,7 +174,7 @@ export class ChatComponent implements OnInit {
         this.socketEvents.forEach((event) => {
             if (typeof event.trigger === "function" && event.trigger(data)) {
                 isEventFound = true;
-                return event.function(data);
+                return event.function.bind(this)(data);
             } else if (event.trigger === data.event) {
                 isEventFound = true;
                 return event.function.bind(this)(data);
@@ -181,7 +186,7 @@ export class ChatComponent implements OnInit {
         }
     }
 
-    onSocketInit(data: SocketEventMessage) {
+    onSocketInit(data: ISocketEventMessage) {
         this.connection.nodeConnectionId = data.nodeConnectionId;
         this.connection.phpConnectionId = data.phpConnectionId;
     }
@@ -203,8 +208,6 @@ export class ChatComponent implements OnInit {
                 chat.status = data.chat.status;
                 const statusElement = document.getElementById(chat.id).querySelector(".status");
 
-                // statusElement.querySelector("i").className = "fa " + this.getStatusMark(chat.status);
-
                 statusElement.appendChild(statusElement.childNodes[0]);
             }
 
@@ -212,7 +215,7 @@ export class ChatComponent implements OnInit {
         });
     }
 
-    onSocketMessageCallback(data: SocketEventMessage) {
+    onSocketMessageCallback(data: ISocketEventMessage) {
         this.message.nativeElement.value = "";
         this.addMessages(data.chat);
     }
@@ -221,7 +224,7 @@ export class ChatComponent implements OnInit {
         console.log("Received error from socket server:", data.message || data.error.message);
     }
 
-    parseServerMessage(data: SocketEventMessage) {
+    parseServerMessage(data: ISocketEventMessage) {
         let parsedMessage: any = data;
 
         if (typeof data.chat === "object") {
@@ -240,10 +243,6 @@ export class ChatComponent implements OnInit {
     }
 
     messageSender(chat: IChat) {
-        if (chat.from === this.user._id) {
-            return "representative";
-        } else {
-            return "client";
-        }
+        return chat.from === this.user._id ? this.conversantsClasses.me : this.conversantsClasses.conversant;
     }
 }

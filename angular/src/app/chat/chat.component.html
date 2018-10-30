@@ -2,6 +2,16 @@
 <div class="container">
     <div class="col-10">
         <div class="row justify-content-center">
+            <div class="messagesHeader">
+                <h2>{{isSupport ? 'Support ' : ' '}}Chat</h2>
+                <div class="conversantDetails" *ngIf="!!conversantDetails">
+                    <b>Conversant name:</b> <label>{{conversantDetails.name}}</label>
+                </div>
+
+            </div>
+        </div>
+        <hr class="hr">
+        <div class="row justify-content-center">
             <ul id="messages" #messages>
                 <li class="message" *ngIf="!isConversantOnline">{{conversantOfflineText}}</li>
                 <li *ngFor="let chat of chats" [class]="'message ' + messageSender(chat)" [id]="chat.id">

@@ -39,7 +39,7 @@ export let sendMessage = (req, res, next) => {
         if (userID == req.body.from) {
             const chat: IChat = {
                 id: (count + 1).toString(),
-                message: req.body.message,
+                message: req.body.chat,
                 from: userID,
                 to: conversantID,
                 date: new Date(req.body.date),

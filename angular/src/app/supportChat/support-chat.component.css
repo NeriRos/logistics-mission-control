@@ -1,6 +1,8 @@
 ul#messages {
     list-style: none;
     height: 500px;
+    width: 80%;
+    padding: 0;
     overflow-y: scroll;
     padding-left: 5px;
 }
@@ -23,6 +25,14 @@ ul#messages {
     display: flex;
     justify-content: flex-end;
 }
+
+.message.representative {
+    padding-left: 50px;
+}
+.message.client {
+    padding-right: 50px;
+}
+
 
 .client .messageBody {
     background-color: green;
