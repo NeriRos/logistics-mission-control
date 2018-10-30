@@ -46,26 +46,33 @@ export class Globals {
     }
 
     productionInit() {
-        this.server = { ip: "82.80.210.156", dns: "app.cargo-express.co.il", port: "8887", protocol: "http" };
-        this.server.uri = this.server.protocol + "://" + this.server.ip + ":" + this.server.port;
-
+        this.server = {
+            ip: "82.80.210.156",
+            dns: "app.cargo-express.co.il",
+            port: "443",
+            protocol: "https"
+        };
         this.socketServer = {
-                ip: "82.80.210.156",
-                dns: "app.cargo-express.co.il",
-                port: "8890",
-                protocol: "ws",
-                uri: ""
+            ip: "82.80.210.156",
+            dns: "api.cargo-express.co.il",
+            port: "80",
+            protocol: "ws",
+            uri: ""
         };
 
         // tslint:disable-next-line:max-line-length
-        this.socketServer.uri = this.socketServer.protocol + "://" + this.socketServer.ip + ":" + this.socketServer.port;
+        this.socketServer.uri = this.socketServer.protocol + "://" + this.socketServer.dns + ":" + this.socketServer.port;
+        this.server.uri = this.server.protocol + "://" + this.server.dns + ":" + this.server.port;
     }
 
     debugInit() {
         // this.server = { ip: "141.226.21.44", dns: "cargo-express.co.il", port: "8887", protocol: "http" };
-        this.server = { ip: "127.0.0.1", dns: "localhost", port: "8888", protocol: "http" };
-        this.server.uri = this.server.protocol + "://" + this.server.ip + ":" + this.server.port;
-
+        this.server = {
+            ip: "127.0.0.1",
+            dns: "localhost",
+            port: "8888",
+            protocol: "http"
+        };
         this.socketServer = {
             ip: "127.0.0.1",
             dns: "localhost",
@@ -76,5 +83,6 @@ export class Globals {
 
         // tslint:disable-next-line:max-line-length
         this.socketServer.uri = this.socketServer.protocol + "://" + this.socketServer.ip + ":" + this.socketServer.port;
+        this.server.uri = this.server.protocol + "://" + this.server.ip + ":" + this.server.port;
     }
 }

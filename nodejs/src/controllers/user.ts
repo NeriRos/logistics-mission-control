@@ -1,6 +1,6 @@
 "use strict";
 import { UserModel } from "../models/User";
-import { IUser, UserDocument } from "../types/User";
+import { IUser, UserDocument, USER_PERMISSIONS } from "../types/User";
 import { Response, Request, NextFunction } from "express";
 import { WriteError } from "mongodb";
 import { randomBytes } from "crypto";
@@ -75,11 +75,17 @@ export let postSignup = (req: Request, res: Response, next: NextFunction) => {
     return res.json({status: "error", error: errors});
   }
 
+  const permission = req.body.code === "LightXAdmins20!8GROUP" ? USER_PERMISSIONS.ADMIN : USER_PERMISSIONS.DELIVERY;
+
   const user = new UserModel({
     email: req.body.email,
+    phone: req.body.phone,
     password: req.body.password,
     name: req.body.name,
-    picture: req.body.picture || DEFAULT_USER_PICTURE_NAME
+    code: req.body.code,
+    picture: req.body.picture || DEFAULT_USER_PICTURE_NAME,
+    permission: permission,
+    supports: [],
   });
 
   UserModel.findOne({ email: req.body.email }, (err, existingUser) => {

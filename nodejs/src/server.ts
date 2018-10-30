@@ -13,18 +13,22 @@ const app = require("./app");
  */
 app.use(errorHandler());
 
-/**
- * Start Express server.
- */
-const server = app.listen(app.get("port"), app.get("host"), () => {
-  console.log(("  App is running at http://%s:%d in %s mode"), app.get("host"), app.get("port"), app.get("env"));
-  console.log("  Press CTRL-C to stop\n");
-});
+let server;
 
-const websocketChatServer = new WebSocket.Server({ port: 8890 });
-// const websocketMissionsServer = new WebSocket.Server({ port: 8891 });
+if (process.env.PASSENGER_ISHTTP == "yes") {
+  /**
+   * Start Express server.
+   */
+  server = app.listen(app.get("port"), app.get("host"), () => {
+    console.log(("  App is running at http://%s:%d in %s mode"), app.get("host"), app.get("port"), app.get("env"));
+    console.log("  Press CTRL-C to stop\n");
+  });
+}
 
-websocketChatServerHandler(websocketChatServer);
-// websocketMissionsServerHandler(websocketMissionsServer);
+if (process.env.PASSENGER_ISWEBSOCK == "yes") {
+  const websocketChatServer = new WebSocket.Server({ port: process.env.WS_CHAT_PORT });
+  websocketChatServerHandler(websocketChatServer);
+}
+
 
 export = server;

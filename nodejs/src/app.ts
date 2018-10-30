@@ -15,7 +15,8 @@ import * as passport from "passport";
 const MongoStore = mongo(session);
 
 // Load environment variables from .env file, where API keys and passwords are configured
-dotenv.config({ path: ".env" });
+dotenv.config();
+// /home/cargoexapp/node_app/.env
 
 // Controllers (route handlers)
 import * as apiController from "./controllers/api";
@@ -65,6 +66,7 @@ app.use(session({
   },
   store: new MongoStore({
     url: mongoUrl,
+    mongooseConnection: mongoose.connection,
     autoReconnect: true
   })
 }));
@@ -79,8 +81,8 @@ app.use(function(req, res, next) {
 
   const allowedOrigins = [
 
-    "http://localhost" + ":" + process.env.ACTUAL_HTTP_PORT,
-    "http://127.0.0.1" + ":" + process.env.ACTUAL_HTTP_PORT,
+    "http://localhost" + ":" + process.env.HTTP_PORT,
+    "http://127.0.0.1" + ":" + process.env.HTTP_PORT,
     "http://localhost" + ":" + process.env.HTTP_PORT,
     "https://localhost" + ":" + process.env.HTTPS_PORT,
     "http://127.0.0.1" + ":" + process.env.HTTP_PORT,
@@ -89,8 +91,8 @@ app.use(function(req, res, next) {
     "http://" + process.env.SERVER_IP + ":" + process.env.HTTP_PORT,
     "http://" + process.env.SERVER_DNS + ":" + process.env.HTTP_PORT,
 
-    "http://" + process.env.SERVER_IP + ":" + process.env.ACTUAL_HTTP_PORT,
-    "http://" + process.env.SERVER_DNS + ":" + process.env.ACTUAL_HTTP_PORT,
+    "http://" + process.env.SERVER_IP + ":" + process.env.HTTP_PORT,
+    "http://" + process.env.SERVER_DNS + ":" + process.env.HTTP_PORT,
 
     "https://" + process.env.SERVER_IP + ":" + process.env.HTTPS_PORT,
     "https://" + process.env.SERVER_DNS + ":" + process.env.HTTPS_PORT
@@ -187,7 +189,7 @@ app.get("/contacts/getConversants", passport.authenticate("bearer", { session: f
 
 
 app.get("*", function (req, res, next) {
-  res.sendFile(path.resolve("dist/public/index.html"));
+  res.sendFile(path.resolve("public/index.html"));
 });
 
 
