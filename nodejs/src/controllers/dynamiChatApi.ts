@@ -2,7 +2,7 @@ import { Response, Request, NextFunction } from "express";
 
 import { SupportModel } from "../models/Support";
 import { Output } from "../models/output";
-import { Connection, SOCKET_EVENTS, CONNECTION_MESSAGE_TEXTS, CONNECTION_MESSAGE_CODES } from "../models/Connection";
+import { Connection, SOCKET_EVENTS, CONNECTION_MESSAGE_TEXTS, CONNECTION_MESSAGE_CODES, CONNECTION_TYPES } from "../models/Connection";
 
 import { SupportDocument } from "../types/Support";
 
@@ -30,13 +30,15 @@ export let supportInit = (req, res, next) => {
 
         const resultData = req.body;
         const repID = support.representative && support.representative.id ? support.representative.id : "";
+        const connection = Connection.findConnectionByUserId(repID, CONNECTION_TYPES.CHAT);
 
         resultData.representative = support.representative;
-        resultData.nodeConnectionId = Connection.getConnectionIdByUserId(repID);
+        resultData.nodeConnectionId = connection.nodeConnectionId;
 
-        Connection.sendClientMessageByUserId(resultData, SOCKET_EVENTS.SUPPORT_INIT, repID, res);
+        // send message to client and return result with success status
+        Connection.sendClientMessageByUserId(resultData, SOCKET_EVENTS.SUPPORT_INIT, repID, CONNECTION_TYPES.CHAT, res);
 
-        findAvailableRepsWithSocket(support);
+        findAvailableRepsWithSocket(support, resultData.nodeConnectionId);
     });
 };
 
@@ -57,7 +59,7 @@ export let clientMessage = (req, res: Response, next) => {
  */
 export let messageRead = (req, res: Response, next) => {
     if (req.body && req.body.support && req.body.chat) {
-        const connection = Connection.findConnectionByUserId(req.body.support.representative.id);
+        const connection = Connection.findConnectionByUserId(req.body.support.representative.id, CONNECTION_TYPES.CHAT);
 
         ChatModel.findById(req.body.chat._id, (err, chat) => {
             if (err)
@@ -74,7 +76,7 @@ export let messageRead = (req, res: Response, next) => {
 
                 req.body.chat = savedChat;
 
-                connection.sendClientMessage(req.body, SOCKET_EVENTS.MESSAGE_READ, undefined, customResponse(
+                connection.sendClientMessage(req.body, SOCKET_EVENTS.MESSAGE_READ, customResponse(
                     (rtdata) => {
                         res.json(rtdata);
                     }

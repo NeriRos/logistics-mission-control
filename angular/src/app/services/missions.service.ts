@@ -32,6 +32,13 @@ export class MissionsService {
         return this.network.http("POST", `${this.prefix}/createMission`, {}, data);
     }
 
+    deleteMission(missionId) {
+        if (!missionId) {
+            console.log("NO missionId");
+        }
+        return this.network.http("GET", `${this.prefix}/deleteMission/${missionId}`);
+    }
+
     changeMissionStatus(missionId, status) {
         if (!missionId) {
             console.log("NO Mission ID");

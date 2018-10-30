@@ -1,6 +1,6 @@
 import { IUser } from "./user.model";
 import { Globals } from "../shared/globals";
-import { SocketEventMessage } from "../shared/socketEventMesssage";
+import { ISocketEventMessage } from "../shared/socketEventMesssage";
 
 declare let global: {connections: {chat: Array<Connection>, missions: Array<Connection>}};
 
@@ -20,7 +20,7 @@ export class Connection {
         return new Connection(socket, user, -1);
     }
 
-    public sendServerMessage(message: SocketEventMessage, event: string) {
+    public sendServerMessage(message: ISocketEventMessage, event: string) {
         let response;
 
         if (event === Globals.SOCKET_EVENTS.SUPPORT_INIT) {
@@ -28,6 +28,8 @@ export class Connection {
         }
 
         message.event = event;
+        message.nodeConnectionId = this.nodeConnectionId;
+        message.phpConnectionId = this.phpConnectionId;
 
         if (!this.socket) {
             response = {error: true, status: "error", message: "NO SOCKET"};
@@ -40,6 +42,10 @@ export class Connection {
         }
 
         return response;
+    }
+
+    public isConnected(): boolean {
+        return this.socket.readyState === WebSocket.OPEN;
     }
 
     get nodeConnectionId(): number | undefined {

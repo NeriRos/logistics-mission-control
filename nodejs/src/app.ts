@@ -172,6 +172,7 @@ app.get("/management/deleteSupport/:supportId", passport.authenticate("bearer", 
 app.get("/missions/getMissionsByCreatorID/:creatorID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.getMissionsByCreatorID);
 app.get("/missions/getUnhandledMissions/:receiverID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.getUnhandledMissions);
 app.get("/missions/changeMissionStatus/:missionId/:status", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.changeMissionStatus);
+app.get("/missions/deleteMission/:missionId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.deleteMission);
 app.post("/missions/createMission", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.createMission);
 
 /**

@@ -1,4 +1,5 @@
 import { IUserLite } from "./user.model";
+import { error } from "util";
 
 export interface IMission {
     _id?: string;
@@ -79,11 +80,23 @@ export class Mission implements IMission {
     }
 
     static createMessageFromObject(data) {
-        if (!data || (typeof data.title === "undefined" || typeof data.description === "undefined" ||
+        if (data && data.body) {
+            data.title = data.body.title;
+            data.description = data.body.description;
+            data.package = data.body.package;
+        }
+        if (!data || ((typeof data.title === "undefined" || typeof data.description === "undefined") ||
             typeof data.receivers === "undefined" || typeof data.urgency === "undefined" || typeof data.type === "undefined")) {
             console.log("missing data", data, !data);
+
+            throw error("missing data");
         }
+
         const newMission = new Mission(data.creator, data.title, data.description, data.receivers, data.urgency, data.type);
+
+        if (data._id) {
+            newMission._id = data._id;
+        }
 
         return newMission;
     }

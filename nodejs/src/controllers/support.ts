@@ -1,17 +1,17 @@
 "use strict";
 
 import { Response, Request, NextFunction, json } from "express";
-import { parallel, waterfall } from "async";
+import { parallel, waterfall, every, map } from "async";
 import { Mongoose } from "mongoose";
 
 import { UserModel } from "../models/User";
 import { SupportModel } from "../models/Support";
 import { ChatModel } from "../models/Chat";
-import { Connection, SOCKET_EVENTS } from "../models/Connection";
+import { Connection, SOCKET_EVENTS, CONNECTION_TYPES } from "../models/Connection";
 
-import { SupportDocument, SUPPORT_STATUS, ISupport, TRepresentative } from "../types/Support";
+import { SupportDocument, SUPPORT_STATUS, ISupport } from "../types/Support";
 import { UserDocument, USER_PERMISSIONS } from "../types/User";
-import { IChat, ChatDocument } from "../types/Chat";
+import { IChat, ChatDocument, CHAT_STATUS } from "../types/Chat";
 
 import { notifyPhpForAvailableRep } from "./clientSocketApi";
 import { Output } from "../models/output";
@@ -100,6 +100,7 @@ export let openSupport = (req: Request, res: Response, next: NextFunction) => {
 export let takeSupport = (req, res: Response, next: NextFunction) => {
     let supportID = req.params.supportId;
     const repID = req.user._id;
+    const connection = Connection.findConnectionByUserId(repID, CONNECTION_TYPES.CHAT);
 
     supportID = (new Mongoose()).Types.ObjectId(supportID);
 
@@ -134,7 +135,7 @@ export let takeSupport = (req, res: Response, next: NextFunction) => {
                     support.save();
                     user.save();
 
-                    Connection.sendServerMessage({support}, SOCKET_EVENTS.FIND_AVAILABLE_REP, {json:
+                    connection.sendServerMessage({support}, SOCKET_EVENTS.FIND_AVAILABLE_REP, {json:
                         (rtdata) => {
                             console.log("Sent representative to php:", rtdata);
                         }
@@ -174,6 +175,7 @@ export let viewSupport = (req: Request, res: Response, next: NextFunction) => {
  */
 export let getChats = (req: Request, res: Response, next: NextFunction) => {
     const supportId = req.params.supportId;
+    const userId = req.user._id;
 
     SupportModel.findById(supportId, (err, support: ISupport) => {
         if (err)
@@ -188,14 +190,35 @@ export let getChats = (req: Request, res: Response, next: NextFunction) => {
         else if (support.messages.length <= 0 && support.representative)
             return res.json({ isAvailableRep: true, chats: [], representative: support.representative });
 
+        const connection = Connection.findConnectionByUserId(userId, CONNECTION_TYPES.CHAT);
 
-        ChatModel.find({_id: {$in: support.messages}}, (err, chats) => {
+        ChatModel.find({_id: { $in: support.messages }}, (err, chats) => {
             if (err)
                 return next(err);
 
-            notifyPhpForAvailableRep(support, chats[0]);
+            map(chats, (chat, callback) => {
+                if (chat.from != userId && chat.status != CHAT_STATUS.READ) {
+                    chat.status = CHAT_STATUS.READ;
 
-            res.json({chats: chats || [], isAvailableRep: true, representative: support.representative});
+                    chat.save((err, savedChat) => {
+                        if (err)
+                            return callback(err);
+
+                        connection.sendServerMessage({chat: savedChat}, SOCKET_EVENTS.MESSAGE_READ);
+
+                        callback(false, savedChat);
+                    });
+                } else {
+                    callback(false, chat);
+                }
+            }, (err, chats: Array<ChatDocument>) => {
+                if (err)
+                    return next(err);
+
+                notifyPhpForAvailableRep(support, chats[0]);
+
+                res.json({chats: chats || [], isAvailableRep: true, representative: support.representative});
+            });
         });
     });
 };
@@ -256,7 +279,7 @@ export let sendMessage = (req, res, next) => {
         const repID = result.supportData.repID;
         const isRep = result.supportData.isRep;
         const isClient = result.supportData.isClient;
-
+        const connection = Connection.findConnectionByUserId(repID, CONNECTION_TYPES.CHAT);
         const chat: IChat = {
             id: (result.chatCount + 1).toString(),
             message: data.message,
@@ -267,7 +290,6 @@ export let sendMessage = (req, res, next) => {
             isSupport: true,
             initial: req.openSupport.initial
         };
-
         const newMessage = new ChatModel(chat);
 
         newMessage.save((err, savedMessage: ChatDocument) => {
@@ -284,10 +306,25 @@ export let sendMessage = (req, res, next) => {
                     return res.json({support: savedSupport});
                 } else if (isClient) {
                     // Send message to nodejs client and return response to php http request.
-                    Connection.sendClientMessageByUserId({chat: savedMessage}, Connection.SOCKET_EVENTS.CLIENT_MESSAGE, repID, res);
+                    if (connection.isConnected()) {
+                        connection.sendClientMessage({chat: savedMessage}, SOCKET_EVENTS.CLIENT_MESSAGE, res);
+                    } else {
+                        Output.debug("Client is not online");
+
+                        res.json({
+                            chat: savedMessage,
+                            error: false,
+                            status: "friendOfflineMessage",
+                            message: "Friend offline but message sent"
+                        });
+                    }
                 } else if (isRep) {
                     // Send message to php http server.
-                    Connection.sendServerMessage({chat: savedMessage, phpConnectionId: data.phpConnectionId, support: savedSupport}, Connection.SOCKET_EVENTS.SUPPORT_MESSAGE, res);
+                    const serverData = {
+                        chat: savedMessage,
+                        support: savedSupport
+                    };
+                    connection.sendServerMessage(serverData, SOCKET_EVENTS.SUPPORT_MESSAGE, res);
                 } else {
                     Output.error("NO CLIENT, NO REP");
                     res.json({error: true, status: "error", message: "NO CLIENT, NO REP"});

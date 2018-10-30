@@ -1,8 +1,9 @@
 import { IUser } from "../models/user.model";
 import { ISupport } from "../models/support.model";
 import { IChat } from "../models/chat.model";
+import { IMission } from "../models/mission.model";
 
-export interface SocketEventMessage {
+export interface ISocketEventMessage {
     event?: string;
     error?: any;
     user?: IUser;
@@ -12,4 +13,5 @@ export interface SocketEventMessage {
     nodeConnectionId?: number;
     messageId?: string;
     conversantId?: string;
+    mission?: IMission;
 }

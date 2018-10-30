@@ -8,6 +8,7 @@ export const verbosity = {
 
 export class Output {
     static verbosity = verbosity.verbose;
+    static isExtraDebug = false;
     static prefix = "\n\t";
     static postfix = ", ";
 
@@ -34,6 +35,12 @@ export class Output {
 
     static debug (message, ...args) {
         if (this.verbosity >= verbosity.verbose) {
+            console.log("[*]", message, Output.parseArgs(args));
+        }
+    }
+
+    static extraDebug (message, ...args) {
+        if (this.isExtraDebug) {
             console.log("[*]", message, Output.parseArgs(args));
         }
     }

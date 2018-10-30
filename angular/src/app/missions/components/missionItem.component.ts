@@ -5,7 +5,7 @@ import { MissionsService } from "../../services/missions.service";
 @Component({
     selector: "app-mission-item",
     template: `
-    <div class="mission col">
+    <div class="mission col" [id]="collapseId">
         <button class="btn btn-primary" type="button" data-toggle="collapse" [attr.data-target]="'#' + collapseId">
             <p class="row">
                 <span class="col"> {{mission.date | dateToTime : true}} </span>
@@ -14,6 +14,7 @@ import { MissionsService } from "../../services/missions.service";
             <div class="collapse button" [id]="collapseId">
                 <button class="btn btn-success finishMission" *ngIf="mission.status !== LOCAL_MISSION_STATUS.DONE">Mark as done</button>
                 <button class="btn btn-warning reopenMission" *ngIf="mission.status === LOCAL_MISSION_STATUS.DONE">Open again</button>
+                <button class="btn btn-danger deleteMission">delete</button>
             </div>
         </button>
         <div class="collapse body" [id]="collapseId">
@@ -46,6 +47,16 @@ export class MissionItemComponent implements OnInit, AfterViewInit {
         this.LOCAL_MISSION_URGENCY_NAME = MISSION_URGENCY_NAME;
     }
 
+    static deleteMissionById(missionService, missionId) {
+        missionService.deleteMission(missionId).subscribe((res) => {
+            if (!res.problem) {
+                $(`:regex(id, ${missionId}$)`).parent().css("display", "none");
+            }
+        }, (err) => {
+            console.log("error:", err);
+        });
+    }
+
     ngOnInit(): void {
         this.collapseId = `${this.missionKind}-${this.mission._id}`;
         this.myMissions = this.missionKind === "myMissions";
@@ -76,6 +87,13 @@ export class MissionItemComponent implements OnInit, AfterViewInit {
 
             this.changeMissionStatus(MISSION_STATUS.READ);
         });
+
+        body.on("click", `${collapseButtonElement} .deleteMission`, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.deleteMission();
+        });
     }
 
     changeMissionStatus(status) {
@@ -87,5 +105,9 @@ export class MissionItemComponent implements OnInit, AfterViewInit {
         }, (err) => {
             console.log("error:", err);
         });
+    }
+
+    deleteMission() {
+        MissionItemComponent.deleteMissionById(this.missionService, this.mission._id);
     }
 }

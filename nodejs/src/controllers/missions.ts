@@ -47,7 +47,7 @@ export let getUnhandledMissions = (req: Request, res: Response, next: NextFuncti
  * POST /missions/createMission
  * Create new mission.
  */
-export let createMission = (req: Request, res: Response, next: NextFunction) => {
+export let createMission = (req, res, next) => {
     const newMissionDocument = new MissionModel(req.body);
 
     newMissionDocument.save((err, savedMission) => {
@@ -55,6 +55,19 @@ export let createMission = (req: Request, res: Response, next: NextFunction) => 
             return next(err);
 
         res.json(savedMission);
+    });
+};
+
+/**
+ * GET /missions/deleteMission/:missionId
+ * Create new mission.
+ */
+export let deleteMission = (req, res, next) => {
+    MissionModel.findByIdAndRemove(req.params.missionId, (err, removedMission) => {
+        if (err)
+            return next(err);
+
+        res.json({problem: false, removedMission});
     });
 };
 
