@@ -46,12 +46,12 @@ export class Globals {
     }
 
     productionInit() {
-        this.server = { ip: "141.226.21.44", dns: "cargo-express.co.il", port: "8887", protocol: "http" };
+        this.server = { ip: "82.80.210.156", dns: "app.cargo-express.co.il", port: "8887", protocol: "http" };
         this.server.uri = this.server.protocol + "://" + this.server.ip + ":" + this.server.port;
 
         this.socketServer = {
-                ip: "141.226.21.44",
-                dns: "cargo-express.co.il",
+                ip: "82.80.210.156",
+                dns: "app.cargo-express.co.il",
                 port: "8890",
                 protocol: "ws",
                 uri: ""
