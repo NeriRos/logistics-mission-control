@@ -15,7 +15,7 @@ app.use(errorHandler());
 
 let server;
 
-if (process.env.PASSENGER_ISHTTP == "yes") {
+if (process.env.PASSENGER_ISHTTP == "yes" || !process.env.PASSENGER_ISHTTP) {
   /**
    * Start Express server.
    */
@@ -25,7 +25,7 @@ if (process.env.PASSENGER_ISHTTP == "yes") {
   });
 }
 
-if (process.env.PASSENGER_ISWEBSOCK == "yes") {
+if (process.env.PASSENGER_ISWEBSOCK == "yes" || !process.env.PASSENGER_ISWEBSOCK) {
   const websocketChatServer = new WebSocket.Server({ port: process.env.WS_CHAT_PORT });
   websocketChatServerHandler(websocketChatServer);
 }

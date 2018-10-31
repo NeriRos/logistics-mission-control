@@ -55,8 +55,8 @@ export class Globals {
         this.socketServer = {
             ip: "82.80.210.156",
             dns: "api.cargo-express.co.il",
-            port: "80",
-            protocol: "ws",
+            port: "443",
+            protocol: "wss",
             uri: ""
         };
 
