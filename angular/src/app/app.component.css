@@ -1,0 +1,12 @@
+.userPicture {
+    height: 50px;
+    width: 50px;
+}
+.top_bar {
+
+}
+
+.menu {
+    display: flex;
+    justify-content: space-evenly;
+}
