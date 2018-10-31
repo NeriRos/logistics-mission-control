@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, NgZone, Input } from "@angular/core";
 import { ISupport } from "../models/support.model";
 import { IChat, Chat, CHAT_STATUS } from "../models/chat.model";
 import { ChatService } from "../services/chat.service";
@@ -19,6 +19,8 @@ import { ISocketEventMessage } from "../shared/socketEventMesssage";
 export class ChatComponent implements OnInit {
     @ViewChild("message") message: ElementRef;
     @ViewChild("messages") messages: ElementRef;
+
+    @Input() selfObject: ChatComponent;
 
     chats: Array<IChat> = [];
     conversant: IUser | ISupport | any;
@@ -45,28 +47,43 @@ export class ChatComponent implements OnInit {
         protected globals: Globals,
         protected zone: NgZone
     ) {
-        this.serverService = chatService;
-        this.conversantOfflineText = "Waiting for conversant";
-        this.socketEvents = [
-            {trigger: ((data) => data.error || (data.response && data.response.error)), function: this.onSocketError},
-            {trigger: Globals.SOCKET_EVENTS.CHAT_INIT, function: this.onSocketOpen},
-            {trigger: Globals.SOCKET_EVENTS.MESSAGE_CALLBACK, function: this.onSocketMessageCallback},
-            {trigger: Globals.SOCKET_EVENTS.MESSAGE_READ, function: this.onSocketMessageRead},
-            {trigger: Globals.SOCKET_EVENTS.CHAT_MESSAGE, function: this.onSocketMessage}
-        ];
+        if (this.selfObject) {
+            Object.keys(this).forEach((key) => {
+                this[key] = this.selfObject[key];
+            });
+        } else {
+            this.serverService = chatService;
+            this.conversantOfflineText = "Waiting for conversant";
+            this.socketEvents = [
+                {trigger: ((data) => data.error || (data.response && data.response.error)), function: this.onSocketError},
+                {trigger: Globals.SOCKET_EVENTS.CHAT_INIT, function: this.onSocketOpen},
+                {trigger: Globals.SOCKET_EVENTS.MESSAGE_CALLBACK, function: this.onSocketMessageCallback},
+                {trigger: Globals.SOCKET_EVENTS.MESSAGE_READ, function: this.onSocketMessageRead},
+                {trigger: Globals.SOCKET_EVENTS.CHAT_MESSAGE, function: this.onSocketMessage}
+            ];
+        }
     }
 
     ngOnInit() {
         this.router.params.subscribe((params) => {
-            this.conversantPromise = this.serverService.getConversantById(params.id).then((conversant) => {
-                this.conversant = conversant;
+            if (!params.ids) {
+                params.ids = [params.id];
+            } else {
+                params.ids = Array.from(params.ids);
+            }
 
-                this.serverService.getChats(conversant._id).then((chats) => {
-                    this.initChats(chats);
+            params.ids.forEach((id) => {
+                this.conversantPromise = this.serverService.getConversantById(id).then((conversant) => {
+                    this.conversant = conversant;
+
+                    this.serverService.getChats(conversant._id).then((chats) => {
+                        this.initChats(chats);
+                    });
+
+                    return conversant;
                 });
-
-                return conversant;
             });
+
         });
 
         this.userPromise = this.userService.getUser().toPromise();

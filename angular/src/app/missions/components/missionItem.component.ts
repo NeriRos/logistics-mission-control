@@ -1,40 +1,17 @@
-import { Component, Input, OnInit, AfterViewInit } from "@angular/core";
+import { Component, Input, OnInit, AfterViewInit, Output, EventEmitter } from "@angular/core";
 import { IMission, MISSION_STATUS, MISSION_STATUS_NAME, MISSION_URGENCY_NAME } from "../../models/mission.model";
 import { MissionsService } from "../../services/missions.service";
 
 @Component({
     selector: "app-mission-item",
-    template: `
-    <div class="mission col" [id]="collapseId">
-        <button class="btn btn-primary" type="button" data-toggle="collapse" [attr.data-target]="'#' + collapseId">
-            <p class="row">
-                <span class="col"> {{mission.date | dateToTime : true}} </span>
-                <span class="col"> {{mission.body.title}} </span>
-            </p>
-            <div class="collapse button" [id]="collapseId">
-                <button class="btn btn-success finishMission" *ngIf="mission.status !== LOCAL_MISSION_STATUS.DONE">Mark as done</button>
-                <button class="btn btn-warning reopenMission" *ngIf="mission.status === LOCAL_MISSION_STATUS.DONE">Open again</button>
-                <button class="btn btn-danger deleteMission">delete</button>
-            </div>
-        </button>
-        <div class="collapse body" [id]="collapseId">
-            <div class="card text-center">
-                <div class="card-body">
-                    <p class="card-text">{{mission.body.description}}</p>
-                </div>
-                <div class="card-footer">
-                    <span class="urgency"><b>Urgency:</b> {{LOCAL_MISSION_URGENCY_NAME[mission.urgency]}}, </span>
-                    <span class="status"><b>Status:</b> {{LOCAL_MISSION_STATUS_NAME[mission.status]}}, </span>
-                    <span class="type"><b>Type:</b> {{mission.type}}</span>
-                </div>
-            </div>
-        </div>
-    </div>`,
-    styleUrls: ["./missionItem.css"]
+    templateUrl: "./missionItem.component.html",
+    styleUrls: ["./missionItem.component.css"]
 })
 export class MissionItemComponent implements OnInit, AfterViewInit {
     @Input() missionKind: string;
     @Input() mission: IMission;
+    @Output() showChatsTrigger = new EventEmitter<string>();
+
     myMissions: boolean;
     collapseId: string;
     LOCAL_MISSION_STATUS;
@@ -93,6 +70,14 @@ export class MissionItemComponent implements OnInit, AfterViewInit {
             e.stopPropagation();
 
             this.deleteMission();
+        });
+
+        body.on("click", `${collapseButtonElement} .showChats`, (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.showChatsTrigger.emit(this.mission._id);
+            console.log("EMITTTINNGGG", this.mission._id);
         });
     }
 

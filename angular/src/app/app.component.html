@@ -1,29 +1,4 @@
-<div class="top_bar row">
-    <div class="col-2">
-        <div class="headerUserDetails row" *ngIf="user">
-            <div class="col-3">
-                <img class="userPicture" [src]="'assets/images/' + user.picture + '.png'" [alt]="user.name + ' image'">
-            </div>
-            <div class="col">
-                <div class="col-12 text-right">
-                    <span class="greeting">{{greeting}}</span>
-                </div>
-                <div class="col-12 text-right">
-                    <span class="userName">{{user.name}}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-3 col-md-5 col-sm-8 col-xs-12 pull-left">
-        <div class="menu row">
-            <div class="menuItem" *ngFor="let menuItem of menus">
-                <div class="form-group">
-                    <a [routerLink]="menuItem.link"><button class="btn">{{menuItem.name}}</button></a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<app-menu></app-menu>
 <div class="container">
 <hr>
 <router-outlet></router-outlet>

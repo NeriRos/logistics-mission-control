@@ -94,6 +94,7 @@ export class UserService {
       method: "GET"
     }).then((res) => {
       localStorage.removeItem("token");
+      window.location = window.location;
     }).catch((err) => {
       if (err) {
         console.log(err);

@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, NgZone } from "@angular/core";
 import { MissionsService } from "../services/missions.service";
 import { Mission } from "../models/mission.model";
 import { IUser } from "../models/user.model";
@@ -11,6 +11,10 @@ import { Globals } from "../shared/globals";
 import { Connection } from "../models/connection.model";
 import { ISocketEventMessage } from "../shared/socketEventMesssage";
 import { MissionItemComponent } from "./components/missionItem.component";
+import { ChatComponent } from "../chat/chat.component";
+import { ActivatedRoute } from "@angular/router";
+import { ChatService } from "../services/chat.service";
+import { SupportService } from "../services/support.service";
 
 @Component({
     selector: "app-missions",
@@ -18,8 +22,9 @@ import { MissionItemComponent } from "./components/missionItem.component";
     styleUrls: ["./missions.component.css"]
 })
 export class MissionsComponent implements OnInit {
-    protected user: IUser;
+    user: IUser;
     protected users: Array<IUser>;
+    chatComponent: ChatComponent;
 
     createMissionForm: FormGroup;
 
@@ -28,11 +33,14 @@ export class MissionsComponent implements OnInit {
     connection: Connection;
 
     constructor(private missionsService: MissionsService,
-                private userService: UserService,
-                private globals: Globals,
                 private managementService: ManagementService,
-                public dialog: MatDialog) {
-
+                protected dialog: MatDialog,
+                protected router: ActivatedRoute,
+                protected userService: UserService,
+                protected chatService: ChatService,
+                protected supportService: SupportService,
+                protected globals: Globals,
+                protected zone: NgZone) {
     }
 
     ngOnInit() {
@@ -178,5 +186,14 @@ export class MissionsComponent implements OnInit {
                 this.onMissionCreation({mission: res});
             });
         }
+    }
+
+    showChats(event) {
+        console.log("Showing chats for ", event);
+
+        // tslint:disable-next-line:max-line-length
+        this.chatComponent = new ChatComponent(this.router, this.userService, this.chatService, this.supportService, this.globals, this.zone);
+
+        $("#chatsModal").modal("show");
     }
 }
