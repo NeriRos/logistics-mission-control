@@ -173,7 +173,9 @@ app.get("/missions/getMissionsByCreatorID/:creatorID", passport.authenticate("be
 app.get("/missions/getUnhandledMissions/:receiverID", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.getUnhandledMissions);
 app.get("/missions/changeMissionStatus/:missionId/:status", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.changeMissionStatus);
 app.get("/missions/deleteMission/:missionId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.deleteMission);
+app.get("/missions/getChats/:missionId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.getChats);
 app.post("/missions/createMission", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.createMission);
+app.post("/missions/sendMessage/:missionId", passport.authenticate("bearer", { session: false }), passportConfig.isAuthenticated, missionsController.sendMessage);
 
 /**
  * dynamiChatApi routes

@@ -8,7 +8,7 @@
                         <hr>
                         <div class="missions">
                             <ng-template ngFor let-mission [ngForOf]="myMissions">
-                                <app-mission-item [missionKind]="'myMissions'" [mission]="mission"></app-mission-item>
+                                <app-mission-item [missionKind]="'myMissions'" [mission]="mission" (showChatsTrigger)="showChats($event)"></app-mission-item>
                             </ng-template>
                         </div>
                     </div>
@@ -35,21 +35,22 @@
     </div>
 </div>
 
-<div class="modal fade" id="chatsModal" tabindex="-1" role="dialog" aria-labelledby="chatsModalLabel" aria-hidden="true" *ngIf="chatComponent">
+<div class="modal fade" id="chatsModal" tabindex="-1" role="dialog" aria-labelledby="chatsModalLabel" aria-hidden="true" *ngIf="!!selectedMission">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title" id="chatsModalLabel">chats</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body">
-            <app-chat [selfObject]="chatComponent"></app-chat>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h5 class="modal-title" id="chatsModalLabel">chats</h5>
+            </div>
+            <div class="modal-body">
+                <app-messages-test *ngIf="selectedMission?.chats" [myId]="user._id" [conversantsClasses]="conversantsClasses" [chats]="selectedMission.chats"
+                    conversantOfflineText="No Chats" [users]="users" [isDisplayConversantName]="true"></app-messages-test>
+            </div>
+            <div class="modal-footer">
+                <textarea class="form-control" #message></textarea>
+                <button class="btn btn-success pull-right" (click)="sendMessage()">Send</button>
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button> -->
+            </div>
         </div>
     </div>
 </div>

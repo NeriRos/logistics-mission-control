@@ -8,7 +8,7 @@ import { UserService } from "../services/login.service";
 import { SupportService } from "../services/support.service";
 import { Globals } from "../shared/globals";
 import { Connection } from "../models/connection.model";
-import { ISocketEventMessage } from "../shared/socketEventMesssage";
+import { ISocketEventMessage } from "../shared/socketEventMessage";
 
 
 @Component({
@@ -19,8 +19,6 @@ import { ISocketEventMessage } from "../shared/socketEventMesssage";
 export class ChatComponent implements OnInit {
     @ViewChild("message") message: ElementRef;
     @ViewChild("messages") messages: ElementRef;
-
-    @Input() selfObject: ChatComponent;
 
     chats: Array<IChat> = [];
     conversant: IUser | ISupport | any;
@@ -47,21 +45,15 @@ export class ChatComponent implements OnInit {
         protected globals: Globals,
         protected zone: NgZone
     ) {
-        if (this.selfObject) {
-            Object.keys(this).forEach((key) => {
-                this[key] = this.selfObject[key];
-            });
-        } else {
-            this.serverService = chatService;
-            this.conversantOfflineText = "Waiting for conversant";
-            this.socketEvents = [
-                {trigger: ((data) => data.error || (data.response && data.response.error)), function: this.onSocketError},
-                {trigger: Globals.SOCKET_EVENTS.CHAT_INIT, function: this.onSocketOpen},
-                {trigger: Globals.SOCKET_EVENTS.MESSAGE_CALLBACK, function: this.onSocketMessageCallback},
-                {trigger: Globals.SOCKET_EVENTS.MESSAGE_READ, function: this.onSocketMessageRead},
-                {trigger: Globals.SOCKET_EVENTS.CHAT_MESSAGE, function: this.onSocketMessage}
-            ];
-        }
+        this.serverService = chatService;
+        this.conversantOfflineText = "Waiting for conversant";
+        this.socketEvents = [
+            {trigger: ((data) => data.error || (data.response && data.response.error)), function: this.onSocketError},
+            {trigger: Globals.SOCKET_EVENTS.CHAT_INIT, function: this.onSocketOpen},
+            {trigger: Globals.SOCKET_EVENTS.MESSAGE_CALLBACK, function: this.onSocketMessageCallback},
+            {trigger: Globals.SOCKET_EVENTS.MESSAGE_READ, function: this.onSocketMessageRead},
+            {trigger: Globals.SOCKET_EVENTS.CHAT_MESSAGE, function: this.onSocketMessage}
+        ];
     }
 
     ngOnInit() {

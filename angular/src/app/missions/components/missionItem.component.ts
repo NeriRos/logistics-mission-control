@@ -5,7 +5,7 @@ import { MissionsService } from "../../services/missions.service";
 @Component({
     selector: "app-mission-item",
     templateUrl: "./missionItem.component.html",
-    styleUrls: ["./missionItem.component.css"]
+    styleUrls: ["./missionItem.component.css", "../../chat/chat.component.css"]
 })
 export class MissionItemComponent implements OnInit, AfterViewInit {
     @Input() missionKind: string;

@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone } from "@angular/core";
+import { Component, OnInit, NgZone, ElementRef, ViewChild } from "@angular/core";
 import { MissionsService } from "../services/missions.service";
 import { Mission } from "../models/mission.model";
 import { IUser } from "../models/user.model";
@@ -9,12 +9,10 @@ import { CreateMissionComponent } from "./components/createMission.component";
 import { ManagementService } from "../services/management.service";
 import { Globals } from "../shared/globals";
 import { Connection } from "../models/connection.model";
-import { ISocketEventMessage } from "../shared/socketEventMesssage";
+import { ISocketEventMessage } from "../shared/socketEventMessage";
 import { MissionItemComponent } from "./components/missionItem.component";
-import { ChatComponent } from "../chat/chat.component";
-import { ActivatedRoute } from "@angular/router";
 import { ChatService } from "../services/chat.service";
-import { SupportService } from "../services/support.service";
+import { IChat, Chat } from "../models/chat.model";
 
 @Component({
     selector: "app-missions",
@@ -22,9 +20,11 @@ import { SupportService } from "../services/support.service";
     styleUrls: ["./missions.component.css"]
 })
 export class MissionsComponent implements OnInit {
+    @ViewChild("message") message: ElementRef;
+
     user: IUser;
     protected users: Array<IUser>;
-    chatComponent: ChatComponent;
+    selectedMission: Mission & {chats: IChat[]};
 
     createMissionForm: FormGroup;
 
@@ -32,13 +32,13 @@ export class MissionsComponent implements OnInit {
     unhandledMissions: Array<Mission>;
     connection: Connection;
 
+    conversantsClasses = {me: "me", conversant: "conversant"};
+    messages: ElementRef;
+
     constructor(private missionsService: MissionsService,
                 private managementService: ManagementService,
                 protected dialog: MatDialog,
-                protected router: ActivatedRoute,
                 protected userService: UserService,
-                protected chatService: ChatService,
-                protected supportService: SupportService,
                 protected globals: Globals,
                 protected zone: NgZone) {
     }
@@ -188,12 +188,39 @@ export class MissionsComponent implements OnInit {
         }
     }
 
-    showChats(event) {
-        console.log("Showing chats for ", event);
+    showChats(missionId) {
+        this.myMissions.concat(this.unhandledMissions).forEach((mission) => {
+            if (mission._id === missionId) {
+                return this.zone.run(() => {
+                    this.selectedMission = <any>mission;
 
-        // tslint:disable-next-line:max-line-length
-        this.chatComponent = new ChatComponent(this.router, this.userService, this.chatService, this.supportService, this.globals, this.zone);
+                    this.missionsService.getChats(missionId).subscribe((chats) => {
+                        this.selectedMission.chats = chats;
+                    });
 
-        $("#chatsModal").modal("show");
+
+                    setTimeout(() => {
+                        $("#chatsModal").modal("show");
+                    }, 1);
+                });
+            }
+        });
+    }
+
+    sendMessage() {
+        const messageElement = (<HTMLTextAreaElement>this.message.nativeElement);
+        const messageText = messageElement.value;
+        const chat = Chat.newMessage(messageText, this.user._id, this.selectedMission._id, false);
+
+        chat.setId(this.selectedMission.chats.length + "");
+
+        if (messageText && messageText.length > 0) {
+            this.missionsService.sendMessage(this.selectedMission._id, chat).subscribe((res) => {
+                console.log("Sent message:", res);
+                this.selectedMission.chats.push(res);
+            });
+        } else {
+            console.log("no text", messageText);
+        }
     }
 }

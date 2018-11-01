@@ -40,8 +40,6 @@ export class Chat implements IChat {
     this.isSupport = isSupport;
     this.initial = initial;
 
-
-
     this.time = date.toTimeString().split(" ")[0];
   }
 
