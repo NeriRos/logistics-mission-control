@@ -1,0 +1,50 @@
+<div class="top_bar row">
+    <div class="col-9 col-sm-5 col-md-4 col-lg-3">
+        <div class="headerUserDetails row" *ngIf="user" data-toggle="collapse" data-target="#userDetailsActions" >
+            <div class="col-3 col-sm-2 col-md-3 col-lg-2 col-xl-1 d-flex justify-content-start">
+                <img class="userPicture" [src]="'assets/images/' + user.picture + '.png'" [alt]="user.name + ' image'">
+            </div>
+            <div class="col">
+                <div class="col-12 text-right">
+                    <span class="greeting">{{greeting}}</span>
+                </div>
+                <div class="col-12 text-right">
+                    <span class="userName">{{user.name}}</span>
+                </div>
+            </div>
+        </div>
+        <div class="collapse" id="userDetailsActions">
+            <div class="card card-body col-4">
+                <button class="btn btn-warning" (click)="signOut()">SignOut</button>
+            </div>
+        </div>
+    </div>
+    <div class="d-none d-sm-block">
+        <div class="menu row">
+            <ul class="nav" *ngFor="let menuItem of menus" routerLinkActive="active">
+                <li class="nav-item menuItem">
+                    <a class="nav-link" [routerLink]="menuItem.link">{{menuItem.name}}</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="d-block d-sm-none">
+        <button class="btn btn-outline-light" type="button" (click)="toggleMobileMenu()">
+            <div class="hamburger">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
+        </button>
+
+        <div id="mobileNav" class="overlay">
+            <a href="javascript:void(0)" class="closebtn" (click)="toggleMobileMenu(true)">&times;</a>
+
+            <div class="overlay-content">
+                <div class="nav-item menuItem" *ngFor="let menuItem of menus">
+                    <a class="nav-link" [routerLink]="menuItem.link" (click)="toggleMobileMenu(true)">{{menuItem.name}}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

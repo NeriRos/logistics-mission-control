@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, NgZone } from "@angular/core";
+import { Component, OnInit, ViewChild, ElementRef, NgZone, Input } from "@angular/core";
 import { ISupport } from "../models/support.model";
 import { IChat, Chat, CHAT_STATUS } from "../models/chat.model";
 import { ChatService } from "../services/chat.service";
@@ -8,7 +8,7 @@ import { UserService } from "../services/login.service";
 import { SupportService } from "../services/support.service";
 import { Globals } from "../shared/globals";
 import { Connection } from "../models/connection.model";
-import { ISocketEventMessage } from "../shared/socketEventMesssage";
+import { ISocketEventMessage } from "../shared/socketEventMessage";
 
 
 @Component({
@@ -58,15 +58,24 @@ export class ChatComponent implements OnInit {
 
     ngOnInit() {
         this.router.params.subscribe((params) => {
-            this.conversantPromise = this.serverService.getConversantById(params.id).then((conversant) => {
-                this.conversant = conversant;
+            if (!params.ids) {
+                params.ids = [params.id];
+            } else {
+                params.ids = Array.from(params.ids);
+            }
 
-                this.serverService.getChats(conversant._id).then((chats) => {
-                    this.initChats(chats);
+            params.ids.forEach((id) => {
+                this.conversantPromise = this.serverService.getConversantById(id).then((conversant) => {
+                    this.conversant = conversant;
+
+                    this.serverService.getChats(conversant._id).then((chats) => {
+                        this.initChats(chats);
+                    });
+
+                    return conversant;
                 });
-
-                return conversant;
             });
+
         });
 
         this.userPromise = this.userService.getUser().toPromise();

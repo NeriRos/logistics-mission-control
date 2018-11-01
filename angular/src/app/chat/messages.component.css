@@ -1,0 +1,8 @@
+ul#messages {
+    list-style: none;
+    height: 300px;
+    width: 100%;
+    padding: 0;
+    overflow-y: scroll;
+    padding-left: 5px;
+}

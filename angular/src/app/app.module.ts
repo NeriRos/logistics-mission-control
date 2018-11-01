@@ -15,10 +15,12 @@ import { Globals } from "./shared/globals";
 
 import { PermissionLazyLoadGuard } from "./permission-lazy-load.guard";
 import { LoggedInLazyLoadGuard } from "./logged-in-lazy-load.guard";
+import { MenuComponent } from "./menu/menu.component";
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MenuComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [

@@ -5,10 +5,11 @@ import { Pipe, PipeTransform } from "@angular/core";
 })
 export class GetUserById implements PipeTransform {
 
-  transform(value: any, users: any): any {
+  transform(value: any, users: any, isNameOnly?: boolean): any {
     for (const user of users) {
       if (user._id === value) {
-          return user;
+        console.log(user);
+        return isNameOnly ? user.name : user;
       }
     }
     return false;

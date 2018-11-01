@@ -13,6 +13,8 @@ import { ManagementService } from "../services/management.service";
 import { SharedModule } from "../shared/shared.module";
 import { MissionItemComponent } from "./components/missionItem.component";
 import { Globals } from "../shared/globals";
+import { ChatService } from "../services/chat.service";
+import { MessagesComponent } from "../chat/messages.component";
 
 
 @NgModule({
@@ -25,11 +27,12 @@ import { Globals } from "../shared/globals";
   exports: [ PipesModule ],
   providers: [
     MissionsService,
+    ChatService,
     UserService,
     ManagementService,
     Globals
   ],
-  declarations: [MissionsComponent, CreateMissionComponent, MissionItemComponent],
+  declarations: [MissionsComponent, MessagesComponent, CreateMissionComponent, MissionItemComponent],
   entryComponents: [CreateMissionComponent]
 })
 export class MissionsModule { }
