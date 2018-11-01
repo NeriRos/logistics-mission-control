@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Output } from "@angular/core";
 import { IChat } from "../models/chat.model";
+import { IUser } from "../models/user.model";
 
 @Component({
     selector: "app-messages-test",
@@ -20,17 +21,19 @@ import { IChat } from "../models/chat.model";
             </div>
         </li>
     </ul>
-    `
+    `, styleUrls: ["./chat.component.css", "./messages.component.css"]
 })
 export class MessagesComponent implements OnInit {
     @Input() myId: string;
     @Input() chats: Array<IChat>;
+    @Input() users: Array<IUser>;
+    @Input() isDisplayConversantName: boolean;
     @Input() conversantsClasses: {me: string, conversant: string};
     @Input() conversantOfflineText: string;
     @ViewChild("messages") messages: ElementRef;
-    @Output() messagesElement;
+    @Output() messagesElement = this.messages;
 
-    isConversantOnline = false;
+    isConversantOnline = true;
 
     template = `
         <ul id="messages" #messages>
@@ -42,6 +45,9 @@ export class MessagesComponent implements OnInit {
                     </div>
                     <div class="row">
                         <span class="date">{{chat.date | dateToTime}}</span>
+                        <span class="conversantName" *ngIf="isDisplayConversantName && chat.from === myId">
+                            {{chat.from | GetUserById : users : true}}
+                        </span>
                         <span class="status"><i *ngIf="messageSender(chat) === 'representative'"
                             [class]="'fa ' + (chat.status | statusToMark)"></i></span>
                     </div>
@@ -52,7 +58,9 @@ export class MessagesComponent implements OnInit {
 
     constructor() { }
 
-    ngOnInit() { }
+    ngOnInit() {
+        console.log(this.isDisplayConversantName);
+    }
 
     messageSender(chat: IChat): string {
         return chat.from === this.myId ? this.conversantsClasses.me : this.conversantsClasses.conversant;

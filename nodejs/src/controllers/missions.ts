@@ -2,8 +2,12 @@
 
 import { Response, Request, NextFunction } from "express";
 import { MissionModel } from "../models/Mission";
-import { MISSION_STATUS } from "../types/Mission";
+import { MISSION_STATUS, MissionDocument, IMission } from "../types/Mission";
 import { Mongoose } from "mongoose";
+import { waterfall, map, each } from "async";
+import { ChatModel } from "../models/Chat";
+import { UserModel } from "~/models/User";
+import { IChat } from "~/types/Chat";
 
 const mongooseInstance = (new Mongoose());
 
@@ -68,6 +72,80 @@ export let deleteMission = (req, res, next) => {
             return next(err);
 
         res.json({problem: false, removedMission});
+    });
+};
+
+/**
+ * GET /missions/sendMessage/:missionId
+ * send message to mission.
+ */
+export let sendMessage = (req, res, next) => {
+    const chat: IChat = req.body;
+
+    waterfall([
+        (callback) => {
+            MissionModel.findById(req.params.missionId, (err, mission) => {
+                if (err)
+                    return callback(err);
+
+                callback(false, mission);
+            });
+        }, (mission: MissionDocument, callback) => {
+            const newChat = new ChatModel(chat);
+
+            newChat.save((err, savedChat) => {
+                if (err)
+                    return callback(err);
+
+                mission.relatedChatIds.push(savedChat._id);
+                callback(false, savedChat);
+
+                mission.save();
+            });
+        },
+    ], (err, chat) => {
+        if (err)
+            return next(err);
+
+        res.json(chat);
+    });
+};
+
+/**
+ * GET /missions/getChats/:missionId
+ * get chats for a mission.
+ */
+export let getChats = (req, res, next) => {
+    waterfall([
+        (callback) => {
+            MissionModel.findById(req.params.missionId, (err, mission) => {
+                if (err)
+                    return callback(err);
+
+                callback(false, mission);
+            });
+        }, (mission: MissionDocument, callback) => {
+            const chats = [];
+            each(mission.relatedChatIds, (chatId, cb) => {
+                ChatModel.findById(chatId, (err, chat) => {
+                    if (err)
+                        return cb(err);
+
+                    chats.push(chat);
+                    cb();
+                });
+            }, (err) => {
+                if (err)
+                    return callback(err);
+
+                callback(false, chats);
+            });
+        },
+    ], (err, chats) => {
+        if (err)
+            return next(err);
+
+        res.json(chats);
     });
 };
 

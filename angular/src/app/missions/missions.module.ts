@@ -13,10 +13,8 @@ import { ManagementService } from "../services/management.service";
 import { SharedModule } from "../shared/shared.module";
 import { MissionItemComponent } from "./components/missionItem.component";
 import { Globals } from "../shared/globals";
-import { ChatComponent } from "../chat/chat.component";
 import { ChatService } from "../services/chat.service";
-import { RouterModule } from "@angular/router";
-import { SupportService } from "../services/support.service";
+import { MessagesComponent } from "../chat/messages.component";
 
 
 @NgModule({
@@ -24,7 +22,6 @@ import { SupportService } from "../services/support.service";
     CommonModule,
     MissionsRoutingModule,
     SharedModule,
-    RouterModule,
     PipesModule
   ],
   exports: [ PipesModule ],
@@ -32,11 +29,10 @@ import { SupportService } from "../services/support.service";
     MissionsService,
     ChatService,
     UserService,
-    SupportService,
     ManagementService,
     Globals
   ],
-  declarations: [MissionsComponent, ChatComponent, CreateMissionComponent, MissionItemComponent],
+  declarations: [MissionsComponent, MessagesComponent, CreateMissionComponent, MissionItemComponent],
   entryComponents: [CreateMissionComponent]
 })
 export class MissionsModule { }
