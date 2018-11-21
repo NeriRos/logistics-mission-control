@@ -50,6 +50,8 @@ export let updateSupport = (req: Request, res: Response, next: NextFunction) => 
         support.client = req.body.client;
 
         if (typeof req.body.representative !== "undefined" && (support.representative != req.body.representative || !support.representative)) {
+            const oldRep = support.representative;
+
             // Update status
             if (support.status <= SUPPORT_STATUS.REQUEST)
                 support.status = SUPPORT_STATUS.TAKEN;
@@ -64,7 +66,12 @@ export let updateSupport = (req: Request, res: Response, next: NextFunction) => 
                 if (err)
                     return next(err);
 
-                sendWelcomeMessage(req, res, next, support, `A representative has joined the conversation, rep name: ${support.representative.name}`);
+                if (!oldRep) {
+                    sendWelcomeMessage(req, res, next, support, `A representative has joined the conversation, rep name: ${support.representative.name}`);
+                } else if (oldRep != req.body.representative) {
+                    sendWelcomeMessage(req, res, next, support, `${oldRep.name} has left the conversation.`);
+                    sendWelcomeMessage(req, res, next, support, `A new representative has joined the conversation, rep name: ${support.representative.name}`);
+                }
             });
         } else {
             res.json({error: true, status: "noRepresentativeInBody", message: "there is no representative in body"});

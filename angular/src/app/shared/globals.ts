@@ -66,7 +66,6 @@ export class Globals {
     }
 
     debugInit() {
-        // this.server = { ip: "141.226.21.44", dns: "cargo-express.co.il", port: "8887", protocol: "http" };
         this.server = {
             ip: "127.0.0.1",
             dns: "localhost",
